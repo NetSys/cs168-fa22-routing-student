@@ -54,8 +54,9 @@ class TestGirvanNewman(object):
         validate_communities(communities[0], [{0, 1}, {2, 3}])
         # After the next, we get the graph .-. . ., but there are two
         # symmetric possible verisons.
-        validate_possible_communities(communities[1], [{0}, {1}, {2, 3}],
-                                      [{0, 1}, {2}, {3}])
+        validate_possible_communities(
+            communities[1], [{0}, {1}, {2, 3}], [{0, 1}, {2}, {3}]
+        )
         # After the last removal, we alway get the empty graph.
         validate_communities(communities[2], [{0}, {1}, {2}, {3}])
 
@@ -64,8 +65,9 @@ class TestGirvanNewman(object):
         communities = list(girvan_newman(G))
         assert_equal(len(communities), 3)
         validate_communities(communities[0], [{0, 1}, {2, 3}])
-        validate_possible_communities(communities[1], [{0}, {1}, {2, 3}],
-                                      [{0, 1}, {2}, {3}])
+        validate_possible_communities(
+            communities[1], [{0}, {1}, {2, 3}], [{0, 1}, {2}, {3}]
+        )
         validate_communities(communities[2], [{0}, {1}, {2}, {3}])
 
     def test_selfloops(self):
@@ -75,8 +77,9 @@ class TestGirvanNewman(object):
         communities = list(girvan_newman(G))
         assert_equal(len(communities), 3)
         validate_communities(communities[0], [{0, 1}, {2, 3}])
-        validate_possible_communities(communities[1], [{0}, {1}, {2, 3}],
-                                      [{0, 1}, {2}, {3}])
+        validate_possible_communities(
+            communities[1], [{0}, {1}, {2, 3}], [{0, 1}, {2}, {3}]
+        )
         validate_communities(communities[2], [{0}, {1}, {2}, {3}])
 
     def test_most_valuable_edge(self):
@@ -84,7 +87,9 @@ class TestGirvanNewman(object):
         G.add_weighted_edges_from([(0, 1, 3), (1, 2, 2), (2, 3, 1)])
         # Let the most valuable edge be the one with the highest weight.
 
-        def heaviest(G): return max(G.edges(data='weight'), key=itemgetter(2))[:2]
+        def heaviest(G):
+            return max(G.edges(data="weight"), key=itemgetter(2))[:2]
+
         communities = list(girvan_newman(G, heaviest))
         assert_equal(len(communities), 3)
         validate_communities(communities[0], [{0}, {1, 2, 3}])

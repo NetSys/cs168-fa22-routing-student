@@ -17,7 +17,7 @@
 import networkx as nx
 from collections import deque
 
-__all__ = ['bfs_edges', 'bfs_tree', 'bfs_predecessors', 'bfs_successors']
+__all__ = ["bfs_edges", "bfs_tree", "bfs_predecessors", "bfs_successors"]
 
 
 def generic_bfs_edges(G, source, neighbors=None):

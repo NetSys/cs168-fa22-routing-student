@@ -32,14 +32,24 @@ def test_complement():
 
 def test_complement_2():
     G1 = nx.DiGraph()
-    G1.add_edge('A', 'B')
-    G1.add_edge('A', 'C')
-    G1.add_edge('A', 'D')
+    G1.add_edge("A", "B")
+    G1.add_edge("A", "C")
+    G1.add_edge("A", "D")
     G1C = complement(G1)
-    assert_equal(sorted(G1C.edges()),
-                 [('B', 'A'), ('B', 'C'),
-                  ('B', 'D'), ('C', 'A'), ('C', 'B'),
-                  ('C', 'D'), ('D', 'A'), ('D', 'B'), ('D', 'C')])
+    assert_equal(
+        sorted(G1C.edges()),
+        [
+            ("B", "A"),
+            ("B", "C"),
+            ("B", "D"),
+            ("C", "A"),
+            ("C", "B"),
+            ("C", "D"),
+            ("D", "A"),
+            ("D", "B"),
+            ("D", "C"),
+        ],
+    )
 
 
 def test_reverse1():

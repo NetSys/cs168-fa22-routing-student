@@ -14,7 +14,6 @@ import networkx as nx
 
 
 class TestEfficiency:
-
     def __init__(self):
         # G1 is a disconnected graph
         self.G1 = nx.Graph()

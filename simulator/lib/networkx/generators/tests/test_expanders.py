@@ -6,6 +6,7 @@
 """
 try:
     import scipy
+
     is_scipy_available = True
 except:
     is_scipy_available = False
@@ -30,6 +31,7 @@ def test_margulis_gabber_galil_graph():
         # but this second use could be done using only numpy.
         import numpy as np
         import scipy.linalg
+
         has_scipy = True
     except ImportError as e:
         has_scipy = False
@@ -52,7 +54,7 @@ def test_margulis_gabber_galil_graph():
 def test_chordal_cycle_graph():
     """Test for the :func:`networkx.chordal_cycle_graph` function."""
     if not is_scipy_available:
-        raise SkipTest('SciPy is not available')
+        raise SkipTest("SciPy is not available")
     primes = [3, 5, 7, 11]
     for p in primes:
         G = chordal_cycle_graph(p)
@@ -66,7 +68,5 @@ def test_chordal_cycle_graph():
 
 
 def test_margulis_gabber_galil_graph_badinput():
-    assert_raises(nx.NetworkXError, margulis_gabber_galil_graph, 3,
-                  nx.DiGraph())
-    assert_raises(nx.NetworkXError, margulis_gabber_galil_graph, 3,
-                  nx.Graph())
+    assert_raises(nx.NetworkXError, margulis_gabber_galil_graph, 3, nx.DiGraph())
+    assert_raises(nx.NetworkXError, margulis_gabber_galil_graph, 3, nx.Graph())

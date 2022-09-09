@@ -3,7 +3,6 @@ import networkx as nx
 
 
 class TestBFS:
-
     def setUp(self):
         # simple graph
         G = nx.Graph()
@@ -11,12 +10,14 @@ class TestBFS:
         self.G = G
 
     def test_successor(self):
-        assert_equal(dict(nx.bfs_successors(self.G, source=0)),
-                     {0: [1], 1: [2, 3], 2: [4]})
+        assert_equal(
+            dict(nx.bfs_successors(self.G, source=0)), {0: [1], 1: [2, 3], 2: [4]}
+        )
 
     def test_predecessor(self):
-        assert_equal(dict(nx.bfs_predecessors(self.G, source=0)),
-                     {1: 0, 2: 1, 3: 1, 4: 2})
+        assert_equal(
+            dict(nx.bfs_predecessors(self.G, source=0)), {1: 0, 2: 1, 3: 1, 4: 2}
+        )
 
     def test_bfs_tree(self):
         T = nx.bfs_tree(self.G, source=0)

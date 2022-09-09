@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from nose.tools import assert_equal
 from nose.tools import assert_false
+
 try:
     from nose.tools import assert_count_equal
 except ImportError:
@@ -14,7 +15,6 @@ from networkx import is_eulerian, eulerian_circuit
 
 
 class TestIsEulerian(TestCase):
-
     def test_is_eulerian(self):
         assert_true(is_eulerian(nx.complete_graph(5)))
         assert_true(is_eulerian(nx.complete_graph(7)))
@@ -47,7 +47,6 @@ class TestIsEulerian(TestCase):
 
 
 class TestEulerianCircuit(TestCase):
-
     def test_eulerian_circuit_cycle(self):
         G = nx.cycle_graph(4)
 

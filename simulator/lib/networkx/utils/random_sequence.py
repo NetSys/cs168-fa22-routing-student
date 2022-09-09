@@ -22,6 +22,7 @@ import networkx as nx
 # uses Python's random module
 # https://docs.python.org/2/library/random.html
 
+
 def powerlaw_sequence(n, exponent=2.0):
     """
     Return sample sequence of length n from a power law distribution.
@@ -86,8 +87,8 @@ def zipf_rv(alpha, xmin=1, seed=None):
     while True:
         u = 1.0 - random.random()  # u in (0,1]
         v = random.random()  # v in [0,1)
-        x = int(xmin * u**-(1.0 / a1))
-        t = (1.0 + (1.0 / x))**a1
+        x = int(xmin * u ** -(1.0 / a1))
+        t = (1.0 + (1.0 / x)) ** a1
         if v * x * (t - 1.0) / (b - 1.0) <= t / b:
             break
     return x
@@ -123,7 +124,8 @@ def discrete_sequence(n, distribution=None, cdistribution=None):
         cdf = cumulative_distribution(distribution)
     else:
         raise nx.NetworkXError(
-            "discrete_sequence: distribution or cdistribution missing")
+            "discrete_sequence: distribution or cdistribution missing"
+        )
 
     # get a uniform random number
     inputseq = [random.random() for i in range(n)]

@@ -8,15 +8,20 @@ Eigenvalue spectrum of graphs.
 #    All rights reserved.
 #    BSD license.
 import networkx as nx
-__author__ = "\n".join(['Aric Hagberg <aric.hagberg@gmail.com>',
-                        'Pieter Swart (swart@lanl.gov)',
-                        'Dan Schult(dschult@colgate.edu)',
-                        'Jean-Gabriel Young (jean.gabriel.young@gmail.com)'])
 
-__all__ = ['laplacian_spectrum', 'adjacency_spectrum', 'modularity_spectrum']
+__author__ = "\n".join(
+    [
+        "Aric Hagberg <aric.hagberg@gmail.com>",
+        "Pieter Swart (swart@lanl.gov)",
+        "Dan Schult(dschult@colgate.edu)",
+        "Jean-Gabriel Young (jean.gabriel.young@gmail.com)",
+    ]
+)
+
+__all__ = ["laplacian_spectrum", "adjacency_spectrum", "modularity_spectrum"]
 
 
-def laplacian_spectrum(G, weight='weight'):
+def laplacian_spectrum(G, weight="weight"):
     """Return eigenvalues of the Laplacian of G
 
     Parameters
@@ -43,10 +48,11 @@ def laplacian_spectrum(G, weight='weight'):
     laplacian_matrix
     """
     from scipy.linalg import eigvalsh
+
     return eigvalsh(nx.laplacian_matrix(G, weight=weight).todense())
 
 
-def adjacency_spectrum(G, weight='weight'):
+def adjacency_spectrum(G, weight="weight"):
     """Return eigenvalues of the adjacency matrix of G.
 
     Parameters
@@ -73,6 +79,7 @@ def adjacency_spectrum(G, weight='weight'):
     adjacency_matrix
     """
     from scipy.linalg import eigvals
+
     return eigvals(nx.adjacency_matrix(G, weight=weight).todense())
 
 
@@ -99,16 +106,19 @@ def modularity_spectrum(G):
        Proc. Natl. Acad. Sci. USA, vol. 103, pp. 8577-8582, 2006.
     """
     from scipy.linalg import eigvals
+
     if G.is_directed():
         return eigvals(nx.directed_modularity_matrix(G))
     else:
         return eigvals(nx.modularity_matrix(G))
+
 
 # fixture for nose tests
 
 
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import scipy.linalg
     except:

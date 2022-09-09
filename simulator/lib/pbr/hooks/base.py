@@ -21,7 +21,7 @@ class BaseConfig(object):
     def __init__(self, config):
         self._global_config = config
         self.config = self._global_config.get(self.section, dict())
-        self.pbr_config = config.get('pbr', dict())
+        self.pbr_config = config.get("pbr", dict())
 
     def run(self):
         self.hook()

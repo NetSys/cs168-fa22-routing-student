@@ -2,4 +2,5 @@
 
 # Start the simulator!
 import sim.boot
+
 sim.boot.main()

@@ -49,11 +49,13 @@ from pbr.tests import util
 class TestHooks(base.BaseTestCase):
     def setUp(self):
         super(TestHooks, self).setUp()
-        with util.open_config(
-                os.path.join(self.package_dir, 'setup.cfg')) as cfg:
-            cfg.set('global', 'setup-hooks',
-                    'pbr_testpackage._setup_hooks.test_hook_1\n'
-                    'pbr_testpackage._setup_hooks.test_hook_2')
+        with util.open_config(os.path.join(self.package_dir, "setup.cfg")) as cfg:
+            cfg.set(
+                "global",
+                "setup-hooks",
+                "pbr_testpackage._setup_hooks.test_hook_1\n"
+                "pbr_testpackage._setup_hooks.test_hook_2",
+            )
 
     def test_global_setup_hooks(self):
         """Test setup_hooks.
@@ -62,11 +64,11 @@ class TestHooks(base.BaseTestCase):
         executed in order.
         """
 
-        stdout, _, return_code = self.run_setup('egg_info')
-        assert 'test_hook_1\ntest_hook_2' in stdout
+        stdout, _, return_code = self.run_setup("egg_info")
+        assert "test_hook_1\ntest_hook_2" in stdout
         assert return_code == 0
 
     def test_custom_commands_known(self):
-        stdout, _, return_code = self.run_setup('--help-commands')
+        stdout, _, return_code = self.run_setup("--help-commands")
         self.assertFalse(return_code)
         self.assertThat(stdout, matchers.Contains(" testr "))

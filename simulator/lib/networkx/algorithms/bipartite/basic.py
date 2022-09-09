@@ -11,14 +11,18 @@ Bipartite Graph Algorithms
 #    All rights reserved.
 #    BSD license.
 import networkx as nx
-__author__ = """\n""".join(['Jordi Torrents <jtorrents@milnou.net>',
-                            'Aric Hagberg <aric.hagberg@gmail.com>'])
-__all__ = ['is_bipartite',
-           'is_bipartite_node_set',
-           'color',
-           'sets',
-           'density',
-           'degrees']
+
+__author__ = """\n""".join(
+    ["Jordi Torrents <jtorrents@milnou.net>", "Aric Hagberg <aric.hagberg@gmail.com>"]
+)
+__all__ = [
+    "is_bipartite",
+    "is_bipartite_node_set",
+    "color",
+    "sets",
+    "density",
+    "degrees",
+]
 
 
 def color(G):
@@ -59,8 +63,8 @@ def color(G):
         import itertools
 
         def neighbors(v):
-            return itertools.chain.from_iterable([G.predecessors(v),
-                                                  G.successors(v)])
+            return itertools.chain.from_iterable([G.predecessors(v), G.successors(v)])
+
     else:
         neighbors = G.neighbors
 
@@ -86,7 +90,7 @@ def color(G):
 
 
 def is_bipartite(G):
-    """ Returns True if graph G is bipartite, False if not.
+    """Returns True if graph G is bipartite, False if not.
 
     Parameters
     ----------
@@ -136,8 +140,9 @@ def is_bipartite_node_set(G, nodes):
     S = set(nodes)
     for CC in nx.connected_component_subgraphs(G):
         X, Y = sets(CC)
-        if not ((X.issubset(S) and Y.isdisjoint(S)) or
-                (Y.issubset(S) and X.isdisjoint(S))):
+        if not (
+            (X.issubset(S) and Y.isdisjoint(S)) or (Y.issubset(S) and X.isdisjoint(S))
+        ):
             return False
     return True
 
@@ -202,7 +207,7 @@ def sets(G, top_nodes=None):
         Y = set(G) - X
     else:
         if not is_connected(G):
-            msg = 'Disconnected graph: Ambiguous solution for bipartite sets.'
+            msg = "Disconnected graph: Ambiguous solution for bipartite sets."
             raise nx.AmbiguousSolution(msg)
         c = color(G)
         X = {n for n, is_top in c.items() if is_top}

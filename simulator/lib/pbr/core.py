@@ -86,10 +86,9 @@ def pbr(dist, attr, value):
     if isinstance(value, string_type):
         path = os.path.abspath(value)
     else:
-        path = os.path.abspath('setup.cfg')
+        path = os.path.abspath("setup.cfg")
     if not os.path.exists(path):
-        raise errors.DistutilsFileError(
-            'The setup.cfg file %s does not exist.' % path)
+        raise errors.DistutilsFileError("The setup.cfg file %s does not exist." % path)
 
     # Converts the setup.cfg file to setup() arguments
     try:
@@ -99,9 +98,10 @@ def pbr(dist, attr, value):
         # NB: This will output to the console if no explicit logging has
         # been setup - but thats fine, this is a fatal distutils error, so
         # being pretty isn't the #1 goal.. being diagnosable is.
-        logging.exception('Error parsing')
+        logging.exception("Error parsing")
         raise errors.DistutilsSetupError(
-            'Error parsing %s: %s: %s' % (path, e.__class__.__name__, e))
+            "Error parsing %s: %s: %s" % (path, e.__class__.__name__, e)
+        )
 
     # Repeat some of the Distribution initialization code with the newly
     # provided attrs
@@ -109,14 +109,14 @@ def pbr(dist, attr, value):
         # Skips 'options' and 'licence' support which are rarely used; may
         # add back in later if demanded
         for key, val in attrs.items():
-            if hasattr(dist.metadata, 'set_' + key):
-                getattr(dist.metadata, 'set_' + key)(val)
+            if hasattr(dist.metadata, "set_" + key):
+                getattr(dist.metadata, "set_" + key)(val)
             elif hasattr(dist.metadata, key):
                 setattr(dist.metadata, key, val)
             elif hasattr(dist, key):
                 setattr(dist, key, val)
             else:
-                msg = 'Unknown distribution option: %s' % repr(key)
+                msg = "Unknown distribution option: %s" % repr(key)
                 warnings.warn(msg)
 
     # Re-finalize the underlying Distribution

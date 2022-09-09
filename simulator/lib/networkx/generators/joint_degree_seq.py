@@ -10,12 +10,11 @@ import random
 
 import networkx as nx
 
-__all__ = ['is_valid_joint_degree',
-           'joint_degree_graph']
+__all__ = ["is_valid_joint_degree", "joint_degree_graph"]
 
 
 def is_valid_joint_degree(joint_degrees):
-    """ Checks whether the given joint degree dictionary is realizable
+    """Checks whether the given joint degree dictionary is realizable
     as a simple graph.
 
     A *joint degree dictionary* is a dictionary of dictionaries, in
@@ -68,8 +67,7 @@ def is_valid_joint_degree(joint_degrees):
             if not float(joint_degrees[k][l]).is_integer():
                 return False
 
-            if (k != l) and (joint_degrees[k][l] >
-                             degree_count[k] * degree_count[l]):
+            if (k != l) and (joint_degrees[k][l] > degree_count[k] * degree_count[l]):
                 return False
             elif k == l:
                 if joint_degrees[k][k] > degree_count[k] * (degree_count[k] - 1):
@@ -83,7 +81,7 @@ def is_valid_joint_degree(joint_degrees):
 
 
 def _neighbor_switch(G, w, unsat, h_node_residual, avoid_node_id=None):
-    """ Releases one free stub for saturated node ``w``, while preserving
+    """Releases one free stub for saturated node ``w``, while preserving
     joint degree in graph G.
 
     Parameters
@@ -147,7 +145,7 @@ def _neighbor_switch(G, w, unsat, h_node_residual, avoid_node_id=None):
 
 
 def joint_degree_graph(joint_degrees, seed=None):
-    """ Generates a random simple graph with the given joint degree dictionary.
+    """Generates a random simple graph with the given joint degree dictionary.
 
     Parameters
     ----------
@@ -202,7 +200,7 @@ def joint_degree_graph(joint_degrees, seed=None):
     """
 
     if not is_valid_joint_degree(joint_degrees):
-        msg = 'Input joint degree dict not realizable as a simple graph'
+        msg = "Input joint degree dict not realizable as a simple graph"
         raise nx.NetworkXError(msg)
 
     if seed is not None:
@@ -276,8 +274,9 @@ def joint_degree_graph(joint_degrees, seed=None):
                             if k != l:
                                 _neighbor_switch(G, w, l_unsat, h_node_residual)
                             else:
-                                _neighbor_switch(G, w, l_unsat, h_node_residual,
-                                                 avoid_node_id=v)
+                                _neighbor_switch(
+                                    G, w, l_unsat, h_node_residual, avoid_node_id=v
+                                )
 
                         # add edge (v, w) and update data structures
                         G.add_edge(v, w)

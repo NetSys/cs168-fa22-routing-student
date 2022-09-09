@@ -23,26 +23,26 @@ import random
 class TestMaximalIndependantSet(object):
     def setup(self):
         self.florentine = nx.Graph()
-        self.florentine.add_edge('Acciaiuoli', 'Medici')
-        self.florentine.add_edge('Castellani', 'Peruzzi')
-        self.florentine.add_edge('Castellani', 'Strozzi')
-        self.florentine.add_edge('Castellani', 'Barbadori')
-        self.florentine.add_edge('Medici', 'Barbadori')
-        self.florentine.add_edge('Medici', 'Ridolfi')
-        self.florentine.add_edge('Medici', 'Tornabuoni')
-        self.florentine.add_edge('Medici', 'Albizzi')
-        self.florentine.add_edge('Medici', 'Salviati')
-        self.florentine.add_edge('Salviati', 'Pazzi')
-        self.florentine.add_edge('Peruzzi', 'Strozzi')
-        self.florentine.add_edge('Peruzzi', 'Bischeri')
-        self.florentine.add_edge('Strozzi', 'Ridolfi')
-        self.florentine.add_edge('Strozzi', 'Bischeri')
-        self.florentine.add_edge('Ridolfi', 'Tornabuoni')
-        self.florentine.add_edge('Tornabuoni', 'Guadagni')
-        self.florentine.add_edge('Albizzi', 'Ginori')
-        self.florentine.add_edge('Albizzi', 'Guadagni')
-        self.florentine.add_edge('Bischeri', 'Guadagni')
-        self.florentine.add_edge('Guadagni', 'Lamberteschi')
+        self.florentine.add_edge("Acciaiuoli", "Medici")
+        self.florentine.add_edge("Castellani", "Peruzzi")
+        self.florentine.add_edge("Castellani", "Strozzi")
+        self.florentine.add_edge("Castellani", "Barbadori")
+        self.florentine.add_edge("Medici", "Barbadori")
+        self.florentine.add_edge("Medici", "Ridolfi")
+        self.florentine.add_edge("Medici", "Tornabuoni")
+        self.florentine.add_edge("Medici", "Albizzi")
+        self.florentine.add_edge("Medici", "Salviati")
+        self.florentine.add_edge("Salviati", "Pazzi")
+        self.florentine.add_edge("Peruzzi", "Strozzi")
+        self.florentine.add_edge("Peruzzi", "Bischeri")
+        self.florentine.add_edge("Strozzi", "Ridolfi")
+        self.florentine.add_edge("Strozzi", "Bischeri")
+        self.florentine.add_edge("Ridolfi", "Tornabuoni")
+        self.florentine.add_edge("Tornabuoni", "Guadagni")
+        self.florentine.add_edge("Albizzi", "Ginori")
+        self.florentine.add_edge("Albizzi", "Guadagni")
+        self.florentine.add_edge("Bischeri", "Guadagni")
+        self.florentine.add_edge("Guadagni", "Lamberteschi")
 
     def test_K5(self):
         """Maximal independent set: K5"""
@@ -59,10 +59,10 @@ class TestMaximalIndependantSet(object):
     def test_exception(self):
         """Bad input should raise exception."""
         G = self.florentine
-        assert_raises(nx.NetworkXUnfeasible,
-                      nx.maximal_independent_set, G, ["Smith"])
-        assert_raises(nx.NetworkXUnfeasible,
-                      nx.maximal_independent_set, G, ["Salviati", "Pazzi"])
+        assert_raises(nx.NetworkXUnfeasible, nx.maximal_independent_set, G, ["Smith"])
+        assert_raises(
+            nx.NetworkXUnfeasible, nx.maximal_independent_set, G, ["Salviati", "Pazzi"]
+        )
 
     def test_digraph_exception(self):
         G = nx.DiGraph([(1, 2), (3, 4)])
@@ -71,9 +71,12 @@ class TestMaximalIndependantSet(object):
     def test_florentine_family(self):
         G = self.florentine
         indep = nx.maximal_independent_set(G, ["Medici", "Bischeri"])
-        assert_equal(sorted(indep),
-                     sorted(["Medici", "Bischeri", "Castellani", "Pazzi",
-                             "Ginori", "Lamberteschi"]))
+        assert_equal(
+            sorted(indep),
+            sorted(
+                ["Medici", "Bischeri", "Castellani", "Pazzi", "Ginori", "Lamberteschi"]
+            ),
+        )
 
     def test_bipartite(self):
         G = nx.complete_bipartite_graph(12, 34)

@@ -1,5 +1,12 @@
-from nose.tools import assert_equal, assert_not_equal, assert_is,\
-    assert_is_not, assert_true, assert_false, assert_raises
+from nose.tools import (
+    assert_equal,
+    assert_not_equal,
+    assert_is,
+    assert_is_not,
+    assert_true,
+    assert_false,
+    assert_raises,
+)
 import tempfile
 import pickle
 
@@ -9,7 +16,7 @@ import networkx as nx
 class TestAtlasView(object):
     # node->data
     def setup(self):
-        self.d = {0: {'color': 'blue', 'weight': 1.2}, 1: {}, 2: {'color': 1}}
+        self.d = {0: {"color": "blue", "weight": 1.2}, 1: {}, 2: {"color": 1}}
         self.av = nx.classes.coreviews.AtlasView(self.d)
 
     def test_pickle(self):
@@ -26,7 +33,7 @@ class TestAtlasView(object):
 
     def test_getitem(self):
         assert_is(self.av[1], self.d[1])
-        assert_equal(self.av[2]['color'], 1)
+        assert_equal(self.av[2]["color"], 1)
         assert_raises(KeyError, self.av.__getitem__, 3)
 
     def test_copy(self):
@@ -38,13 +45,13 @@ class TestAtlasView(object):
         avcopy[5] = {}
         assert_not_equal(avcopy, self.av)
 
-        avcopy[0]['ht'] = 4
+        avcopy[0]["ht"] = 4
         assert_not_equal(avcopy[0], self.av[0])
-        self.av[0]['ht'] = 4
+        self.av[0]["ht"] = 4
         assert_equal(avcopy[0], self.av[0])
-        del self.av[0]['ht']
+        del self.av[0]["ht"]
 
-        assert_false(hasattr(self.av, '__setitem__'))
+        assert_false(hasattr(self.av, "__setitem__"))
 
     def test_items(self):
         assert_equal(sorted(self.av.items()), sorted(self.d.items()))
@@ -61,9 +68,9 @@ class TestAtlasView(object):
 class TestAdjacencyView(object):
     # node->nbr->data
     def setup(self):
-        dd = {'color': 'blue', 'weight': 1.2}
-        self.nd = {0: dd, 1: {}, 2: {'color': 1}}
-        self.adj = {3: self.nd, 0: {3: dd}, 1: {}, 2: {3: {'color': 1}}}
+        dd = {"color": "blue", "weight": 1.2}
+        self.nd = {0: dd, 1: {}, 2: {"color": 1}}
+        self.adj = {3: self.nd, 0: {3: dd}, 1: {}, 2: {3: {"color": 1}}}
         self.adjview = nx.classes.coreviews.AdjacencyView(self.adj)
 
     def test_pickle(self):
@@ -81,7 +88,7 @@ class TestAdjacencyView(object):
     def test_getitem(self):
         assert_is_not(self.adjview[1], self.adj[1])
         assert_is(self.adjview[3][0], self.adjview[0][3])
-        assert_equal(self.adjview[2][3]['color'], 1)
+        assert_equal(self.adjview[2][3]["color"], 1)
         assert_raises(KeyError, self.adjview.__getitem__, 4)
 
     def test_copy(self):
@@ -89,13 +96,13 @@ class TestAdjacencyView(object):
         assert_equal(avcopy[0], self.adjview[0])
         assert_is_not(avcopy[0], self.adjview[0])
 
-        avcopy[2][3]['ht'] = 4
+        avcopy[2][3]["ht"] = 4
         assert_not_equal(avcopy[2], self.adjview[2])
-        self.adjview[2][3]['ht'] = 4
+        self.adjview[2][3]["ht"] = 4
         assert_equal(avcopy[2], self.adjview[2])
-        del self.adjview[2][3]['ht']
+        del self.adjview[2][3]["ht"]
 
-        assert_false(hasattr(self.adjview, '__setitem__'))
+        assert_false(hasattr(self.adjview, "__setitem__"))
 
     def test_items(self):
         view_items = sorted((n, dict(d)) for n, d in self.adjview.items())
@@ -113,16 +120,16 @@ class TestAdjacencyView(object):
 class TestMultiAdjacencyView(TestAdjacencyView):
     # node->nbr->key->data
     def setup(self):
-        dd = {'color': 'blue', 'weight': 1.2}
-        self.kd = {0: dd, 1: {}, 2: {'color': 1}}
-        self.nd = {3: self.kd, 0: {3: dd}, 1: {0: {}}, 2: {3: {'color': 1}}}
+        dd = {"color": "blue", "weight": 1.2}
+        self.kd = {0: dd, 1: {}, 2: {"color": 1}}
+        self.nd = {3: self.kd, 0: {3: dd}, 1: {0: {}}, 2: {3: {"color": 1}}}
         self.adj = {3: self.nd, 0: {3: {3: dd}}, 1: {}, 2: {3: {8: {}}}}
         self.adjview = nx.classes.coreviews.MultiAdjacencyView(self.adj)
 
     def test_getitem(self):
         assert_is_not(self.adjview[1], self.adj[1])
         assert_is(self.adjview[3][0][3], self.adjview[0][3][3])
-        assert_equal(self.adjview[3][2][3]['color'], 1)
+        assert_equal(self.adjview[3][2][3]["color"], 1)
         assert_raises(KeyError, self.adjview.__getitem__, 4)
 
     def test_copy(self):
@@ -130,20 +137,20 @@ class TestMultiAdjacencyView(TestAdjacencyView):
         assert_equal(avcopy[0], self.adjview[0])
         assert_is_not(avcopy[0], self.adjview[0])
 
-        avcopy[2][3][8]['ht'] = 4
+        avcopy[2][3][8]["ht"] = 4
         assert_not_equal(avcopy[2], self.adjview[2])
-        self.adjview[2][3][8]['ht'] = 4
+        self.adjview[2][3][8]["ht"] = 4
         assert_equal(avcopy[2], self.adjview[2])
-        del self.adjview[2][3][8]['ht']
+        del self.adjview[2][3][8]["ht"]
 
-        assert_false(hasattr(self.adjview, '__setitem__'))
+        assert_false(hasattr(self.adjview, "__setitem__"))
 
 
 class TestUnionAtlas(object):
     # node->data
     def setup(self):
-        self.s = {0: {'color': 'blue', 'weight': 1.2}, 1: {}, 2: {'color': 1}}
-        self.p = {3: {'color': 'blue', 'weight': 1.2}, 4: {}, 2: {'watch': 2}}
+        self.s = {0: {"color": "blue", "weight": 1.2}, 1: {}, 2: {"color": 1}}
+        self.p = {3: {"color": "blue", "weight": 1.2}, 4: {}, 2: {"watch": 2}}
         self.av = nx.classes.coreviews.UnionAtlas(self.s, self.p)
 
     def test_pickle(self):
@@ -161,8 +168,8 @@ class TestUnionAtlas(object):
     def test_getitem(self):
         assert_is(self.av[0], self.s[0])
         assert_is(self.av[4], self.p[4])
-        assert_equal(self.av[2]['color'], 1)
-        assert_raises(KeyError, self.av[2].__getitem__, 'watch')
+        assert_equal(self.av[2]["color"], 1)
+        assert_raises(KeyError, self.av[2].__getitem__, "watch")
         assert_raises(KeyError, self.av.__getitem__, 8)
 
     def test_copy(self):
@@ -173,13 +180,13 @@ class TestUnionAtlas(object):
         avcopy[5] = {}
         assert_not_equal(avcopy, self.av)
 
-        avcopy[0]['ht'] = 4
+        avcopy[0]["ht"] = 4
         assert_not_equal(avcopy[0], self.av[0])
-        self.av[0]['ht'] = 4
+        self.av[0]["ht"] = 4
         assert_equal(avcopy[0], self.av[0])
-        del self.av[0]['ht']
+        del self.av[0]["ht"]
 
-        assert_false(hasattr(self.av, '__setitem__'))
+        assert_false(hasattr(self.av, "__setitem__"))
 
     def test_items(self):
         expected = dict(self.p.items())
@@ -198,10 +205,10 @@ class TestUnionAtlas(object):
 class TestUnionAdjacency(object):
     # node->nbr->data
     def setup(self):
-        dd = {'color': 'blue', 'weight': 1.2}
-        self.nd = {0: dd, 1: {}, 2: {'color': 1}}
-        self.s = {3: self.nd, 0: {}, 1: {}, 2: {3: {'color': 1}}}
-        self.p = {3: {}, 0: {3: dd}, 1: {0: {}}, 2: {1: {'color': 1}}}
+        dd = {"color": "blue", "weight": 1.2}
+        self.nd = {0: dd, 1: {}, 2: {"color": 1}}
+        self.s = {3: self.nd, 0: {}, 1: {}, 2: {3: {"color": 1}}}
+        self.p = {3: {}, 0: {3: dd}, 1: {0: {}}, 2: {1: {"color": 1}}}
         self.adjview = nx.classes.coreviews.UnionAdjacency(self.s, self.p)
 
     def test_pickle(self):
@@ -219,7 +226,7 @@ class TestUnionAdjacency(object):
     def test_getitem(self):
         assert_is_not(self.adjview[1], self.s[1])
         assert_is(self.adjview[3][0], self.adjview[0][3])
-        assert_equal(self.adjview[2][3]['color'], 1)
+        assert_equal(self.adjview[2][3]["color"], 1)
         assert_raises(KeyError, self.adjview.__getitem__, 4)
 
     def test_copy(self):
@@ -227,13 +234,13 @@ class TestUnionAdjacency(object):
         assert_equal(avcopy[0], self.adjview[0])
         assert_is_not(avcopy[0], self.adjview[0])
 
-        avcopy[2][3]['ht'] = 4
+        avcopy[2][3]["ht"] = 4
         assert_not_equal(avcopy[2], self.adjview[2])
-        self.adjview[2][3]['ht'] = 4
+        self.adjview[2][3]["ht"] = 4
         assert_equal(avcopy[2], self.adjview[2])
-        del self.adjview[2][3]['ht']
+        del self.adjview[2][3]["ht"]
 
-        assert_false(hasattr(self.adjview, '__setitem__'))
+        assert_false(hasattr(self.adjview, "__setitem__"))
 
     def test_str(self):
         out = str(dict(self.adjview))
@@ -248,10 +255,10 @@ class TestUnionAdjacency(object):
 class TestUnionMultiInner(TestUnionAdjacency):
     # nbr->key->data
     def setup(self):
-        dd = {'color': 'blue', 'weight': 1.2}
-        self.kd = {7: {}, 'ekey': {}, 9: {'color': 1}}
-        self.s = {3: self.kd, 0: {7: dd}, 1: {}, 2: {'key': {'color': 1}}}
-        self.p = {3: {}, 0: {3: dd}, 1: {}, 2: {1: {'span': 2}}}
+        dd = {"color": "blue", "weight": 1.2}
+        self.kd = {7: {}, "ekey": {}, 9: {"color": 1}}
+        self.s = {3: self.kd, 0: {7: dd}, 1: {}, 2: {"key": {"color": 1}}}
+        self.p = {3: {}, 0: {3: dd}, 1: {}, 2: {1: {"span": 2}}}
         self.adjview = nx.classes.coreviews.UnionMultiInner(self.s, self.p)
 
     def test_len(self):
@@ -260,32 +267,32 @@ class TestUnionMultiInner(TestUnionAdjacency):
     def test_getitem(self):
         assert_is_not(self.adjview[1], self.s[1])
         assert_is(self.adjview[0][7], self.adjview[0][3])
-        assert_equal(self.adjview[2]['key']['color'], 1)
-        assert_equal(self.adjview[2][1]['span'], 2)
+        assert_equal(self.adjview[2]["key"]["color"], 1)
+        assert_equal(self.adjview[2][1]["span"], 2)
         assert_raises(KeyError, self.adjview.__getitem__, 4)
-        assert_raises(KeyError, self.adjview[1].__getitem__, 'key')
+        assert_raises(KeyError, self.adjview[1].__getitem__, "key")
 
     def test_copy(self):
         avcopy = self.adjview.copy()
         assert_equal(avcopy[0], self.adjview[0])
         assert_is_not(avcopy[0], self.adjview[0])
 
-        avcopy[2][1]['width'] = 8
+        avcopy[2][1]["width"] = 8
         assert_not_equal(avcopy[2], self.adjview[2])
-        self.adjview[2][1]['width'] = 8
+        self.adjview[2][1]["width"] = 8
         assert_equal(avcopy[2], self.adjview[2])
-        del self.adjview[2][1]['width']
+        del self.adjview[2][1]["width"]
 
-        assert_false(hasattr(self.adjview, '__setitem__'))
-        assert_true(hasattr(avcopy, '__setitem__'))
+        assert_false(hasattr(self.adjview, "__setitem__"))
+        assert_true(hasattr(avcopy, "__setitem__"))
 
 
 class TestUnionMultiAdjacency(TestUnionAdjacency):
     # node->nbr->key->data
     def setup(self):
-        dd = {'color': 'blue', 'weight': 1.2}
-        self.kd = {7: {}, 8: {}, 9: {'color': 1}}
-        self.nd = {3: self.kd, 0: {9: dd}, 1: {8: {}}, 2: {9: {'color': 1}}}
+        dd = {"color": "blue", "weight": 1.2}
+        self.kd = {7: {}, 8: {}, 9: {"color": 1}}
+        self.nd = {3: self.kd, 0: {9: dd}, 1: {8: {}}, 2: {9: {"color": 1}}}
         self.s = {3: self.nd, 0: {3: {7: dd}}, 1: {}, 2: {3: {8: {}}}}
         self.p = {3: {}, 0: {3: {9: dd}}, 1: {}, 2: {1: {8: {}}}}
         self.adjview = nx.classes.coreviews.UnionMultiAdjacency(self.s, self.p)
@@ -293,7 +300,7 @@ class TestUnionMultiAdjacency(TestUnionAdjacency):
     def test_getitem(self):
         assert_is_not(self.adjview[1], self.s[1])
         assert_is(self.adjview[3][0][9], self.adjview[0][3][9])
-        assert_equal(self.adjview[3][2][9]['color'], 1)
+        assert_equal(self.adjview[3][2][9]["color"], 1)
         assert_raises(KeyError, self.adjview.__getitem__, 4)
 
     def test_copy(self):
@@ -301,11 +308,11 @@ class TestUnionMultiAdjacency(TestUnionAdjacency):
         assert_equal(avcopy[0], self.adjview[0])
         assert_is_not(avcopy[0], self.adjview[0])
 
-        avcopy[2][3][8]['ht'] = 4
+        avcopy[2][3][8]["ht"] = 4
         assert_not_equal(avcopy[2], self.adjview[2])
-        self.adjview[2][3][8]['ht'] = 4
+        self.adjview[2][3][8]["ht"] = 4
         assert_equal(avcopy[2], self.adjview[2])
-        del self.adjview[2][3][8]['ht']
+        del self.adjview[2][3][8]["ht"]
 
-        assert_false(hasattr(self.adjview, '__setitem__'))
-        assert_true(hasattr(avcopy, '__setitem__'))
+        assert_false(hasattr(self.adjview, "__setitem__"))
+        assert_true(hasattr(avcopy, "__setitem__"))

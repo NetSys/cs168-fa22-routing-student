@@ -26,75 +26,81 @@ import sim.api
 
 all_hosts = set()
 
-class MegaHost (BasicHost):
-  """
-  This is actually the same as a BasicHost except it tracks all instances...
-  """
-  def __init__ (self, *args, **kw):
-    super(MegaHost,self).__init__(*args, **kw)
-    all_hosts.add(self)
+
+class MegaHost(BasicHost):
+    """
+    This is actually the same as a BasicHost except it tracks all instances...
+    """
+
+    def __init__(self, *args, **kw):
+        super(MegaHost, self).__init__(*args, **kw)
+        all_hosts.add(self)
 
 
-def do_send_megaping (dst):
-  """
-  Make everyone send a ping to dst
-  """
-  if dst is None: return
+def do_send_megaping(dst):
+    """
+    Make everyone send a ping to dst
+    """
+    if dst is None:
+        return
 
-  for host in all_hosts:
-    if host is dst: continue
-    host.ping(dst)
+    for host in all_hosts:
+        if host is dst:
+            continue
+        host.ping(dst)
 
-  sim.api.netvis.info = "%s hosts pinged %s" % (len(all_hosts) - 1, dst)
-
-
-def get_dst ():
-  """
-  Get the currently selected node in NetVis
-  """
-  if not all_hosts:
-    sim.api.netvis.info = ("No hosts!\n"
-      "Did you remember to set\n --default-host-type=examples.megaping ?")
-    return None
-
-  dst = sim.api.netvis.selected
-  if not dst:
-    sim.api.netvis.info = "You must select a node to megaping!"
-    return None
-
-  assert dst in all_hosts
-
-  return dst
+    sim.api.netvis.info = "%s hosts pinged %s" % (len(all_hosts) - 1, dst)
 
 
-def send_megaping ():
-  """
-  Full documentation at https://www.youtube.com/watch?v=jr0JaXfKj68#t=4
-  """
-  do_send_megaping(get_dst())
+def get_dst():
+    """
+    Get the currently selected node in NetVis
+    """
+    if not all_hosts:
+        sim.api.netvis.info = (
+            "No hosts!\n"
+            "Did you remember to set\n --default-host-type=examples.megaping ?"
+        )
+        return None
+
+    dst = sim.api.netvis.selected
+    if not dst:
+        sim.api.netvis.info = "You must select a node to megaping!"
+        return None
+
+    assert dst in all_hosts
+
+    return dst
 
 
-def send_super_megaping ():
-  """
-  When just one megaping won't do.
-  """
-  dst = get_dst()
-
-  def send_some (how_many, interval):
-    # Our tasklet function.
-    # Sends /how_many/ pings separated by /interval/ seconds.
-    for _ in range(how_many):
-      do_send_megaping(dst) # Send
-      yield interval        # Sleep
-
-  # Send 5 megapings 1 second apart
-  sim.api.run_tasklet(send_some, 5, 1)
+def send_megaping():
+    """
+    Full documentation at https://www.youtube.com/watch?v=jr0JaXfKj68#t=4
+    """
+    do_send_megaping(get_dst())
 
 
-def launch (bind_to = 1, super = False):
-  if not super:
-    sim.api.netvis.set_function_callback(int(bind_to), send_megaping)
-  else:
-    sim.api.netvis.set_function_callback(int(bind_to), send_super_megaping)
+def send_super_megaping():
+    """
+    When just one megaping won't do.
+    """
+    dst = get_dst()
 
-  # Now Shift-<bind_to> will cause all hosts to ping the selected host
+    def send_some(how_many, interval):
+        # Our tasklet function.
+        # Sends /how_many/ pings separated by /interval/ seconds.
+        for _ in range(how_many):
+            do_send_megaping(dst)  # Send
+            yield interval  # Sleep
+
+    # Send 5 megapings 1 second apart
+    sim.api.run_tasklet(send_some, 5, 1)
+
+
+def launch(bind_to=1, super=False):
+    if not super:
+        sim.api.netvis.set_function_callback(int(bind_to), send_megaping)
+    else:
+        sim.api.netvis.set_function_callback(int(bind_to), send_super_megaping)
+
+    # Now Shift-<bind_to> will cause all hosts to ping the selected host

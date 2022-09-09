@@ -7,7 +7,6 @@ from nose.tools import assert_almost_equal, assert_equal, raises
 
 
 class TestKatzCentrality(object):
-
     def test_K5(self):
         """Katz centrality: K5"""
         G = nx.complete_graph(5)
@@ -26,8 +25,7 @@ class TestKatzCentrality(object):
         """Katz centrality: P3"""
         alpha = 0.1
         G = nx.path_graph(3)
-        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449,
-                    2: 0.5598852584152162}
+        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449, 2: 0.5598852584152162}
         b = nx.katz_centrality(G, alpha)
         for n in sorted(G):
             assert_almost_equal(b[n], b_answer[n], places=4)
@@ -46,8 +44,7 @@ class TestKatzCentrality(object):
     def test_beta_as_scalar(self):
         alpha = 0.1
         beta = 0.1
-        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449,
-                    2: 0.5598852584152162}
+        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449, 2: 0.5598852584152162}
         G = nx.path_graph(3)
         b = nx.katz_centrality(G, alpha, beta)
         for n in sorted(G):
@@ -56,8 +53,7 @@ class TestKatzCentrality(object):
     def test_beta_as_dict(self):
         alpha = 0.1
         beta = {0: 1.0, 1: 1.0, 2: 1.0}
-        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449,
-                    2: 0.5598852584152162}
+        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449, 2: 0.5598852584152162}
         G = nx.path_graph(3)
         b = nx.katz_centrality(G, alpha, beta)
         for n in sorted(G):
@@ -66,18 +62,38 @@ class TestKatzCentrality(object):
     def test_multiple_alpha(self):
         alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
         for alpha in alpha_list:
-            b_answer = {0.1: {0: 0.5598852584152165, 1: 0.6107839182711449,
-                              2: 0.5598852584152162},
-                        0.2: {0: 0.5454545454545454, 1: 0.6363636363636365,
-                              2: 0.5454545454545454},
-                        0.3: {0: 0.5333964609104419, 1: 0.6564879518897746,
-                              2: 0.5333964609104419},
-                        0.4: {0: 0.5232045649263551, 1: 0.6726915834767423,
-                              2: 0.5232045649263551},
-                        0.5: {0: 0.5144957746691622, 1: 0.6859943117075809,
-                              2: 0.5144957746691622},
-                        0.6: {0: 0.5069794004195823, 1: 0.6970966755769258,
-                              2: 0.5069794004195823}}
+            b_answer = {
+                0.1: {
+                    0: 0.5598852584152165,
+                    1: 0.6107839182711449,
+                    2: 0.5598852584152162,
+                },
+                0.2: {
+                    0: 0.5454545454545454,
+                    1: 0.6363636363636365,
+                    2: 0.5454545454545454,
+                },
+                0.3: {
+                    0: 0.5333964609104419,
+                    1: 0.6564879518897746,
+                    2: 0.5333964609104419,
+                },
+                0.4: {
+                    0: 0.5232045649263551,
+                    1: 0.6726915834767423,
+                    2: 0.5232045649263551,
+                },
+                0.5: {
+                    0: 0.5144957746691622,
+                    1: 0.6859943117075809,
+                    2: 0.5144957746691622,
+                },
+                0.6: {
+                    0: 0.5069794004195823,
+                    1: 0.6970966755769258,
+                    2: 0.5069794004195823,
+                },
+            }
             G = nx.path_graph(3)
             b = nx.katz_centrality(G, alpha)
             for n in sorted(G):
@@ -100,7 +116,7 @@ class TestKatzCentrality(object):
     @raises(nx.NetworkXException)
     def test_bad_beta_numbe(self):
         G = nx.Graph([(0, 1)])
-        e = nx.katz_centrality(G, 0.1, beta='foo')
+        e = nx.katz_centrality(G, 0.1, beta="foo")
 
 
 class TestKatzCentralityNumpy(object):
@@ -113,7 +129,7 @@ class TestKatzCentralityNumpy(object):
             import numpy as np
             import scipy
         except ImportError:
-            raise SkipTest('SciPy not available.')
+            raise SkipTest("SciPy not available.")
 
     def test_K5(self):
         """Katz centrality: K5"""
@@ -133,8 +149,7 @@ class TestKatzCentralityNumpy(object):
         """Katz centrality: P3"""
         alpha = 0.1
         G = nx.path_graph(3)
-        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449,
-                    2: 0.5598852584152162}
+        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449, 2: 0.5598852584152162}
         b = nx.katz_centrality_numpy(G, alpha)
         for n in sorted(G):
             assert_almost_equal(b[n], b_answer[n], places=4)
@@ -142,8 +157,7 @@ class TestKatzCentralityNumpy(object):
     def test_beta_as_scalar(self):
         alpha = 0.1
         beta = 0.1
-        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449,
-                    2: 0.5598852584152162}
+        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449, 2: 0.5598852584152162}
         G = nx.path_graph(3)
         b = nx.katz_centrality_numpy(G, alpha, beta)
         for n in sorted(G):
@@ -152,8 +166,7 @@ class TestKatzCentralityNumpy(object):
     def test_beta_as_dict(self):
         alpha = 0.1
         beta = {0: 1.0, 1: 1.0, 2: 1.0}
-        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449,
-                    2: 0.5598852584152162}
+        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449, 2: 0.5598852584152162}
         G = nx.path_graph(3)
         b = nx.katz_centrality_numpy(G, alpha, beta)
         for n in sorted(G):
@@ -162,18 +175,38 @@ class TestKatzCentralityNumpy(object):
     def test_multiple_alpha(self):
         alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
         for alpha in alpha_list:
-            b_answer = {0.1: {0: 0.5598852584152165, 1: 0.6107839182711449,
-                              2: 0.5598852584152162},
-                        0.2: {0: 0.5454545454545454, 1: 0.6363636363636365,
-                              2: 0.5454545454545454},
-                        0.3: {0: 0.5333964609104419, 1: 0.6564879518897746,
-                              2: 0.5333964609104419},
-                        0.4: {0: 0.5232045649263551, 1: 0.6726915834767423,
-                              2: 0.5232045649263551},
-                        0.5: {0: 0.5144957746691622, 1: 0.6859943117075809,
-                              2: 0.5144957746691622},
-                        0.6: {0: 0.5069794004195823, 1: 0.6970966755769258,
-                              2: 0.5069794004195823}}
+            b_answer = {
+                0.1: {
+                    0: 0.5598852584152165,
+                    1: 0.6107839182711449,
+                    2: 0.5598852584152162,
+                },
+                0.2: {
+                    0: 0.5454545454545454,
+                    1: 0.6363636363636365,
+                    2: 0.5454545454545454,
+                },
+                0.3: {
+                    0: 0.5333964609104419,
+                    1: 0.6564879518897746,
+                    2: 0.5333964609104419,
+                },
+                0.4: {
+                    0: 0.5232045649263551,
+                    1: 0.6726915834767423,
+                    2: 0.5232045649263551,
+                },
+                0.5: {
+                    0: 0.5144957746691622,
+                    1: 0.6859943117075809,
+                    2: 0.5144957746691622,
+                },
+                0.6: {
+                    0: 0.5069794004195823,
+                    1: 0.6970966755769258,
+                    2: 0.5069794004195823,
+                },
+            }
             G = nx.path_graph(3)
             b = nx.katz_centrality_numpy(G, alpha)
             for n in sorted(G):
@@ -196,7 +229,7 @@ class TestKatzCentralityNumpy(object):
     @raises(nx.NetworkXException)
     def test_bad_beta_numbe(self):
         G = nx.Graph([(0, 1)])
-        e = nx.katz_centrality_numpy(G, 0.1, beta='foo')
+        e = nx.katz_centrality_numpy(G, 0.1, beta="foo")
 
     def test_K5_unweighted(self):
         """Katz centrality: K5"""
@@ -216,8 +249,7 @@ class TestKatzCentralityNumpy(object):
         """Katz centrality: P3"""
         alpha = 0.1
         G = nx.path_graph(3)
-        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449,
-                    2: 0.5598852584152162}
+        b_answer = {0: 0.5598852584152165, 1: 0.6107839182711449, 2: 0.5598852584152162}
         b = nx.katz_centrality_numpy(G, alpha, weight=None)
         for n in sorted(G):
             assert_almost_equal(b[n], b_answer[n], places=4)
@@ -226,9 +258,25 @@ class TestKatzCentralityNumpy(object):
 class TestKatzCentralityDirected(object):
     def setUp(self):
         G = nx.DiGraph()
-        edges = [(1, 2), (1, 3), (2, 4), (3, 2), (3, 5), (4, 2), (4, 5),
-                 (4, 6), (5, 6), (5, 7), (5, 8), (6, 8), (7, 1), (7, 5),
-                 (7, 8), (8, 6), (8, 7)]
+        edges = [
+            (1, 2),
+            (1, 3),
+            (2, 4),
+            (3, 2),
+            (3, 5),
+            (4, 2),
+            (4, 5),
+            (4, 6),
+            (5, 6),
+            (5, 7),
+            (5, 8),
+            (6, 8),
+            (7, 1),
+            (7, 5),
+            (7, 8),
+            (8, 6),
+            (8, 7),
+        ]
         G.add_edges_from(edges, weight=2.0)
         self.G = G.reverse()
         self.G.alpha = 0.1
@@ -260,14 +308,14 @@ class TestKatzCentralityDirected(object):
     def test_katz_centrality_weighted(self):
         G = self.G
         alpha = self.G.alpha
-        p = nx.katz_centrality(G, alpha, weight='weight')
+        p = nx.katz_centrality(G, alpha, weight="weight")
         for (a, b) in zip(list(p.values()), self.G.evc):
             assert_almost_equal(a, b)
 
     def test_katz_centrality_unweighted(self):
         H = self.H
         alpha = self.H.alpha
-        p = nx.katz_centrality(H, alpha, weight='weight')
+        p = nx.katz_centrality(H, alpha, weight="weight")
         for (a, b) in zip(list(p.values()), self.H.evc):
             assert_almost_equal(a, b)
 
@@ -282,19 +330,19 @@ class TestKatzCentralityDirectedNumpy(TestKatzCentralityDirected):
             import numpy as np
             import scipy
         except ImportError:
-            raise SkipTest('SciPy not available.')
+            raise SkipTest("SciPy not available.")
 
     def test_katz_centrality_weighted(self):
         G = self.G
         alpha = self.G.alpha
-        p = nx.katz_centrality_numpy(G, alpha, weight='weight')
+        p = nx.katz_centrality_numpy(G, alpha, weight="weight")
         for (a, b) in zip(list(p.values()), self.G.evc):
             assert_almost_equal(a, b)
 
     def test_katz_centrality_unweighted(self):
         H = self.H
         alpha = self.H.alpha
-        p = nx.katz_centrality_numpy(H, alpha, weight='weight')
+        p = nx.katz_centrality_numpy(H, alpha, weight="weight")
         for (a, b) in zip(list(p.values()), self.H.evc):
             assert_almost_equal(a, b)
 
@@ -311,7 +359,7 @@ class TestKatzEigenvectorVKatz(object):
             import scipy
             from numpy.linalg import eigvals
         except ImportError:
-            raise SkipTest('SciPy not available.')
+            raise SkipTest("SciPy not available.")
 
     def test_eigenvector_v_katz_random(self):
         G = nx.gnp_random_graph(10, 0.5, seed=1234)

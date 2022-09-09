@@ -11,8 +11,14 @@
 """Graph diameter, radius, eccentricity and other properties."""
 import networkx
 
-__all__ = ['extrema_bounding', 'eccentricity', 'diameter',
-           'radius', 'periphery', 'center']
+__all__ = [
+    "extrema_bounding",
+    "eccentricity",
+    "diameter",
+    "radius",
+    "periphery",
+    "center",
+]
 
 
 def extrema_bounding(G, compute="diameter"):
@@ -91,15 +97,15 @@ def extrema_bounding(G, compute="diameter"):
         # get distances from/to current node and derive eccentricity
         dist = dict(networkx.single_source_shortest_path_length(G, current))
         if len(dist) != N:
-            msg = ('Cannot compute metric because graph is not connected.')
+            msg = "Cannot compute metric because graph is not connected."
             raise networkx.NetworkXError(msg)
         current_ecc = max(dist.values())
 
         # print status update
-#        print ("ecc of " + str(current) + " (" + str(ecc_lower[current]) + "/"
-#        + str(ecc_upper[current]) + ", deg: " + str(dist[current]) + ") is "
-#        + str(current_ecc))
-#        print(ecc_upper)
+        #        print ("ecc of " + str(current) + " (" + str(ecc_lower[current]) + "/"
+        #        + str(ecc_upper[current]) + ", deg: " + str(dist[current]) + ") is "
+        #        + str(current_ecc))
+        #        print(ecc_upper)
 
         # (re)set bound extremes
         maxuppernode = None
@@ -119,73 +125,95 @@ def extrema_bounding(G, compute="diameter"):
             maxupper = max(ecc_upper[i], maxupper)
 
         # update candidate set
-        if compute == 'diameter':
-            ruled_out = {i for i in candidates if ecc_upper[i] <= maxlower and
-                         2 * ecc_lower[i] >= maxupper}
+        if compute == "diameter":
+            ruled_out = {
+                i
+                for i in candidates
+                if ecc_upper[i] <= maxlower and 2 * ecc_lower[i] >= maxupper
+            }
 
-        elif compute == 'radius':
-            ruled_out = {i for i in candidates if ecc_lower[i] >= minupper and
-                         ecc_upper[i] + 1 <= 2 * minlower}
+        elif compute == "radius":
+            ruled_out = {
+                i
+                for i in candidates
+                if ecc_lower[i] >= minupper and ecc_upper[i] + 1 <= 2 * minlower
+            }
 
-        elif compute == 'periphery':
-            ruled_out = {i for i in candidates if ecc_upper[i] < maxlower and
-                         (maxlower == maxupper or ecc_lower[i] > maxupper)}
+        elif compute == "periphery":
+            ruled_out = {
+                i
+                for i in candidates
+                if ecc_upper[i] < maxlower
+                and (maxlower == maxupper or ecc_lower[i] > maxupper)
+            }
 
-        elif compute == 'center':
-            ruled_out = {i for i in candidates if ecc_lower[i] > minupper and
-                         (minlower == minupper or ecc_upper[i] + 1 < 2 * minlower)}
+        elif compute == "center":
+            ruled_out = {
+                i
+                for i in candidates
+                if ecc_lower[i] > minupper
+                and (minlower == minupper or ecc_upper[i] + 1 < 2 * minlower)
+            }
 
-        elif compute == 'eccentricities':
+        elif compute == "eccentricities":
             ruled_out = {}
 
         ruled_out.update(i for i in candidates if ecc_lower[i] == ecc_upper[i])
         candidates -= ruled_out
 
-#        for i in ruled_out:
-#            print("removing %g: ecc_u: %g maxl: %g ecc_l: %g maxu: %g"%
-#                    (i,ecc_upper[i],maxlower,ecc_lower[i],maxupper))
-#        print("node %g: ecc_u: %g maxl: %g ecc_l: %g maxu: %g"%
-#                    (4,ecc_upper[4],maxlower,ecc_lower[4],maxupper))
-#        print("NODE 4: %g"%(ecc_upper[4] <= maxlower))
-#        print("NODE 4: %g"%(2 * ecc_lower[4] >= maxupper))
-#        print("NODE 4: %g"%(ecc_upper[4] <= maxlower
-#                            and 2 * ecc_lower[4] >= maxupper))
+        #        for i in ruled_out:
+        #            print("removing %g: ecc_u: %g maxl: %g ecc_l: %g maxu: %g"%
+        #                    (i,ecc_upper[i],maxlower,ecc_lower[i],maxupper))
+        #        print("node %g: ecc_u: %g maxl: %g ecc_l: %g maxu: %g"%
+        #                    (4,ecc_upper[4],maxlower,ecc_lower[4],maxupper))
+        #        print("NODE 4: %g"%(ecc_upper[4] <= maxlower))
+        #        print("NODE 4: %g"%(2 * ecc_lower[4] >= maxupper))
+        #        print("NODE 4: %g"%(ecc_upper[4] <= maxlower
+        #                            and 2 * ecc_lower[4] >= maxupper))
 
         # updating maxuppernode and minlowernode for selection in next round
         for i in candidates:
-            if minlowernode is None \
-                    or (ecc_lower[i] == ecc_lower[minlowernode]
-                        and degrees[i] > degrees[minlowernode]) \
-                    or (ecc_lower[i] < ecc_lower[minlowernode]):
+            if (
+                minlowernode is None
+                or (
+                    ecc_lower[i] == ecc_lower[minlowernode]
+                    and degrees[i] > degrees[minlowernode]
+                )
+                or (ecc_lower[i] < ecc_lower[minlowernode])
+            ):
                 minlowernode = i
 
-            if maxuppernode is None \
-                    or (ecc_upper[i] == ecc_upper[maxuppernode]
-                        and degrees[i] > degrees[maxuppernode]) \
-                    or (ecc_upper[i] > ecc_upper[maxuppernode]):
+            if (
+                maxuppernode is None
+                or (
+                    ecc_upper[i] == ecc_upper[maxuppernode]
+                    and degrees[i] > degrees[maxuppernode]
+                )
+                or (ecc_upper[i] > ecc_upper[maxuppernode])
+            ):
                 maxuppernode = i
 
         # print status update
-#        print (" min=" + str(minlower) + "/" + str(minupper) +
-#        " max=" + str(maxlower) + "/" + str(maxupper) +
-#        " candidates: " + str(len(candidates)))
-#        print("cand:",candidates)
-#        print("ecc_l",ecc_lower)
-#        print("ecc_u",ecc_upper)
-#        wait = input("press Enter to continue")
+    #        print (" min=" + str(minlower) + "/" + str(minupper) +
+    #        " max=" + str(maxlower) + "/" + str(maxupper) +
+    #        " candidates: " + str(len(candidates)))
+    #        print("cand:",candidates)
+    #        print("ecc_l",ecc_lower)
+    #        print("ecc_u",ecc_upper)
+    #        wait = input("press Enter to continue")
 
     # return the correct value of the requested metric
-    if compute == 'diameter':
+    if compute == "diameter":
         return maxlower
-    elif compute == 'radius':
+    elif compute == "radius":
         return minupper
-    elif compute == 'periphery':
+    elif compute == "periphery":
         p = [v for v in G if ecc_lower[v] == maxlower]
         return p
-    elif compute == 'center':
+    elif compute == "center":
         c = [v for v in G if ecc_upper[v] == minupper]
         return c
-    elif compute == 'eccentricities':
+    elif compute == "eccentricities":
         return ecc_lower
     return None
 
@@ -212,12 +240,12 @@ def eccentricity(G, v=None, sp=None):
     ecc : dictionary
        A dictionary of eccentricity values keyed by node.
     """
-#    if v is None:                # none, use entire graph
-#        nodes=G.nodes()
-#    elif v in G:               # is v a single node
-#        nodes=[v]
-#    else:                      # assume v is a container of nodes
-#        nodes=v
+    #    if v is None:                # none, use entire graph
+    #        nodes=G.nodes()
+    #    elif v in G:               # is v a single node
+    #        nodes=[v]
+    #    else:                      # assume v is a container of nodes
+    #        nodes=v
     order = G.order()
 
     e = {}
@@ -233,11 +261,12 @@ def eccentricity(G, v=None, sp=None):
                 raise networkx.NetworkXError('Format of "sp" is invalid.')
         if L != order:
             if G.is_directed():
-                msg = ('Found infinite path length because the digraph is not'
-                       ' strongly connected')
+                msg = (
+                    "Found infinite path length because the digraph is not"
+                    " strongly connected"
+                )
             else:
-                msg = ('Found infinite path length because the graph is not'
-                       ' connected')
+                msg = "Found infinite path length because the graph is not" " connected"
             raise networkx.NetworkXError(msg)
 
         e[n] = max(length.values())

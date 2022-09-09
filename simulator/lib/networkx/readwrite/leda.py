@@ -18,15 +18,15 @@ __author__ = """Aric Hagberg (hagberg@lanl.gov)"""
 #    All rights reserved.
 #    BSD license.
 
-__all__ = ['read_leda', 'parse_leda']
+__all__ = ["read_leda", "parse_leda"]
 
 import networkx as nx
 from networkx.exception import NetworkXError
 from networkx.utils import open_file, is_string_like
 
 
-@open_file(0, mode='rb')
-def read_leda(path, encoding='UTF-8'):
+@open_file(0, mode="rb")
+def read_leda(path, encoding="UTF-8"):
     """Read graph in LEDA format from path.
 
     Parameters
@@ -73,9 +73,14 @@ def parse_leda(lines):
     .. [1] http://www.algorithmic-solutions.info/leda_guide/graphs/leda_native_graph_fileformat.html
     """
     if is_string_like(lines):
-        lines = iter(lines.split('\n'))
-    lines = iter([line.rstrip('\n') for line in lines
-                  if not (line.startswith('#') or line.startswith('\n') or line == '')])
+        lines = iter(lines.split("\n"))
+    lines = iter(
+        [
+            line.rstrip("\n")
+            for line in lines
+            if not (line.startswith("#") or line.startswith("\n") or line == "")
+        ]
+    )
     for i in range(3):
         next(lines)
     # Graph
@@ -89,7 +94,7 @@ def parse_leda(lines):
     n = int(next(lines))  # number of nodes
     node = {}
     for i in range(1, n + 1):  # LEDA counts from 1 to n
-        symbol = next(lines).rstrip().strip('|{}|  ')
+        symbol = next(lines).rstrip().strip("|{}|  ")
         if symbol == "":
             symbol = str(i)  # use int if no label - could be trouble
         node[i] = symbol
@@ -102,7 +107,7 @@ def parse_leda(lines):
         try:
             s, t, reversal, label = next(lines).split()
         except:
-            raise NetworkXError('Too few fields in LEDA.GRAPH edge %d' % (i + 1))
+            raise NetworkXError("Too few fields in LEDA.GRAPH edge %d" % (i + 1))
         # BEWARE: no handling of reversal edges
         G.add_edge(node[int(s)], node[int(t)], label=label[2:-2])
     return G

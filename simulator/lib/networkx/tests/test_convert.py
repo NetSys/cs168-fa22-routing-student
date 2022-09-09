@@ -1,25 +1,33 @@
 #!/usr/bin/env python
-from nose.tools import (assert_equal, assert_not_equal,
-                        assert_true, assert_false,
-                        assert_raises)
+from nose.tools import (
+    assert_equal,
+    assert_not_equal,
+    assert_true,
+    assert_false,
+    assert_raises,
+)
 
 import networkx as nx
 from networkx.testing import assert_nodes_equal, assert_edges_equal, assert_graphs_equal
-from networkx.convert import (to_networkx_graph,
-                              to_dict_of_dicts,
-                              from_dict_of_dicts,
-                              to_dict_of_lists,
-                              from_dict_of_lists)
+from networkx.convert import (
+    to_networkx_graph,
+    to_dict_of_dicts,
+    from_dict_of_dicts,
+    to_dict_of_lists,
+    from_dict_of_lists,
+)
 from networkx.generators.classic import barbell_graph, cycle_graph
 
 
-class TestConvert():
+class TestConvert:
     def edgelists_equal(self, e1, e2):
         return sorted(sorted(e) for e in e1) == sorted(sorted(e) for e in e2)
 
     def test_simple_graphs(self):
-        for dest, source in [(to_dict_of_dicts, from_dict_of_dicts),
-                             (to_dict_of_lists, from_dict_of_lists)]:
+        for dest, source in [
+            (to_dict_of_dicts, from_dict_of_dicts),
+            (to_dict_of_lists, from_dict_of_lists),
+        ]:
             G = barbell_graph(10, 3)
             G.graph = {}
             dod = dest(G)
@@ -45,7 +53,7 @@ class TestConvert():
         # _prep_create_using
         G = {"a": "a"}
         H = nx.to_networkx_graph(G)
-        assert_graphs_equal(H, nx.Graph([('a', 'a')]))
+        assert_graphs_equal(H, nx.Graph([("a", "a")]))
         assert_raises(TypeError, to_networkx_graph, G, create_using=0.0)
 
         # NX graph
@@ -74,8 +82,10 @@ class TestConvert():
         assert_raises(nx.NetworkXError, to_networkx_graph, "a")
 
     def test_digraphs(self):
-        for dest, source in [(to_dict_of_dicts, from_dict_of_dicts),
-                             (to_dict_of_lists, from_dict_of_lists)]:
+        for dest, source in [
+            (to_dict_of_dicts, from_dict_of_dicts),
+            (to_dict_of_lists, from_dict_of_lists),
+        ]:
             G = cycle_graph(10)
 
             # Dict of [dicts, lists]
@@ -179,8 +189,9 @@ class TestConvert():
         # Dict of dicts
         # with multiedges, OK
         dod = to_dict_of_dicts(XGM)
-        GG = from_dict_of_dicts(dod, create_using=nx.MultiGraph(),
-                                multigraph_input=True)
+        GG = from_dict_of_dicts(
+            dod, create_using=nx.MultiGraph(), multigraph_input=True
+        )
         assert_nodes_equal(sorted(XGM.nodes()), sorted(GG.nodes()))
         assert_edges_equal(sorted(XGM.edges()), sorted(GG.edges()))
         GW = to_networkx_graph(dod, create_using=nx.MultiGraph(), multigraph_input=True)
@@ -188,10 +199,11 @@ class TestConvert():
         assert_edges_equal(sorted(XGM.edges()), sorted(GW.edges()))
         GI = nx.MultiGraph(dod)  # convert can't tell whether to duplicate edges!
         assert_nodes_equal(sorted(XGM.nodes()), sorted(GI.nodes()))
-        #assert_not_equal(sorted(XGM.edges()), sorted(GI.edges()))
+        # assert_not_equal(sorted(XGM.edges()), sorted(GI.edges()))
         assert_false(sorted(XGM.edges()) == sorted(GI.edges()))
-        GE = from_dict_of_dicts(dod, create_using=nx.MultiGraph(),
-                                multigraph_input=False)
+        GE = from_dict_of_dicts(
+            dod, create_using=nx.MultiGraph(), multigraph_input=False
+        )
         assert_nodes_equal(sorted(XGM.nodes()), sorted(GE.nodes()))
         assert_not_equal(sorted(XGM.edges()), sorted(GE.edges()))
         GI = nx.MultiGraph(XGM)
@@ -240,16 +252,26 @@ class TestConvert():
         edges2 = [(0, 1), (1, 2), (0, 2)]
         assert_true(self.edgelists_equal(nx.Graph(nx.DiGraph(edges1)).edges(), edges1))
         assert_true(self.edgelists_equal(nx.Graph(nx.DiGraph(edges2)).edges(), edges1))
-        assert_true(self.edgelists_equal(nx.MultiGraph(nx.DiGraph(edges1)).edges(), edges1))
-        assert_true(self.edgelists_equal(nx.MultiGraph(nx.DiGraph(edges2)).edges(), edges1))
+        assert_true(
+            self.edgelists_equal(nx.MultiGraph(nx.DiGraph(edges1)).edges(), edges1)
+        )
+        assert_true(
+            self.edgelists_equal(nx.MultiGraph(nx.DiGraph(edges2)).edges(), edges1)
+        )
 
-        assert_true(self.edgelists_equal(nx.MultiGraph(nx.MultiDiGraph(edges1)).edges(),
-                                         edges1))
-        assert_true(self.edgelists_equal(nx.MultiGraph(nx.MultiDiGraph(edges2)).edges(),
-                                         edges1))
+        assert_true(
+            self.edgelists_equal(nx.MultiGraph(nx.MultiDiGraph(edges1)).edges(), edges1)
+        )
+        assert_true(
+            self.edgelists_equal(nx.MultiGraph(nx.MultiDiGraph(edges2)).edges(), edges1)
+        )
 
-        assert_true(self.edgelists_equal(nx.Graph(nx.MultiDiGraph(edges1)).edges(), edges1))
-        assert_true(self.edgelists_equal(nx.Graph(nx.MultiDiGraph(edges2)).edges(), edges1))
+        assert_true(
+            self.edgelists_equal(nx.Graph(nx.MultiDiGraph(edges1)).edges(), edges1)
+        )
+        assert_true(
+            self.edgelists_equal(nx.Graph(nx.MultiDiGraph(edges2)).edges(), edges1)
+        )
 
     def test_attribute_dict_integrity(self):
         # we must not replace dict-like graph data structures with dicts

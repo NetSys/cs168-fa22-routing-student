@@ -12,7 +12,7 @@
 # information.
 """Helper functions for community-finding algorithms."""
 
-__all__ = ['is_partition']
+__all__ = ["is_partition"]
 
 
 def is_partition(G, communities):

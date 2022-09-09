@@ -13,13 +13,13 @@ from collections import defaultdict
 import networkx as nx
 from networkx.utils import generate_unique_node
 
-__all__ = ['prefix_tree', 'random_tree']
+__all__ = ["prefix_tree", "random_tree"]
 
 #: The nil node, the only leaf node in a prefix tree.
 #:
 #: Each predecessor of the nil node corresponds to the end of a path
 #: used to generate the prefix tree.
-NIL = 'NIL'
+NIL = "NIL"
 
 
 def prefix_tree(paths):
@@ -96,6 +96,7 @@ def prefix_tree(paths):
         ['ab', 'abs', 'ad']
 
     """
+
     def _helper(paths, root, B):
         """Recursively create a trie from the given list of paths.
 
@@ -189,7 +190,7 @@ def random_tree(n, seed=None):
 
     """
     if n == 0:
-        raise nx.NetworkXPointlessConcept('the null graph is not a tree')
+        raise nx.NetworkXPointlessConcept("the null graph is not a tree")
     # Cannot create a Prüfer sequence unless `n` is at least two.
     if n == 1:
         return nx.empty_graph(1)

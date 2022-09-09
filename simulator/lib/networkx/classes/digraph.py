@@ -14,8 +14,13 @@ from copy import deepcopy
 import networkx as nx
 from networkx.classes.graph import Graph
 from networkx.classes.coreviews import AdjacencyView
-from networkx.classes.reportviews import OutEdgeView, InEdgeView, \
-    DiDegreeView, InDegreeView, OutDegreeView
+from networkx.classes.reportviews import (
+    OutEdgeView,
+    InEdgeView,
+    DiDegreeView,
+    InDegreeView,
+    OutDegreeView,
+)
 from networkx.exception import NetworkXError
 import networkx.convert as convert
 
@@ -246,20 +251,20 @@ class DiGraph(Graph):
     def __getstate__(self):
         attr = self.__dict__.copy()
         # remove lazy property attributes
-        if 'nodes' in attr:
-            del attr['nodes']
-        if 'edges' in attr:
-            del attr['edges']
-        if 'out_edges' in attr:
-            del attr['out_edges']
-        if 'in_edges' in attr:
-            del attr['in_edges']
-        if 'degree' in attr:
-            del attr['degree']
-        if 'in_degree' in attr:
-            del attr['in_degree']
-        if 'out_degree' in attr:
-            del attr['out_degree']
+        if "nodes" in attr:
+            del attr["nodes"]
+        if "edges" in attr:
+            del attr["edges"]
+        if "out_edges" in attr:
+            del attr["out_edges"]
+        if "in_edges" in attr:
+            del attr["in_edges"]
+        if "degree" in attr:
+            del attr["degree"]
+        if "in_degree" in attr:
+            del attr["in_degree"]
+        if "out_degree" in attr:
+            del attr["out_degree"]
         return attr
 
     def __init__(self, incoming_graph_data=None, **attr):
@@ -522,11 +527,11 @@ class DiGraph(Graph):
         except KeyError:  # NetworkXError if n not in self
             raise NetworkXError("The node %s is not in the digraph." % (n,))
         for u in nbrs:
-            del self._pred[u][n]   # remove all edges n-u in digraph
-        del self._succ[n]          # remove node from succ
+            del self._pred[u][n]  # remove all edges n-u in digraph
+        del self._succ[n]  # remove node from succ
         for u in self._pred[n]:
-            del self._succ[u][n]   # remove all edges n-u in digraph
-        del self._pred[n]          # remove node from pred
+            del self._succ[u][n]  # remove all edges n-u in digraph
+        del self._pred[n]  # remove node from pred
 
     def remove_nodes_from(self, nodes):
         """Remove multiple nodes.
@@ -557,11 +562,11 @@ class DiGraph(Graph):
                 succs = self._succ[n]
                 del self._node[n]
                 for u in succs:
-                    del self._pred[u][n]   # remove all edges n-u in digraph
-                del self._succ[n]          # now remove node
+                    del self._pred[u][n]  # remove all edges n-u in digraph
+                del self._succ[n]  # now remove node
                 for u in self._pred[n]:
-                    del self._succ[u][n]   # remove all edges n-u in digraph
-                del self._pred[n]          # now remove node
+                    del self._succ[u][n]  # remove all edges n-u in digraph
+                del self._pred[n]  # now remove node
             except KeyError:
                 pass  # silent failure on remove
 
@@ -678,7 +683,8 @@ class DiGraph(Graph):
                 dd = {}
             else:
                 raise NetworkXError(
-                    "Edge tuple %s must be a 2-tuple or 3-tuple." % (e,))
+                    "Edge tuple %s must be a 2-tuple or 3-tuple." % (e,)
+                )
             if u not in self._succ:
                 self._succ[u] = self.adjlist_inner_dict_factory()
                 self._pred[u] = self.adjlist_inner_dict_factory()
@@ -763,14 +769,14 @@ class DiGraph(Graph):
 
         This is true if graph has the edge u->v.
         """
-        return (u in self._succ and v in self._succ[u])
+        return u in self._succ and v in self._succ[u]
 
     def has_predecessor(self, u, v):
         """Return True if node u has predecessor v.
 
         This is true if graph has the edge u<-v.
         """
-        return (u in self._pred and v in self._pred[u])
+        return u in self._pred and v in self._pred[u]
 
     def successors(self, n):
         """Return an iterator over successor nodes of n.
@@ -853,8 +859,8 @@ class DiGraph(Graph):
         OutEdgeDataView([(0, 1)])
 
         """
-        self.__dict__['edges'] = edges = OutEdgeView(self)
-        self.__dict__['out_edges'] = edges
+        self.__dict__["edges"] = edges = OutEdgeView(self)
+        self.__dict__["out_edges"] = edges
         return edges
 
     # alias out_edges to edges
@@ -889,7 +895,7 @@ class DiGraph(Graph):
         --------
         edges
         """
-        self.__dict__['in_edges'] = in_edges = InEdgeView(self)
+        self.__dict__["in_edges"] = in_edges = InEdgeView(self)
         return in_edges
 
     @property
@@ -937,7 +943,7 @@ class DiGraph(Graph):
         [(0, 1), (1, 2), (2, 2)]
 
         """
-        self.__dict__['degree'] = degree = DiDegreeView(self)
+        self.__dict__["degree"] = degree = DiDegreeView(self)
         return degree
 
     @property
@@ -985,7 +991,7 @@ class DiGraph(Graph):
         [(0, 0), (1, 1), (2, 1)]
 
         """
-        self.__dict__['in_degree'] = in_degree = InDegreeView(self)
+        self.__dict__["in_degree"] = in_degree = InDegreeView(self)
         return in_degree
 
     @property
@@ -1033,7 +1039,7 @@ class DiGraph(Graph):
         [(0, 1), (1, 1), (2, 1)]
 
         """
-        self.__dict__['out_degree'] = out_degree = OutDegreeView(self)
+        self.__dict__["out_degree"] = out_degree = OutDegreeView(self)
         return out_degree
 
     def clear(self):
@@ -1160,9 +1166,11 @@ class DiGraph(Graph):
         G = self.fresh_copy()
         G.graph.update(self.graph)
         G.add_nodes_from((n, d.copy()) for n, d in self._node.items())
-        G.add_edges_from((u, v, datadict.copy())
-                         for u, nbrs in self._adj.items()
-                         for v, datadict in nbrs.items())
+        G.add_edges_from(
+            (u, v, datadict.copy())
+            for u, nbrs in self._adj.items()
+            for v, datadict in nbrs.items()
+        )
         return G
 
     def to_undirected(self, reciprocal=False, as_view=False):
@@ -1229,14 +1237,18 @@ class DiGraph(Graph):
         G.graph.update(deepcopy(self.graph))
         G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
         if reciprocal is True:
-            G.add_edges_from((u, v, deepcopy(d))
-                             for u, nbrs in self._adj.items()
-                             for v, d in nbrs.items()
-                             if v in self._pred[u])
+            G.add_edges_from(
+                (u, v, deepcopy(d))
+                for u, nbrs in self._adj.items()
+                for v, d in nbrs.items()
+                if v in self._pred[u]
+            )
         else:
-            G.add_edges_from((u, v, deepcopy(d))
-                             for u, nbrs in self._adj.items()
-                             for v, d in nbrs.items())
+            G.add_edges_from(
+                (u, v, deepcopy(d))
+                for u, nbrs in self._adj.items()
+                for v, d in nbrs.items()
+            )
         return G
 
     def subgraph(self, nodes):
@@ -1279,7 +1291,7 @@ class DiGraph(Graph):
         induced_nodes = nx.filters.show_nodes(self.nbunch_iter(nodes))
         SubGraph = nx.graphviews.SubDiGraph
         # if already a subgraph, don't make a chain
-        if hasattr(self, '_NODE_OK'):
+        if hasattr(self, "_NODE_OK"):
             return SubGraph(self._graph, induced_nodes, self._EDGE_OK)
         return SubGraph(self, induced_nodes)
 
@@ -1300,7 +1312,6 @@ class DiGraph(Graph):
             H = self.fresh_copy()
             H.graph.update(deepcopy(self.graph))
             H.add_nodes_from((n, deepcopy(d)) for n, d in self.node.items())
-            H.add_edges_from((v, u, deepcopy(d)) for u, v, d
-                             in self.edges(data=True))
+            H.add_edges_from((v, u, deepcopy(d)) for u, v, d in self.edges(data=True))
             return H
         return nx.graphviews.ReverseView(self)

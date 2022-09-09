@@ -1,6 +1,7 @@
 from nose.tools import *
 
 import networkx as nx
+
 edge_dfs = nx.algorithms.edge_dfs
 FORWARD = nx.algorithms.edgedfs.FORWARD
 REVERSE = nx.algorithms.edgedfs.REVERSE
@@ -47,15 +48,14 @@ class TestEdgeDFS(object):
 
     def test_digraph_rev(self):
         G = nx.DiGraph(self.edges)
-        x = list(edge_dfs(G, self.nodes, orientation='reverse'))
-        x_ = [(1, 0, REVERSE), (0, 1, REVERSE),
-              (2, 1, REVERSE), (3, 1, REVERSE)]
+        x = list(edge_dfs(G, self.nodes, orientation="reverse"))
+        x_ = [(1, 0, REVERSE), (0, 1, REVERSE), (2, 1, REVERSE), (3, 1, REVERSE)]
         assert_equal(x, x_)
 
     def test_digraph_rev2(self):
         G = nx.DiGraph()
         nx.add_path(G, range(4))
-        x = list(edge_dfs(G, [3], orientation='reverse'))
+        x = list(edge_dfs(G, [3], orientation="reverse"))
         x_ = [(2, 3, REVERSE), (1, 2, REVERSE), (0, 1, REVERSE)]
         assert_equal(x, x_)
 
@@ -79,32 +79,37 @@ class TestEdgeDFS(object):
 
     def test_multidigraph_rev(self):
         G = nx.MultiDiGraph(self.edges)
-        x = list(edge_dfs(G, self.nodes, orientation='reverse'))
-        x_ = [(1, 0, 0, REVERSE),
-              (0, 1, 0, REVERSE),
-              (1, 0, 1, REVERSE),
-              (2, 1, 0, REVERSE),
-              (3, 1, 0, REVERSE)]
+        x = list(edge_dfs(G, self.nodes, orientation="reverse"))
+        x_ = [
+            (1, 0, 0, REVERSE),
+            (0, 1, 0, REVERSE),
+            (1, 0, 1, REVERSE),
+            (2, 1, 0, REVERSE),
+            (3, 1, 0, REVERSE),
+        ]
         assert_equal(x, x_)
 
     def test_digraph_ignore(self):
         G = nx.DiGraph(self.edges)
-        x = list(edge_dfs(G, self.nodes, orientation='ignore'))
-        x_ = [(0, 1, FORWARD), (1, 0, FORWARD),
-              (2, 1, REVERSE), (3, 1, REVERSE)]
+        x = list(edge_dfs(G, self.nodes, orientation="ignore"))
+        x_ = [(0, 1, FORWARD), (1, 0, FORWARD), (2, 1, REVERSE), (3, 1, REVERSE)]
         assert_equal(x, x_)
 
     def test_digraph_ignore2(self):
         G = nx.DiGraph()
         nx.add_path(G, range(4))
-        x = list(edge_dfs(G, [0], orientation='ignore'))
+        x = list(edge_dfs(G, [0], orientation="ignore"))
         x_ = [(0, 1, FORWARD), (1, 2, FORWARD), (2, 3, FORWARD)]
         assert_equal(x, x_)
 
     def test_multidigraph_ignore(self):
         G = nx.MultiDiGraph(self.edges)
-        x = list(edge_dfs(G, self.nodes, orientation='ignore'))
-        x_ = [(0, 1, 0, FORWARD), (1, 0, 0, FORWARD),
-              (1, 0, 1, REVERSE), (2, 1, 0, REVERSE),
-              (3, 1, 0, REVERSE)]
+        x = list(edge_dfs(G, self.nodes, orientation="ignore"))
+        x_ = [
+            (0, 1, 0, FORWARD),
+            (1, 0, 0, FORWARD),
+            (1, 0, 1, REVERSE),
+            (2, 1, 0, REVERSE),
+            (3, 1, 0, REVERSE),
+        ]
         assert_equal(x, x_)

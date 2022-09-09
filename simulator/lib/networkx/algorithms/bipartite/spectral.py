@@ -3,6 +3,7 @@
 Spectral bipartivity measure.
 """
 import networkx as nx
+
 __author__ = """Aric Hagberg (hagberg@lanl.gov)"""
 #    Copyright (C) 2011 by
 #    Aric Hagberg <hagberg@lanl.gov>
@@ -10,15 +11,15 @@ __author__ = """Aric Hagberg (hagberg@lanl.gov)"""
 #    Pieter Swart <swart@lanl.gov>
 #    All rights reserved.
 #    BSD license.
-__all__ = ['spectral_bipartivity']
+__all__ = ["spectral_bipartivity"]
 
 
-def spectral_bipartivity(G, nodes=None, weight='weight'):
+def spectral_bipartivity(G, nodes=None, weight="weight"):
     """Returns the spectral bipartivity.
 
     Parameters
     ----------
-    G : NetworkX graph 
+    G : NetworkX graph
 
     nodes : list or container  optional(default is all nodes)
       Nodes to return value of spectral bipartivity contribution.
@@ -43,7 +44,7 @@ def spectral_bipartivity(G, nodes=None, weight='weight'):
     Notes
     -----
     This implementation uses Numpy (dense) matrices which are not efficient
-    for storing large sparse graphs.  
+    for storing large sparse graphs.
 
     See Also
     --------
@@ -57,8 +58,9 @@ def spectral_bipartivity(G, nodes=None, weight='weight'):
     try:
         import scipy.linalg
     except ImportError:
-        raise ImportError('spectral_bipartivity() requires SciPy: ',
-                          'http://scipy.org/')
+        raise ImportError(
+            "spectral_bipartivity() requires SciPy: ", "http://scipy.org/"
+        )
     nodelist = list(G)  # ordering of nodes in matrix
     A = nx.to_numpy_matrix(G, nodelist, weight=weight)
     expA = scipy.linalg.expm(A)
@@ -80,6 +82,7 @@ def spectral_bipartivity(G, nodes=None, weight='weight'):
 def setup_module(module):
     """Fixture for nose tests."""
     from nose import SkipTest
+
     try:
         import numpy
     except:

@@ -17,10 +17,10 @@ import random
 import networkx as nx
 from networkx.utils import not_implemented_for
 
-__all__ = ['maximal_independent_set']
+__all__ = ["maximal_independent_set"]
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def maximal_independent_set(G, nodes=None):
     """Return a random maximal independent set guaranteed to contain
     a given set of nodes.
@@ -70,12 +70,10 @@ def maximal_independent_set(G, nodes=None):
     else:
         nodes = set(nodes)
     if not nodes.issubset(G):
-        raise nx.NetworkXUnfeasible(
-            "%s is not a subset of the nodes of G" % nodes)
+        raise nx.NetworkXUnfeasible("%s is not a subset of the nodes of G" % nodes)
     neighbors = set.union(*[set(G.adj[v]) for v in nodes])
     if set.intersection(neighbors, nodes):
-        raise nx.NetworkXUnfeasible(
-            "%s is not an independent set of G" % nodes)
+        raise nx.NetworkXUnfeasible("%s is not an independent set of G" % nodes)
     indep_nodes = list(nodes)
     available_nodes = set(G.nodes()).difference(neighbors.union(nodes))
     while available_nodes:

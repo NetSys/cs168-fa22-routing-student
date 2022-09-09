@@ -10,17 +10,19 @@ import networkx as nx
 import random
 import sys
 
-__authors__ = "\n".join(['Jesus Cerquides <cerquide@iiia.csic.es>'])
+__authors__ = "\n".join(["Jesus Cerquides <cerquide@iiia.csic.es>"])
 #    Copyright (C) 2010 by
 #    Jesus Cerquides <cerquide@iiia.csic.es>
 #    All rights reserved.
 #    BSD license.
 
-__all__ = ['is_chordal',
-           'find_induced_nodes',
-           'chordal_graph_cliques',
-           'chordal_graph_treewidth',
-           'NetworkXTreewidthBoundExceeded']
+__all__ = [
+    "is_chordal",
+    "find_induced_nodes",
+    "chordal_graph_cliques",
+    "chordal_graph_treewidth",
+    "NetworkXTreewidthBoundExceeded",
+]
 
 
 class NetworkXTreewidthBoundExceeded(nx.NetworkXException):
@@ -73,9 +75,9 @@ def is_chordal(G):
        pp. 566–579.
     """
     if G.is_directed():
-        raise nx.NetworkXError('Directed graphs not supported')
+        raise nx.NetworkXError("Directed graphs not supported")
     if G.is_multigraph():
-        raise nx.NetworkXError('Multiply connected graphs not supported.')
+        raise nx.NetworkXError("Multiply connected graphs not supported.")
     if len(_find_chordality_breaker(G)) == 0:
         return True
     else:
@@ -254,12 +256,12 @@ def _is_complete_graph(G):
     if n < 2:
         return True
     e = G.number_of_edges()
-    max_edges = ((n * (n - 1)) / 2)
+    max_edges = (n * (n - 1)) / 2
     return e == max_edges
 
 
 def _find_missing_edge(G):
-    """ Given a non-complete graph G, returns a missing edge."""
+    """Given a non-complete graph G, returns a missing edge."""
     nodes = set(G)
     for u in G:
         missing = nodes - set(list(G[u].keys()) + [u])
@@ -271,7 +273,7 @@ def _max_cardinality_node(G, choices, wanna_connect):
     """Returns a the node in choices that has more connections in G
     to nodes in wanna_connect.
     """
-#    max_number = None
+    #    max_number = None
     max_number = -1
     for x in choices:
         number = len([y for y in G[x] if y in wanna_connect])
@@ -282,7 +284,7 @@ def _max_cardinality_node(G, choices, wanna_connect):
 
 
 def _find_chordality_breaker(G, s=None, treewidth_bound=sys.maxsize):
-    """ Given a graph G, starts a max cardinality search
+    """Given a graph G, starts a max cardinality search
     (starting from s if s is given and from a random node otherwise)
     trying to find a non-chordal cycle.
 
@@ -295,7 +297,7 @@ def _find_chordality_breaker(G, s=None, treewidth_bound=sys.maxsize):
         s = random.choice(list(unnumbered))
     unnumbered.remove(s)
     numbered = set([s])
-#    current_treewidth = None
+    #    current_treewidth = None
     current_treewidth = -1
     while unnumbered:  # and current_treewidth <= treewidth_bound:
         v = _max_cardinality_node(G, unnumbered, numbered)
@@ -308,7 +310,8 @@ def _find_chordality_breaker(G, s=None, treewidth_bound=sys.maxsize):
             current_treewidth = max(current_treewidth, len(clique_wanna_be))
             if current_treewidth > treewidth_bound:
                 raise nx.NetworkXTreewidthBoundExceeded(
-                    "treewidth_bound exceeded: %s" % current_treewidth)
+                    "treewidth_bound exceeded: %s" % current_treewidth
+                )
         else:
             # sg is not a clique,
             # look for an edge that is not included in sg

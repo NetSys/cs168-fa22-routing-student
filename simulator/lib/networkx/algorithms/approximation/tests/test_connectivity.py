@@ -8,9 +8,29 @@ from networkx.algorithms import approximation as approx
 def test_global_node_connectivity():
     # Figure 1 chapter on Connectivity
     G = nx.Graph()
-    G.add_edges_from([(1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 6), (3, 4),
-                      (3, 6), (4, 6), (4, 7), (5, 7), (6, 8), (6, 9), (7, 8),
-                      (7, 10), (8, 11), (9, 10), (9, 11), (10, 11)])
+    G.add_edges_from(
+        [
+            (1, 2),
+            (1, 3),
+            (1, 4),
+            (1, 5),
+            (2, 3),
+            (2, 6),
+            (3, 4),
+            (3, 6),
+            (4, 6),
+            (4, 7),
+            (5, 7),
+            (6, 8),
+            (6, 9),
+            (7, 8),
+            (7, 10),
+            (8, 11),
+            (9, 10),
+            (9, 11),
+            (10, 11),
+        ]
+    )
     assert_equal(2, approx.local_node_connectivity(G, 1, 11))
     assert_equal(2, approx.node_connectivity(G))
     assert_equal(2, approx.node_connectivity(G, 1, 11))
@@ -50,6 +70,7 @@ def test_petersen():
     assert_equal(3, approx.node_connectivity(G))
     assert_equal(3, approx.node_connectivity(G, 0, 5))
 
+
 # Approximation fails with tutte graph
 # def test_tutte():
 #    G = nx.tutte_graph()
@@ -66,6 +87,7 @@ def test_octahedral():
     G = nx.octahedral_graph()
     assert_equal(4, approx.node_connectivity(G))
     assert_equal(4, approx.node_connectivity(G, 0, 5))
+
 
 # Approximation can fail with icosahedral graph depending
 # on iteration order.
@@ -105,12 +127,11 @@ def test_directed_node_connectivity():
     D = nx.cycle_graph(10).to_directed()  # 2 reciprocal edges
     assert_equal(1, approx.node_connectivity(G))
     assert_equal(1, approx.node_connectivity(G, 1, 4))
-    assert_equal(2,  approx.node_connectivity(D))
-    assert_equal(2,  approx.node_connectivity(D, 1, 4))
+    assert_equal(2, approx.node_connectivity(D))
+    assert_equal(2, approx.node_connectivity(D, 1, 4))
 
 
 class TestAllPairsNodeConnectivityApprox:
-
     def setUp(self):
         self.path = nx.path_graph(7)
         self.directed_path = nx.path_graph(7, create_using=nx.DiGraph())
@@ -121,9 +142,17 @@ class TestAllPairsNodeConnectivityApprox:
         self.K20 = nx.complete_graph(20)
         self.K10 = nx.complete_graph(10)
         self.K5 = nx.complete_graph(5)
-        self.G_list = [self.path, self.directed_path, self.cycle,
-                       self.directed_cycle, self.gnp, self.directed_gnp, self.K10,
-                       self.K5, self.K20]
+        self.G_list = [
+            self.path,
+            self.directed_path,
+            self.cycle,
+            self.directed_cycle,
+            self.gnp,
+            self.directed_gnp,
+            self.K10,
+            self.K5,
+            self.K20,
+        ]
 
     def test_cycles(self):
         K_undir = approx.all_pairs_node_connectivity(self.cycle)

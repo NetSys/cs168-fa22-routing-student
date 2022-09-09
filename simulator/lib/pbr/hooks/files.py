@@ -21,47 +21,45 @@ from pbr.hooks import base
 
 
 def get_manpath():
-    manpath = 'share/man'
-    if os.path.exists(os.path.join(sys.prefix, 'man')):
+    manpath = "share/man"
+    if os.path.exists(os.path.join(sys.prefix, "man")):
         # This works around a bug with install where it expects every node
         # in the relative data directory to be an actual directory, since at
         # least Debian derivatives (and probably other platforms as well)
         # like to symlink Unixish /usr/local/man to /usr/local/share/man.
-        manpath = 'man'
+        manpath = "man"
     return manpath
 
 
 def get_man_section(section):
-    return os.path.join(get_manpath(), 'man%s' % section)
+    return os.path.join(get_manpath(), "man%s" % section)
 
 
 class FilesConfig(base.BaseConfig):
 
-    section = 'files'
+    section = "files"
 
     def __init__(self, config, name):
         super(FilesConfig, self).__init__(config)
         self.name = name
-        self.data_files = self.config.get('data_files', '')
+        self.data_files = self.config.get("data_files", "")
 
     def save(self):
-        self.config['data_files'] = self.data_files
+        self.config["data_files"] = self.data_files
         super(FilesConfig, self).save()
 
     def expand_globs(self):
         finished = []
         for line in self.data_files.split("\n"):
-            if line.rstrip().endswith('*') and '=' in line:
-                (target, source_glob) = line.split('=')
+            if line.rstrip().endswith("*") and "=" in line:
+                (target, source_glob) = line.split("=")
                 source_prefix = source_glob.strip()[:-1]
                 target = target.strip()
                 if not target.endswith(os.path.sep):
                     target += os.path.sep
                 for (dirpath, dirnames, fnames) in os.walk(source_prefix):
-                    finished.append(
-                        "%s = " % dirpath.replace(source_prefix, target))
-                    finished.extend(
-                        [" %s" % os.path.join(dirpath, f) for f in fnames])
+                    finished.append("%s = " % dirpath.replace(source_prefix, target))
+                    finished.extend([" %s" % os.path.join(dirpath, f) for f in fnames])
             else:
                 finished.append(line)
 
@@ -75,7 +73,7 @@ class FilesConfig(base.BaseConfig):
 
     def get_man_sections(self):
         man_sections = dict()
-        manpages = self.pbr_config['manpages']
+        manpages = self.pbr_config["manpages"]
         for manpage in manpages.split():
             section_number = manpage.strip()[-1]
             section = man_sections.get(section_number, list())
@@ -84,17 +82,17 @@ class FilesConfig(base.BaseConfig):
         return man_sections
 
     def hook(self):
-        packages = self.config.get('packages', self.name).strip()
+        packages = self.config.get("packages", self.name).strip()
         expanded = []
         for pkg in packages.split("\n"):
             if os.path.isdir(pkg.strip()):
                 expanded.append(find_package.smart_find_packages(pkg.strip()))
 
-        self.config['packages'] = "\n".join(expanded)
+        self.config["packages"] = "\n".join(expanded)
 
         self.expand_globs()
 
-        if 'manpages' in self.pbr_config:
+        if "manpages" in self.pbr_config:
             man_sections = self.get_man_sections()
             for (section, pages) in man_sections.items():
                 manpath = get_man_section(section)

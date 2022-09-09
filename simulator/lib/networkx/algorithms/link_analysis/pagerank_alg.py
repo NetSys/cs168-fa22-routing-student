@@ -8,15 +8,24 @@
 #    NetworkX:http://networkx.github.io/
 import networkx as nx
 from networkx.utils import not_implemented_for
-__author__ = """\n""".join(["Aric Hagberg <aric.hagberg@gmail.com>",
-                            "Brandon Liu <brandon.k.liu@gmail.com"])
-__all__ = ['pagerank', 'pagerank_numpy', 'pagerank_scipy', 'google_matrix']
+
+__author__ = """\n""".join(
+    ["Aric Hagberg <aric.hagberg@gmail.com>", "Brandon Liu <brandon.k.liu@gmail.com"]
+)
+__all__ = ["pagerank", "pagerank_numpy", "pagerank_scipy", "google_matrix"]
 
 
-@not_implemented_for('multigraph')
-def pagerank(G, alpha=0.85, personalization=None,
-             max_iter=100, tol=1.0e-6, nstart=None, weight='weight',
-             dangling=None):
+@not_implemented_for("multigraph")
+def pagerank(
+    G,
+    alpha=0.85,
+    personalization=None,
+    max_iter=100,
+    tol=1.0e-6,
+    nstart=None,
+    weight="weight",
+    dangling=None,
+):
     """Return the PageRank of the nodes in the graph.
 
     PageRank computes a ranking of the nodes in the graph G based on
@@ -158,8 +167,9 @@ def pagerank(G, alpha=0.85, personalization=None,
     raise nx.PowerIterationFailedConvergence(max_iter)
 
 
-def google_matrix(G, alpha=0.85, personalization=None,
-                  nodelist=None, weight='weight', dangling=None):
+def google_matrix(
+    G, alpha=0.85, personalization=None, nodelist=None, weight="weight", dangling=None
+):
     """Return the Google matrix of the graph.
 
     Parameters
@@ -238,8 +248,7 @@ def google_matrix(G, alpha=0.85, personalization=None,
         dangling_weights = p
     else:
         # Convert the dangling dictionary into an array in nodelist order
-        dangling_weights = np.array([dangling.get(n, 0) for n in nodelist],
-                                    dtype=float)
+        dangling_weights = np.array([dangling.get(n, 0) for n in nodelist], dtype=float)
         dangling_weights /= dangling_weights.sum()
     dangling_nodes = np.where(M.sum(axis=1) == 0)[0]
 
@@ -252,8 +261,7 @@ def google_matrix(G, alpha=0.85, personalization=None,
     return alpha * M + (1 - alpha) * p
 
 
-def pagerank_numpy(G, alpha=0.85, personalization=None, weight='weight',
-                   dangling=None):
+def pagerank_numpy(G, alpha=0.85, personalization=None, weight="weight", dangling=None):
     """Return the PageRank of the nodes in the graph.
 
     PageRank computes a ranking of the nodes in the graph G based on
@@ -322,10 +330,12 @@ def pagerank_numpy(G, alpha=0.85, personalization=None, weight='weight',
        http://dbpubs.stanford.edu:8090/pub/showDoc.Fulltext?lang=en&doc=1999-66&format=pdf
     """
     import numpy as np
+
     if len(G) == 0:
         return {}
-    M = google_matrix(G, alpha, personalization=personalization,
-                      weight=weight, dangling=dangling)
+    M = google_matrix(
+        G, alpha, personalization=personalization, weight=weight, dangling=dangling
+    )
     # use numpy LAPACK solver
     eigenvalues, eigenvectors = np.linalg.eig(M.T)
     ind = np.argmax(eigenvalues)
@@ -335,9 +345,15 @@ def pagerank_numpy(G, alpha=0.85, personalization=None, weight='weight',
     return dict(zip(G, map(float, largest / norm)))
 
 
-def pagerank_scipy(G, alpha=0.85, personalization=None,
-                   max_iter=100, tol=1.0e-6, weight='weight',
-                   dangling=None):
+def pagerank_scipy(
+    G,
+    alpha=0.85,
+    personalization=None,
+    max_iter=100,
+    tol=1.0e-6,
+    weight="weight",
+    dangling=None,
+):
     """Return the PageRank of the nodes in the graph.
 
     PageRank computes a ranking of the nodes in the graph G based on
@@ -424,11 +440,10 @@ def pagerank_scipy(G, alpha=0.85, personalization=None,
         return {}
 
     nodelist = list(G)
-    M = nx.to_scipy_sparse_matrix(G, nodelist=nodelist, weight=weight,
-                                  dtype=float)
+    M = nx.to_scipy_sparse_matrix(G, nodelist=nodelist, weight=weight, dtype=float)
     S = scipy.array(M.sum(axis=1)).flatten()
     S[S != 0] = 1.0 / S[S != 0]
-    Q = scipy.sparse.spdiags(S.T, 0, *M.shape, format='csr')
+    Q = scipy.sparse.spdiags(S.T, 0, *M.shape, format="csr")
     M = Q * M
 
     # initial vector
@@ -446,16 +461,16 @@ def pagerank_scipy(G, alpha=0.85, personalization=None,
         dangling_weights = p
     else:
         # Convert the dangling dictionary into an array in nodelist order
-        dangling_weights = scipy.array([dangling.get(n, 0) for n in nodelist],
-                                       dtype=float)
+        dangling_weights = scipy.array(
+            [dangling.get(n, 0) for n in nodelist], dtype=float
+        )
         dangling_weights /= dangling_weights.sum()
     is_dangling = scipy.where(S == 0)[0]
 
     # power iteration: make up to max_iter iterations
     for _ in range(max_iter):
         xlast = x
-        x = alpha * (x * M + sum(x[is_dangling]) * dangling_weights) + \
-            (1 - alpha) * p
+        x = alpha * (x * M + sum(x[is_dangling]) * dangling_weights) + (1 - alpha) * p
         # check convergence, l1 norm
         err = scipy.absolute(x - xlast).sum()
         if err < N * tol:
@@ -466,6 +481,7 @@ def pagerank_scipy(G, alpha=0.85, personalization=None,
 # fixture for nose tests
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import numpy
     except:

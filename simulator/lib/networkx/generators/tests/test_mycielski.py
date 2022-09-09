@@ -15,7 +15,6 @@ from networkx import *
 
 
 class TestMycielski(object):
-
     def test_construction(self):
         G = nx.path_graph(2)
         M = mycielskian(G)

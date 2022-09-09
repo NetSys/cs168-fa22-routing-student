@@ -29,29 +29,32 @@ from networkx.utils import accumulate
 from networkx.utils import nodes_or_number
 from networkx.utils import pairwise
 
-__all__ = ['balanced_tree',
-           'barbell_graph',
-           'complete_graph',
-           'complete_multipartite_graph',
-           'circular_ladder_graph',
-           'circulant_graph',
-           'cycle_graph',
-           'dorogovtsev_goltsev_mendes_graph',
-           'empty_graph',
-           'full_rary_tree',
-           'ladder_graph',
-           'lollipop_graph',
-           'null_graph',
-           'path_graph',
-           'star_graph',
-           'trivial_graph',
-           'turan_graph',
-           'wheel_graph']
+__all__ = [
+    "balanced_tree",
+    "barbell_graph",
+    "complete_graph",
+    "complete_multipartite_graph",
+    "circular_ladder_graph",
+    "circulant_graph",
+    "cycle_graph",
+    "dorogovtsev_goltsev_mendes_graph",
+    "empty_graph",
+    "full_rary_tree",
+    "ladder_graph",
+    "lollipop_graph",
+    "null_graph",
+    "path_graph",
+    "star_graph",
+    "trivial_graph",
+    "turan_graph",
+    "wheel_graph",
+]
 
 
 # -------------------------------------------------------------------
 #   Some Classic Graphs
 # -------------------------------------------------------------------
+
 
 def _tree_edges(n, r):
     # helper function for trees
@@ -173,11 +176,9 @@ def barbell_graph(m1, m2, create_using=None):
     if create_using is not None and create_using.is_directed():
         raise NetworkXError("Directed Graph not supported")
     if m1 < 2:
-        raise NetworkXError(
-            "Invalid graph description, m1 should be >=2")
+        raise NetworkXError("Invalid graph description, m1 should be >=2")
     if m2 < 0:
-        raise NetworkXError(
-            "Invalid graph description, m2 should be >=0")
+        raise NetworkXError("Invalid graph description, m2 should be >=0")
 
     # left barbell
     G = complete_graph(m1, create_using)
@@ -187,8 +188,9 @@ def barbell_graph(m1, m2, create_using=None):
     if m2 > 1:
         G.add_edges_from(pairwise(range(m1, m1 + m2)))
     # right barbell
-    G.add_edges_from((u, v) for u in range(m1 + m2, 2 * m1 + m2)
-                     for v in range(u + 1, 2 * m1 + m2))
+    G.add_edges_from(
+        (u, v) for u in range(m1 + m2, 2 * m1 + m2) for v in range(u + 1, 2 * m1 + m2)
+    )
     # connect it up
     G.add_edge(m1 - 1, m1)
     if m2 > 0:
@@ -198,7 +200,7 @@ def barbell_graph(m1, m2, create_using=None):
 
 @nodes_or_number(0)
 def complete_graph(n, create_using=None):
-    """ Return the complete graph `K_n` with n nodes.
+    """Return the complete graph `K_n` with n nodes.
 
     Parameters
     ----------
@@ -347,7 +349,7 @@ def dorogovtsev_goltsev_mendes_graph(n, create_using=None):
     G.add_edge(0, 1)
     if n == 0:
         return G
-    new_node = 2         # next node to be added
+    new_node = 2  # next node to be added
     for i in range(1, n + 1):  # iterate over number of generations.
         last_generation_edges = list(G.edges())
         number_of_edges_in_last_generation = len(last_generation_edges)
@@ -476,11 +478,9 @@ def lollipop_graph(m, n, create_using=None):
     if create_using is not None and create_using.is_directed():
         raise NetworkXError("Directed Graph not supported")
     if M < 2:
-        raise NetworkXError(
-            "Invalid graph description, m should be >=2")
+        raise NetworkXError("Invalid graph description, m should be >=2")
     if N < 0:
-        raise NetworkXError(
-            "Invalid graph description, n should be >=0")
+        raise NetworkXError("Invalid graph description, n should be >=0")
 
     # the ball
     G = complete_graph(m_nodes, create_using)
@@ -526,7 +526,7 @@ def path_graph(n, create_using=None):
 
 @nodes_or_number(0)
 def star_graph(n, create_using=None):
-    """ Return the star graph
+    """Return the star graph
 
     The star graph consists of one center node connected to n outer nodes.
 
@@ -556,15 +556,13 @@ def star_graph(n, create_using=None):
 
 
 def trivial_graph(create_using=None):
-    """ Return the Trivial graph with one node (with label 0) and no edges.
-
-    """
+    """Return the Trivial graph with one node (with label 0) and no edges."""
     G = empty_graph(1, create_using)
     return G
 
 
 def turan_graph(n, r):
-    r""" Return the Turan Graph
+    r"""Return the Turan Graph
 
     The Turan Graph is a complete multipartite graph on $n$ vertices
     with $r$ disjoint subsets. It is the graph with the edges for any graph with
@@ -598,7 +596,7 @@ def turan_graph(n, r):
 
 @nodes_or_number(0)
 def wheel_graph(n, create_using=None):
-    """ Return the wheel graph
+    """Return the wheel graph
 
     The wheel graph consists of a hub node connected to a cycle of (n-1) nodes.
 

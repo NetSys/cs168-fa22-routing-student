@@ -18,13 +18,13 @@ from networkx.testing import assert_nodes_equal
 is_isomorphic = graph_could_be_isomorphic
 
 
-class TestGeneratorClassic():
+class TestGeneratorClassic:
     def test_balanced_tree(self):
         # balanced_tree(r,h) is a tree with (r**(h+1)-1)/(r-1) edges
         for r, h in [(2, 2), (3, 3), (6, 2)]:
             t = balanced_tree(r, h)
             order = t.order()
-            assert_true(order == (r**(h + 1) - 1) / (r - 1))
+            assert_true(order == (r ** (h + 1) - 1) / (r - 1))
             assert_true(is_connected(t))
             assert_true(t.size() == order - 1)
             dh = degree_histogram(t)
@@ -132,8 +132,13 @@ class TestGeneratorClassic():
         b = barbell_graph(m1, m2)
         assert_true(is_isomorphic(b, path_graph(m2 + 4)))
 
-        assert_raises(networkx.exception.NetworkXError, barbell_graph, m1, m2,
-                      create_using=DiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError,
+            barbell_graph,
+            m1,
+            m2,
+            create_using=DiGraph(),
+        )
 
         mb = barbell_graph(m1, m2, create_using=MultiGraph())
         assert_edges_equal(mb.edges(), b.edges())
@@ -150,7 +155,7 @@ class TestGeneratorClassic():
         assert_edges_equal(mg.edges(), g.edges())
 
         g = complete_graph("abc")
-        assert_nodes_equal(g.nodes(), ['a', 'b', 'c'])
+        assert_nodes_equal(g.nodes(), ["a", "b", "c"])
         assert_equal(g.size(), 3)
 
     def test_complete_digraph(self):
@@ -168,8 +173,12 @@ class TestGeneratorClassic():
 
     def test_circular_ladder_graph(self):
         G = circular_ladder_graph(5)
-        assert_raises(networkx.exception.NetworkXError, circular_ladder_graph,
-                      5, create_using=DiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError,
+            circular_ladder_graph,
+            5,
+            create_using=DiGraph(),
+        )
         mG = circular_ladder_graph(5, create_using=MultiGraph())
         assert_edges_equal(mG.edges(), G.edges())
 
@@ -222,12 +231,18 @@ class TestGeneratorClassic():
         assert_equal(G.degree(1), 1024)
         assert_equal(G.degree(2), 1024)
 
-        assert_raises(networkx.exception.NetworkXError,
-                      dorogovtsev_goltsev_mendes_graph, 7,
-                      create_using=DiGraph())
-        assert_raises(networkx.exception.NetworkXError,
-                      dorogovtsev_goltsev_mendes_graph, 7,
-                      create_using=MultiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError,
+            dorogovtsev_goltsev_mendes_graph,
+            7,
+            create_using=DiGraph(),
+        )
+        assert_raises(
+            networkx.exception.NetworkXError,
+            dorogovtsev_goltsev_mendes_graph,
+            7,
+            create_using=MultiGraph(),
+        )
 
     def test_empty_graph(self):
         G = empty_graph()
@@ -260,12 +275,17 @@ class TestGeneratorClassic():
         assert_true(isinstance(G, Graph))
 
     def test_ladder_graph(self):
-        for i, G in [(0, empty_graph(0)), (1, path_graph(2)),
-                     (2, hypercube_graph(2)), (10, grid_graph([2, 10]))]:
+        for i, G in [
+            (0, empty_graph(0)),
+            (1, path_graph(2)),
+            (2, hypercube_graph(2)),
+            (10, grid_graph([2, 10])),
+        ]:
             assert_true(is_isomorphic(ladder_graph(i), G))
 
-        assert_raises(networkx.exception.NetworkXError,
-                      ladder_graph, 2, create_using=DiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError, ladder_graph, 2, create_using=DiGraph()
+        )
 
         g = ladder_graph(2)
         mg = ladder_graph(2, create_using=MultiGraph())
@@ -280,20 +300,23 @@ class TestGeneratorClassic():
             assert_equal(number_of_edges(b), m1 * (m1 - 1) / 2 + m2)
 
         # Raise NetworkXError if m<2
-        assert_raises(networkx.exception.NetworkXError,
-                      lollipop_graph, 1, 20)
+        assert_raises(networkx.exception.NetworkXError, lollipop_graph, 1, 20)
 
         # Raise NetworkXError if n<0
-        assert_raises(networkx.exception.NetworkXError,
-                      lollipop_graph, 5, -2)
+        assert_raises(networkx.exception.NetworkXError, lollipop_graph, 5, -2)
 
         # lollipop_graph(2,m) = path_graph(m+2)
         for m1, m2 in [(2, 5), (2, 10), (2, 20)]:
             b = lollipop_graph(m1, m2)
             assert_true(is_isomorphic(b, path_graph(m2 + 2)))
 
-        assert_raises(networkx.exception.NetworkXError,
-                      lollipop_graph, m1, m2, create_using=DiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError,
+            lollipop_graph,
+            m1,
+            m2,
+            create_using=DiGraph(),
+        )
 
         mb = lollipop_graph(m1, m2, create_using=MultiGraph())
         assert_edges_equal(mb.edges(), b.edges())
@@ -314,8 +337,7 @@ class TestGeneratorClassic():
 
         p = path_graph(10)
         assert_true(is_connected(p))
-        assert_equal(sorted(d for n, d in p.degree()),
-                     [1, 1, 2, 2, 2, 2, 2, 2, 2, 2])
+        assert_equal(sorted(d for n, d in p.degree()), [1, 1, 2, 2, 2, 2, 2, 2, 2, 2])
         assert_equal(p.order() - 1, p.size())
 
         dp = path_graph(3, create_using=DiGraph())
@@ -340,11 +362,13 @@ class TestGeneratorClassic():
         assert_true(is_isomorphic(star_graph(5), nx.complete_bipartite_graph(1, 5)))
 
         s = star_graph(10)
-        assert_equal(sorted(d for n, d in s.degree()),
-                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10])
+        assert_equal(
+            sorted(d for n, d in s.degree()), [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10]
+        )
 
-        assert_raises(networkx.exception.NetworkXError,
-                      star_graph, 10, create_using=DiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError, star_graph, 10, create_using=DiGraph()
+        )
 
         ms = star_graph(10, create_using=MultiGraph())
         assert_edges_equal(ms.edges(), s.edges())
@@ -358,21 +382,27 @@ class TestGeneratorClassic():
 
     def test_turan_graph(self):
         assert_equal(number_of_edges(turan_graph(13, 4)), 63)
-        assert_true(is_isomorphic(turan_graph(13, 4), complete_multipartite_graph(3, 4, 3, 3)))
+        assert_true(
+            is_isomorphic(turan_graph(13, 4), complete_multipartite_graph(3, 4, 3, 3))
+        )
 
     def test_wheel_graph(self):
-        for n, G in [(0, null_graph()), (1, empty_graph(1)),
-                     (2, path_graph(2)), (3, complete_graph(3)),
-                     (4, complete_graph(4))]:
+        for n, G in [
+            (0, null_graph()),
+            (1, empty_graph(1)),
+            (2, path_graph(2)),
+            (3, complete_graph(3)),
+            (4, complete_graph(4)),
+        ]:
             g = wheel_graph(n)
             assert_true(is_isomorphic(g, G))
 
         g = wheel_graph(10)
-        assert_equal(sorted(d for n, d in g.degree()),
-                     [3, 3, 3, 3, 3, 3, 3, 3, 3, 9])
+        assert_equal(sorted(d for n, d in g.degree()), [3, 3, 3, 3, 3, 3, 3, 3, 3, 9])
 
-        assert_raises(networkx.exception.NetworkXError,
-                      wheel_graph, 10, create_using=DiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError, wheel_graph, 10, create_using=DiGraph()
+        )
 
         mg = wheel_graph(10, create_using=MultiGraph())
         assert_edges_equal(mg.edges(), g.edges())

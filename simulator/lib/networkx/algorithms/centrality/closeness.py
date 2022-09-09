@@ -15,11 +15,10 @@ Closeness centrality measures.
 import functools
 import networkx as nx
 
-__all__ = ['closeness_centrality']
+__all__ = ["closeness_centrality"]
 
 
-def closeness_centrality(G, u=None, distance=None,
-                         wf_improved=True, reverse=False):
+def closeness_centrality(G, u=None, distance=None, wf_improved=True, reverse=False):
     r"""Compute closeness centrality for nodes.
 
     Closeness centrality [1]_ of a node `u` is the reciprocal of the
@@ -61,7 +60,7 @@ def closeness_centrality(G, u=None, distance=None,
     wf_improved : bool, optional (default=True)
       If True, scale by the fraction of nodes reachable. This gives the
       Wasserman and Faust improved formula. For single component graphs
-      it is the same as the original formula. 
+      it is the same as the original formula.
 
     reverse : bool, optional (default=False)
       If True and G is a digraph, reverse the edges of G, using successors
@@ -100,8 +99,9 @@ def closeness_centrality(G, u=None, distance=None,
     """
     if distance is not None:
         # use Dijkstra's algorithm with specified attribute as edge weight
-        path_length = functools.partial(nx.single_source_dijkstra_path_length,
-                                        weight=distance)
+        path_length = functools.partial(
+            nx.single_source_dijkstra_path_length, weight=distance
+        )
     else:  # handle either directed or undirected
         if G.is_directed() and not reverse:
             path_length = nx.single_target_shortest_path_length

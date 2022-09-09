@@ -10,17 +10,20 @@ Subraph centrality and communicability betweenness.
 #    BSD license.
 import networkx as nx
 from networkx.utils import *
-__author__ = "\n".join(['Aric Hagberg (hagberg@lanl.gov)',
-                        'Franck Kalala (franckkalala@yahoo.fr'])
-__all__ = ['subgraph_centrality_exp',
-           'subgraph_centrality',
-           'communicability_betweenness_centrality',
-           'estrada_index'
-           ]
+
+__author__ = "\n".join(
+    ["Aric Hagberg (hagberg@lanl.gov)", "Franck Kalala (franckkalala@yahoo.fr"]
+)
+__all__ = [
+    "subgraph_centrality_exp",
+    "subgraph_centrality",
+    "communicability_betweenness_centrality",
+    "estrada_index",
+]
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def subgraph_centrality_exp(G):
     r"""Return the subgraph centrality for each node of G.
 
@@ -76,6 +79,7 @@ def subgraph_centrality_exp(G):
     """
     # alternative implementation that calculates the matrix exponential
     import scipy.linalg
+
     nodelist = list(G)  # ordering of nodes in matrix
     A = nx.to_numpy_matrix(G, nodelist)
     # convert to 0-1 matrix
@@ -86,8 +90,8 @@ def subgraph_centrality_exp(G):
     return sc
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def subgraph_centrality(G):
     r"""Return subgraph centrality for each node in G.
 
@@ -148,12 +152,13 @@ def subgraph_centrality(G):
     """
     import numpy
     import numpy.linalg
+
     nodelist = list(G)  # ordering of nodes in matrix
     A = nx.to_numpy_matrix(G, nodelist)
     # convert to 0-1 matrix
     A[A != 0.0] = 1
     w, v = numpy.linalg.eigh(A.A)
-    vsquare = numpy.array(v)**2
+    vsquare = numpy.array(v) ** 2
     expw = numpy.exp(w)
     xg = numpy.dot(vsquare, expw)
     # convert vector dictionary keyed by node
@@ -161,8 +166,8 @@ def subgraph_centrality(G):
     return sc
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def communicability_betweenness_centrality(G, normalized=True):
     r"""Return subgraph communicability for all pairs of nodes in G.
 
@@ -228,6 +233,7 @@ def communicability_betweenness_centrality(G, normalized=True):
     """
     import scipy
     import scipy.linalg
+
     nodelist = list(G)  # ordering of nodes in matrix
     n = len(nodelist)
     A = nx.to_numpy_matrix(G, nodelist)
@@ -264,7 +270,7 @@ def _rescale(cbc, normalized):
         if order <= 2:
             scale = None
         else:
-            scale = 1.0 / ((order - 1.0)**2 - (order - 1.0))
+            scale = 1.0 / ((order - 1.0) ** 2 - (order - 1.0))
     if scale is not None:
         for v in cbc:
             cbc[v] *= scale
@@ -316,11 +322,13 @@ def estrada_index(G):
     """
     return sum(subgraph_centrality(G).values())
 
+
 # fixture for nose tests
 
 
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import numpy
     except:

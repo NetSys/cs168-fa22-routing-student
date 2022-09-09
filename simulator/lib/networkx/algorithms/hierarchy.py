@@ -9,8 +9,9 @@ Flow Hierarchy.
 #    All rights reserved.
 #    BSD license.
 import networkx as nx
-__authors__ = "\n".join(['Ben Edwards (bedwards@cs.unm.edu)'])
-__all__ = ['flow_hierarchy']
+
+__authors__ = "\n".join(["Ben Edwards (bedwards@cs.unm.edu)"])
+__all__ = ["flow_hierarchy"]
 
 
 def flow_hierarchy(G, weight=None):
@@ -51,4 +52,4 @@ def flow_hierarchy(G, weight=None):
     if not G.is_directed():
         raise nx.NetworkXError("G must be a digraph in flow_heirarchy")
     scc = nx.strongly_connected_components(G)
-    return 1. - sum(G.subgraph(c).size(weight) for c in scc) / float(G.size(weight))
+    return 1.0 - sum(G.subgraph(c).size(weight) for c in scc) / float(G.size(weight))

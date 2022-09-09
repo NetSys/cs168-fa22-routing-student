@@ -28,7 +28,7 @@ __author__ = """Aric Hagberg (hagberg@lanl.gov)\nDan Schult (dschult@colgate.edu
 #    All rights reserved.
 #    BSD license.
 
-__all__ = ['read_gpickle', 'write_gpickle']
+__all__ = ["read_gpickle", "write_gpickle"]
 
 import networkx as nx
 from networkx.utils import open_file
@@ -39,7 +39,7 @@ except ImportError:
     import pickle
 
 
-@open_file(1, mode='wb')
+@open_file(1, mode="wb")
 def write_gpickle(G, path, protocol=pickle.HIGHEST_PROTOCOL):
     """Write graph in Python pickle format.
 
@@ -70,7 +70,7 @@ def write_gpickle(G, path, protocol=pickle.HIGHEST_PROTOCOL):
     pickle.dump(G, path, protocol)
 
 
-@open_file(0, mode='rb')
+@open_file(0, mode="rb")
 def read_gpickle(path):
     """Read graph object in Python pickle format.
 
@@ -100,9 +100,11 @@ def read_gpickle(path):
     """
     return pickle.load(path)
 
+
 # fixture for nose tests
 
 
 def teardown_module(module):
     import os
-    os.unlink('test.gpickle')
+
+    os.unlink("test.gpickle")

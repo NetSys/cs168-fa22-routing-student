@@ -18,7 +18,7 @@ class TestSpectralBipartivity(object):
         try:
             import scipy.linalg
         except ImportError:
-            raise SkipTest('SciPy not available.')
+            raise SkipTest("SciPy not available.")
 
     def test_star_like(self):
         # star-like

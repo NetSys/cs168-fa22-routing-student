@@ -33,9 +33,7 @@ class TestPerformance(object):
         assert_almost_equal(8 / 15, performance(G, partition))
 
     def test_good_partition(self):
-        """Tests that a good partition has a high performance measure.
-
-        """
+        """Tests that a good partition has a high performance measure."""
         G = barbell_graph(3, 0)
         partition = [{0, 1, 2}, {3, 4, 5}]
         assert_almost_equal(14 / 15, performance(G, partition))
@@ -60,9 +58,9 @@ class TestCoverage(object):
 def test_modularity():
     G = nx.barbell_graph(3, 0)
     C = [{0, 1, 4}, {2, 3, 5}]
-    assert_almost_equal(-16 / (14 ** 2), modularity(G, C))
+    assert_almost_equal(-16 / (14**2), modularity(G, C))
     C = [{0, 1, 2}, {3, 4, 5}]
-    assert_almost_equal((35 * 2) / (14 ** 2), modularity(G, C))
+    assert_almost_equal((35 * 2) / (14**2), modularity(G, C))
 
 
 def test_inter_community_edges_with_digraphs():

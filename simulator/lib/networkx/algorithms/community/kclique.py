@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #    Copyright (C) 2011 by
 #    Conrad Lee <conradlee@gmail.com>
 #    Aric Hagberg <hagberg@lanl.gov>
@@ -6,9 +6,11 @@
 #    BSD license.
 from collections import defaultdict
 import networkx as nx
-__author__ = """\n""".join(['Conrad Lee <conradlee@gmail.com>',
-                            'Aric Hagberg <aric.hagberg@gmail.com>'])
-__all__ = ['k_clique_communities']
+
+__author__ = """\n""".join(
+    ["Conrad Lee <conradlee@gmail.com>", "Aric Hagberg <aric.hagberg@gmail.com>"]
+)
+__all__ = ["k_clique_communities"]
 
 
 def k_clique_communities(G, k, cliques=None):
@@ -24,7 +26,7 @@ def k_clique_communities(G, k, cliques=None):
     k : int
        Size of smallest clique
 
-    cliques: list or generator       
+    cliques: list or generator
        Precomputed cliques (use networkx.find_cliques(G))
 
     Returns
@@ -46,7 +48,7 @@ def k_clique_communities(G, k, cliques=None):
     References
     ----------
     .. [1] Gergely Palla, Imre Derényi, Illés Farkas1, and Tamás Vicsek,
-       Uncovering the overlapping community structure of complex networks 
+       Uncovering the overlapping community structure of complex networks
        in nature and society Nature 435, 814-818, 2005,
        doi:10.1038/nature03607
     """
@@ -73,7 +75,7 @@ def k_clique_communities(G, k, cliques=None):
     # Connected components of clique graph with perc edges
     # are the percolated cliques
     for component in nx.connected_components(perc_graph):
-        yield(frozenset.union(*component))
+        yield (frozenset.union(*component))
 
 
 def _get_adjacent_cliques(clique, membership_dict):

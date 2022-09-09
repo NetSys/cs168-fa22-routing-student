@@ -42,21 +42,23 @@ class BaseGraphML(object):
   </graph>
 </graphml>"""
         self.simple_directed_graph = nx.DiGraph()
-        self.simple_directed_graph.add_node('n10')
-        self.simple_directed_graph.add_edge('n0', 'n2', id='foo')
-        self.simple_directed_graph.add_edges_from([('n1', 'n2'),
-                                                   ('n2', 'n3'),
-                                                   ('n3', 'n5'),
-                                                   ('n3', 'n4'),
-                                                   ('n4', 'n6'),
-                                                   ('n6', 'n5'),
-                                                   ('n5', 'n7'),
-                                                   ('n6', 'n8'),
-                                                   ('n8', 'n7'),
-                                                   ('n8', 'n9'),
-                                                   ])
-        self.simple_directed_fh = \
-            io.BytesIO(self.simple_directed_data.encode('UTF-8'))
+        self.simple_directed_graph.add_node("n10")
+        self.simple_directed_graph.add_edge("n0", "n2", id="foo")
+        self.simple_directed_graph.add_edges_from(
+            [
+                ("n1", "n2"),
+                ("n2", "n3"),
+                ("n3", "n5"),
+                ("n3", "n4"),
+                ("n4", "n6"),
+                ("n6", "n5"),
+                ("n5", "n7"),
+                ("n6", "n8"),
+                ("n8", "n7"),
+                ("n8", "n9"),
+            ]
+        )
+        self.simple_directed_fh = io.BytesIO(self.simple_directed_data.encode("UTF-8"))
 
         self.attribute_data = """<?xml version="1.0" encoding="UTF-8"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns"
@@ -100,21 +102,21 @@ class BaseGraphML(object):
   </graph>
 </graphml>
 """
-        self.attribute_graph = nx.DiGraph(id='G')
-        self.attribute_graph.graph['node_default'] = {'color': 'yellow'}
-        self.attribute_graph.add_node('n0', color='green')
-        self.attribute_graph.add_node('n2', color='blue')
-        self.attribute_graph.add_node('n3', color='red')
-        self.attribute_graph.add_node('n4')
-        self.attribute_graph.add_node('n5', color='turquoise')
-        self.attribute_graph.add_edge('n0', 'n2', id='e0', weight=1.0)
-        self.attribute_graph.add_edge('n0', 'n1', id='e1', weight=1.0)
-        self.attribute_graph.add_edge('n1', 'n3', id='e2', weight=2.0)
-        self.attribute_graph.add_edge('n3', 'n2', id='e3')
-        self.attribute_graph.add_edge('n2', 'n4', id='e4')
-        self.attribute_graph.add_edge('n3', 'n5', id='e5')
-        self.attribute_graph.add_edge('n5', 'n4', id='e6', weight=1.1)
-        self.attribute_fh = io.BytesIO(self.attribute_data.encode('UTF-8'))
+        self.attribute_graph = nx.DiGraph(id="G")
+        self.attribute_graph.graph["node_default"] = {"color": "yellow"}
+        self.attribute_graph.add_node("n0", color="green")
+        self.attribute_graph.add_node("n2", color="blue")
+        self.attribute_graph.add_node("n3", color="red")
+        self.attribute_graph.add_node("n4")
+        self.attribute_graph.add_node("n5", color="turquoise")
+        self.attribute_graph.add_edge("n0", "n2", id="e0", weight=1.0)
+        self.attribute_graph.add_edge("n0", "n1", id="e1", weight=1.0)
+        self.attribute_graph.add_edge("n1", "n3", id="e2", weight=2.0)
+        self.attribute_graph.add_edge("n3", "n2", id="e3")
+        self.attribute_graph.add_edge("n2", "n4", id="e4")
+        self.attribute_graph.add_edge("n3", "n5", id="e5")
+        self.attribute_graph.add_edge("n5", "n4", id="e6", weight=1.1)
+        self.attribute_fh = io.BytesIO(self.attribute_data.encode("UTF-8"))
 
         self.attribute_numeric_type_data = """<?xml version='1.0' encoding='utf-8'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns"
@@ -143,11 +145,11 @@ class BaseGraphML(object):
 </graphml>
 """
         self.attribute_numeric_type_graph = nx.DiGraph()
-        self.attribute_numeric_type_graph.add_node('n0', weight=1)
-        self.attribute_numeric_type_graph.add_node('n1', weight=2.0)
-        self.attribute_numeric_type_graph.add_edge('n0', 'n1', weight=1)
-        self.attribute_numeric_type_graph.add_edge('n1', 'n1', weight=1.0)
-        fh = io.BytesIO(self.attribute_numeric_type_data.encode('UTF-8'))
+        self.attribute_numeric_type_graph.add_node("n0", weight=1)
+        self.attribute_numeric_type_graph.add_node("n1", weight=2.0)
+        self.attribute_numeric_type_graph.add_edge("n0", "n1", weight=1)
+        self.attribute_numeric_type_graph.add_edge("n1", "n1", weight=1.0)
+        fh = io.BytesIO(self.attribute_numeric_type_data.encode("UTF-8"))
         self.attribute_numeric_type_fh = fh
 
         self.simple_undirected_data = """<?xml version="1.0" encoding="UTF-8"?>
@@ -165,14 +167,17 @@ class BaseGraphML(object):
     <edge source="n2" target="n3"/>
   </graph>
 </graphml>"""
-#    <edge source="n8" target="n10" directed="false"/>
+        #    <edge source="n8" target="n10" directed="false"/>
         self.simple_undirected_graph = nx.Graph()
-        self.simple_undirected_graph.add_node('n10')
-        self.simple_undirected_graph.add_edge('n0', 'n2', id='foo')
-        self.simple_undirected_graph.add_edges_from([('n1', 'n2'),
-                                                     ('n2', 'n3'),
-                                                     ])
-        fh = io.BytesIO(self.simple_undirected_data.encode('UTF-8'))
+        self.simple_undirected_graph.add_node("n10")
+        self.simple_undirected_graph.add_edge("n0", "n2", id="foo")
+        self.simple_undirected_graph.add_edges_from(
+            [
+                ("n1", "n2"),
+                ("n2", "n3"),
+            ]
+        )
+        fh = io.BytesIO(self.simple_undirected_data.encode("UTF-8"))
         self.simple_undirected_fh = fh
 
 
@@ -182,15 +187,13 @@ class TestReadGraphML(BaseGraphML):
         H = nx.read_graphml(self.simple_directed_fh)
         assert_equal(sorted(G.nodes()), sorted(H.nodes()))
         assert_equal(sorted(G.edges()), sorted(H.edges()))
-        assert_equal(sorted(G.edges(data=True)),
-                     sorted(H.edges(data=True)))
+        assert_equal(sorted(G.edges(data=True)), sorted(H.edges(data=True)))
         self.simple_directed_fh.seek(0)
 
         I = nx.parse_graphml(self.simple_directed_data)
         assert_equal(sorted(G.nodes()), sorted(I.nodes()))
         assert_equal(sorted(G.edges()), sorted(I.edges()))
-        assert_equal(sorted(G.edges(data=True)),
-                     sorted(I.edges(data=True)))
+        assert_equal(sorted(G.edges(data=True)), sorted(I.edges(data=True)))
 
     def test_read_simple_undirected_graphml(self):
         G = self.simple_undirected_graph
@@ -234,7 +237,7 @@ class TestReadGraphML(BaseGraphML):
     <edge source="n1" target="n2" directed='true'/>
   </graph>
 </graphml>"""
-        fh = io.BytesIO(s.encode('UTF-8'))
+        fh = io.BytesIO(s.encode("UTF-8"))
         assert_raises(nx.NetworkXError, nx.read_graphml, fh)
         assert_raises(nx.NetworkXError, nx.parse_graphml, s)
 
@@ -252,7 +255,7 @@ class TestReadGraphML(BaseGraphML):
     <edge source="n1" target="n2" directed='false'/>
   </graph>
 </graphml>"""
-        fh = io.BytesIO(s.encode('UTF-8'))
+        fh = io.BytesIO(s.encode("UTF-8"))
         assert_raises(nx.NetworkXError, nx.read_graphml, fh)
         assert_raises(nx.NetworkXError, nx.parse_graphml, s)
 
@@ -280,7 +283,7 @@ class TestReadGraphML(BaseGraphML):
   </graph>
 </graphml>
 """
-        fh = io.BytesIO(s.encode('UTF-8'))
+        fh = io.BytesIO(s.encode("UTF-8"))
         assert_raises(nx.NetworkXError, nx.read_graphml, fh)
         assert_raises(nx.NetworkXError, nx.parse_graphml, s)
 
@@ -310,7 +313,7 @@ class TestReadGraphML(BaseGraphML):
   </graph>
 </graphml>
 """
-        fh = io.BytesIO(s.encode('UTF-8'))
+        fh = io.BytesIO(s.encode("UTF-8"))
         assert_raises(nx.NetworkXError, nx.read_graphml, fh)
         assert_raises(nx.NetworkXError, nx.parse_graphml, s)
 
@@ -329,7 +332,7 @@ class TestReadGraphML(BaseGraphML):
   </graph>
 </graphml>
 """
-        fh = io.BytesIO(s.encode('UTF-8'))
+        fh = io.BytesIO(s.encode("UTF-8"))
         G = nx.read_graphml(fh)
         expected = [("n0", "n1", "e0"), ("n0", "n1", "e1")]
         assert_equal(sorted(G.edges(keys=True)), expected)
@@ -345,25 +348,25 @@ class TestReadGraphML(BaseGraphML):
         G = nx.MultiGraph()
         G.add_node(1)
         G.add_node(2)
-        G.add_edges_from([
-            # edges with no data, no keys:
-            (1, 2),
-            # edges with only data:
-            (1, 2, dict(key='data_key1')),
-            (1, 2, dict(id='data_id2')),
-            (1, 2, dict(key='data_key3', id='data_id3')),
-            # edges with both data and keys:
-            (1, 2, 103, dict(key='data_key4')),
-            (1, 2, 104, dict(id='data_id5')),
-            (1, 2, 105, dict(key='data_key6', id='data_id7')),
-        ])
+        G.add_edges_from(
+            [
+                # edges with no data, no keys:
+                (1, 2),
+                # edges with only data:
+                (1, 2, dict(key="data_key1")),
+                (1, 2, dict(id="data_id2")),
+                (1, 2, dict(key="data_key3", id="data_id3")),
+                # edges with both data and keys:
+                (1, 2, 103, dict(key="data_key4")),
+                (1, 2, 104, dict(id="data_id5")),
+                (1, 2, 105, dict(key="data_key6", id="data_id7")),
+            ]
+        )
         fh = io.BytesIO()
         nx.write_graphml(G, fh)
         fh.seek(0)
         H = nx.read_graphml(fh, node_type=int)
-        assert_edges_equal(
-            G.edges(data=True, keys=True), H.edges(data=True, keys=True)
-        )
+        assert_edges_equal(G.edges(data=True, keys=True), H.edges(data=True, keys=True))
         assert_equal(G._adj, H._adj)
 
     def test_yfiles_extension(self):
@@ -434,18 +437,18 @@ class TestReadGraphML(BaseGraphML):
   </data>
 </graphml>
 """
-        fh = io.BytesIO(data.encode('UTF-8'))
+        fh = io.BytesIO(data.encode("UTF-8"))
         G = nx.read_graphml(fh)
-        assert_equal(list(G.edges()), [('n0', 'n1')])
-        assert_equal(G['n0']['n1']['id'], 'e0')
-        assert_equal(G.nodes['n0']['label'], '1')
-        assert_equal(G.nodes['n1']['label'], '2')
+        assert_equal(list(G.edges()), [("n0", "n1")])
+        assert_equal(G["n0"]["n1"]["id"], "e0")
+        assert_equal(G.nodes["n0"]["label"], "1")
+        assert_equal(G.nodes["n1"]["label"], "2")
 
         H = nx.parse_graphml(data)
-        assert_equal(list(H.edges()), [('n0', 'n1')])
-        assert_equal(H['n0']['n1']['id'], 'e0')
-        assert_equal(H.nodes['n0']['label'], '1')
-        assert_equal(H.nodes['n1']['label'], '2')
+        assert_equal(list(H.edges()), [("n0", "n1")])
+        assert_equal(H["n0"]["n1"]["id"], "e0")
+        assert_equal(H.nodes["n0"]["label"], "1")
+        assert_equal(H.nodes["n1"]["label"], "2")
 
     def test_bool(self):
         s = """<?xml version="1.0" encoding="UTF-8"?>
@@ -479,16 +482,16 @@ class TestReadGraphML(BaseGraphML):
   </graph>
 </graphml>
 """
-        fh = io.BytesIO(s.encode('UTF-8'))
+        fh = io.BytesIO(s.encode("UTF-8"))
         G = nx.read_graphml(fh)
         H = nx.parse_graphml(s)
         for graph in [G, H]:
-            assert_equal(graph.nodes['n0']['test'], True)
-            assert_equal(graph.nodes['n2']['test'], False)
-            assert_equal(graph.nodes['n3']['test'], False)
-            assert_equal(graph.nodes['n4']['test'], True)
-            assert_equal(graph.nodes['n5']['test'], False)
-            assert_equal(graph.nodes['n6']['test'], True)
+            assert_equal(graph.nodes["n0"]["test"], True)
+            assert_equal(graph.nodes["n2"]["test"], False)
+            assert_equal(graph.nodes["n3"]["test"], False)
+            assert_equal(graph.nodes["n4"]["test"], True)
+            assert_equal(graph.nodes["n5"]["test"], False)
+            assert_equal(graph.nodes["n6"]["test"], True)
 
     def test_graphml_header_line(self):
         good = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -531,13 +534,13 @@ class TestReadGraphML(BaseGraphML):
 </graphml>
 """
         for s in (good, bad):
-            fh = io.BytesIO(s.encode('UTF-8'))
+            fh = io.BytesIO(s.encode("UTF-8"))
             G = nx.read_graphml(fh)
             H = nx.parse_graphml(s)
             for graph in [G, H]:
-                assert_equal(graph.nodes['n0']['test'], True)
+                assert_equal(graph.nodes["n0"]["test"], True)
 
-        fh = io.BytesIO(ugly.encode('UTF-8'))
+        fh = io.BytesIO(ugly.encode("UTF-8"))
         assert_raises(nx.NetworkXError, nx.read_graphml, fh)
         assert_raises(nx.NetworkXError, nx.parse_graphml, ugly)
 
@@ -826,12 +829,12 @@ class TestReadGraphML(BaseGraphML):
 </graphml>
 """
         # verify that nodes / attributes are correctly read when part of a group
-        fh = io.BytesIO(data.encode('UTF-8'))
+        fh = io.BytesIO(data.encode("UTF-8"))
         G = nx.read_graphml(fh)
         data = [x for _, x in G.nodes(data=True)]
         assert_equal(len(data), 9)
         for node_data in data:
-            assert_not_equal(node_data['CustomProperty'], '')
+            assert_not_equal(node_data["CustomProperty"], "")
 
 
 class TestWriteGraphML(BaseGraphML):
@@ -842,18 +845,19 @@ class TestWriteGraphML(BaseGraphML):
         try:
             import lxml.etree
         except ImportError:
-            raise SkipTest('lxml.etree not available.')
+            raise SkipTest("lxml.etree not available.")
 
     def test_write_interface(self):
         try:
             import lxml.etree
+
             assert_equal(nx.write_graphml, nx.write_graphml_lxml)
         except ImportError:
             assert_equal(nx.write_graphml, nx.write_graphml_xml)
 
     def test_write_read_simple_directed_graphml(self):
         G = self.simple_directed_graph
-        G.graph['hi'] = 'there'
+        G.graph["hi"] = "there"
         fh = io.BytesIO()
         self.writer(G, fh)
         fh.seek(0)
@@ -886,8 +890,8 @@ class TestWriteGraphML(BaseGraphML):
         keys = [child.items() for child in children[:2]]
 
         assert_equal(len(keys), 2)
-        assert_in(('attr.type', 'double'), keys[0])
-        assert_in(('attr.type', 'double'), keys[1])
+        assert_in(("attr.type", "double"), keys[0])
+        assert_in(("attr.type", "double"), keys[1])
 
     def test_more_multigraph_keys(self):
         """Writing keys as edge id attributes means keys become strings.
@@ -896,7 +900,7 @@ class TestWriteGraphML(BaseGraphML):
         This allows the adjacency to remain the same.
         """
         G = nx.MultiGraph()
-        G.add_edges_from([('a', 'b', 2), ('a', 'b', 3)])
+        G.add_edges_from([("a", "b", 2), ("a", "b", 3)])
         fd, fname = tempfile.mkstemp()
         self.writer(G, fname)
         H = nx.read_graphml(fname)
@@ -908,11 +912,11 @@ class TestWriteGraphML(BaseGraphML):
 
     def test_default_attribute(self):
         G = nx.Graph(name="Fred")
-        G.add_node(1, label=1, color='green')
+        G.add_node(1, label=1, color="green")
         nx.add_path(G, [0, 1, 2, 3])
         G.add_edge(1, 2, weight=3)
-        G.graph['node_default'] = {'color': 'yellow'}
-        G.graph['edge_default'] = {'weight': 7}
+        G.graph["node_default"] = {"color": "yellow"}
+        G.graph["edge_default"] = {"weight": 7}
         fh = io.BytesIO()
         self.writer(G, fh)
         fh.seek(0)
@@ -924,7 +928,7 @@ class TestWriteGraphML(BaseGraphML):
     def test_multigraph_to_graph(self):
         # test converting multigraph to graph if no parallel edges found
         G = nx.MultiGraph()
-        G.add_edges_from([('a', 'b', 2), ('b', 'c', 3)])  # no multiedges
+        G.add_edges_from([("a", "b", 2), ("b", "c", 3)])  # no multiedges
         fd, fname = tempfile.mkstemp()
         self.writer(G, fname)
         H = nx.read_graphml(fname)
@@ -942,7 +946,7 @@ class TestWriteGraphML(BaseGraphML):
             name1 = unichr(2344) + unichr(123) + unichr(6543)
             name2 = unichr(5543) + unichr(1543) + unichr(324)
             node_type = unicode
-        G.add_edge(name1, 'Radiohead', foo=name2)
+        G.add_edge(name1, "Radiohead", foo=name2)
         fd, fname = tempfile.mkstemp()
         self.writer(G, fname)
         H = nx.read_graphml(fname, node_type=node_type)
@@ -953,6 +957,7 @@ class TestWriteGraphML(BaseGraphML):
     def test_unicode_escape(self):
         # test for handling json escaped stings in python 2 Issue #1880
         import json
+
         a = dict(a='{"a": "123"}')  # an object with many chars to escape
         try:  # Python 3.x
             chr(2344)
@@ -960,12 +965,12 @@ class TestWriteGraphML(BaseGraphML):
         except ValueError:  # Python 2.6+
             sa = unicode(json.dumps(a))
         G = nx.Graph()
-        G.graph['test'] = sa
+        G.graph["test"] = sa
         fh = io.BytesIO()
         self.writer(G, fh)
         fh.seek(0)
         H = nx.read_graphml(fh)
-        assert_equal(G.graph['test'], H.graph['test'])
+        assert_equal(G.graph["test"], H.graph["test"])
 
 
 class TestXMLGraphML(TestWriteGraphML):
@@ -976,4 +981,4 @@ class TestXMLGraphML(TestWriteGraphML):
         try:
             import xml.etree.ElementTree
         except ImportError:
-            raise SkipTest('xml.etree.ElementTree not available.')
+            raise SkipTest("xml.etree.ElementTree not available.")

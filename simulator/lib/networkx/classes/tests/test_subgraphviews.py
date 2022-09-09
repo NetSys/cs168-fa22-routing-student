@@ -1,5 +1,10 @@
-from nose.tools import assert_equal, assert_not_equal, \
-    assert_is, assert_true, assert_raises
+from nose.tools import (
+    assert_equal,
+    assert_not_equal,
+    assert_is,
+    assert_true,
+    assert_raises,
+)
 
 import networkx as nx
 
@@ -207,8 +212,8 @@ class TestMultiDiGraphView(TestMultiGraphView, TestSubDiGraphView):
 class TestInducedSubGraph(object):
     def setUp(self):
         self.K3 = G = nx.complete_graph(3)
-        G.graph['foo'] = []
-        G.nodes[0]['foo'] = []
+        G.graph["foo"] = []
+        G.nodes[0]["foo"] = []
         G.remove_edge(1, 2)
         ll = []
         G.add_edge(1, 2, foo=ll)
@@ -231,15 +236,15 @@ class TestInducedSubGraph(object):
         assert_equal(dict(H.adj), {0: {1: {}}, 1: {0: {}}})
 
     def same_attrdict(self, H, G):
-        old_foo = H[1][2]['foo']
-        H.edges[1, 2]['foo'] = 'baz'
+        old_foo = H[1][2]["foo"]
+        H.edges[1, 2]["foo"] = "baz"
         assert_equal(G.edges, H.edges)
-        H.edges[1, 2]['foo'] = old_foo
+        H.edges[1, 2]["foo"] = old_foo
         assert_equal(G.edges, H.edges)
-        old_foo = H.nodes[0]['foo']
-        H.nodes[0]['foo'] = 'baz'
+        old_foo = H.nodes[0]["foo"]
+        H.nodes[0]["foo"] = "baz"
         assert_equal(G.nodes, H.nodes)
-        H.nodes[0]['foo'] = old_foo
+        H.nodes[0]["foo"] = old_foo
         assert_equal(G.nodes, H.nodes)
 
     def graphs_equal(self, H, G):
@@ -270,10 +275,10 @@ class TestEdgeSubGraph(object):
         self.G = G = nx.path_graph(5)
         # Add some node, edge, and graph attributes.
         for i in range(5):
-            G.nodes[i]['name'] = 'node{}'.format(i)
-        G.edges[0, 1]['name'] = 'edge01'
-        G.edges[3, 4]['name'] = 'edge34'
-        G.graph['name'] = 'graph'
+            G.nodes[i]["name"] = "node{}".format(i)
+        G.edges[0, 1]["name"] = "edge01"
+        G.edges[3, 4]["name"] = "edge34"
+        G.graph["name"] = "graph"
         # Get the subgraph induced by the first and last edges.
         self.H = nx.edge_subgraph(G, [(0, 1), (3, 4)])
 
@@ -283,8 +288,9 @@ class TestEdgeSubGraph(object):
 
     def test_correct_edges(self):
         """Tests that the subgraph has the correct edges."""
-        assert_equal([(0, 1, 'edge01'), (3, 4, 'edge34')],
-                     sorted(self.H.edges(data='name')))
+        assert_equal(
+            [(0, 1, "edge01"), (3, 4, "edge34")], sorted(self.H.edges(data="name"))
+        )
 
     def test_add_node(self):
         """Tests that adding a node to the original graph does not
@@ -312,9 +318,9 @@ class TestEdgeSubGraph(object):
         for v in self.H:
             assert_equal(self.G.nodes[v], self.H.nodes[v])
         # Making a change to G should make a change in H and vice versa.
-        self.G.nodes[0]['name'] = 'foo'
+        self.G.nodes[0]["name"] = "foo"
         assert_equal(self.G.nodes[0], self.H.nodes[0])
-        self.H.nodes[1]['name'] = 'bar'
+        self.H.nodes[1]["name"] = "bar"
         assert_equal(self.G.nodes[1], self.H.nodes[1])
 
     def test_edge_attr_dict(self):
@@ -325,12 +331,10 @@ class TestEdgeSubGraph(object):
         for u, v in self.H.edges():
             assert_equal(self.G.edges[u, v], self.H.edges[u, v])
         # Making a change to G should make a change in H and vice versa.
-        self.G.edges[0, 1]['name'] = 'foo'
-        assert_equal(self.G.edges[0, 1]['name'],
-                     self.H.edges[0, 1]['name'])
-        self.H.edges[3, 4]['name'] = 'bar'
-        assert_equal(self.G.edges[3, 4]['name'],
-                     self.H.edges[3, 4]['name'])
+        self.G.edges[0, 1]["name"] = "foo"
+        assert_equal(self.G.edges[0, 1]["name"], self.H.edges[0, 1]["name"])
+        self.H.edges[3, 4]["name"] = "bar"
+        assert_equal(self.G.edges[3, 4]["name"], self.H.edges[3, 4]["name"])
 
     def test_graph_attr_dict(self):
         """Tests that the graph attribute dictionary of the two graphs

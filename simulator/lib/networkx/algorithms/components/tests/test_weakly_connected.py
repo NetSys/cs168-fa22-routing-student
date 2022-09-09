@@ -5,12 +5,25 @@ from networkx import NetworkXNotImplemented
 
 
 class TestWeaklyConnected:
-
     def setUp(self):
         self.gc = []
         G = nx.DiGraph()
-        G.add_edges_from([(1, 2), (2, 3), (2, 8), (3, 4), (3, 7), (4, 5),
-                          (5, 3), (5, 6), (7, 4), (7, 6), (8, 1), (8, 7)])
+        G.add_edges_from(
+            [
+                (1, 2),
+                (2, 3),
+                (2, 8),
+                (3, 4),
+                (3, 7),
+                (4, 5),
+                (5, 3),
+                (5, 6),
+                (7, 4),
+                (7, 6),
+                (8, 1),
+                (8, 7),
+            ]
+        )
         C = [[3, 4, 5, 7], [1, 2, 8], [6]]
         self.gc.append((G, C))
 
@@ -74,4 +87,6 @@ class TestWeaklyConnected:
         assert_raises(NetworkXNotImplemented, nx.number_weakly_connected_components, G)
         assert_raises(NetworkXNotImplemented, nx.is_weakly_connected, G)
         # deprecated
-        assert_raises(NetworkXNotImplemented, nx.weakly_connected_component_subgraphs, G)
+        assert_raises(
+            NetworkXNotImplemented, nx.weakly_connected_component_subgraphs, G
+        )

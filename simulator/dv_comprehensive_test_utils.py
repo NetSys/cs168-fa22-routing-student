@@ -13,8 +13,8 @@ class TestHost(BasicHost):
     ENABLE_PONG = False
 
     def __init__(self):
-        super(TestHost,self).__init__()
-        self.rxed_pings = defaultdict(list) # src -> list((packet, time))
+        super(TestHost, self).__init__()
+        self.rxed_pings = defaultdict(list)  # src -> list((packet, time))
         self.reset()
         all_hosts.add(self)
 
@@ -43,6 +43,7 @@ DefaultHostType = TestHost
 
 def _set_up_cable_tracking():
     old_new = sim.cable.Cable.__new__
+
     def new_new(*args, **kw):
         if old_new is object.__new__:
             # This should probably always be the case...
@@ -61,4 +62,3 @@ sim.cable.BasicCable.DEFAULT_TX_TIME = 0
 
 def launch():
     pass
-

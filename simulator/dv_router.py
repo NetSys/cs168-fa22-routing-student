@@ -6,10 +6,16 @@ Based on skeleton code by:
 """
 
 import sim.api as api
-from cs168.dv import RoutePacket, \
-                     Table, TableEntry, \
-                     DVRouterBase, Ports, \
-                     FOREVER, INFINITY
+from cs168.dv import (
+    RoutePacket,
+    Table,
+    TableEntry,
+    DVRouterBase,
+    Ports,
+    FOREVER,
+    INFINITY,
+)
+
 
 class DVRouter(DVRouterBase):
 
@@ -24,7 +30,7 @@ class DVRouter(DVRouterBase):
     SPLIT_HORIZON = False
     POISON_REVERSE = False
     # -----------------------------------------------
-    
+
     # Determines if you send poison for expired routes
     POISON_EXPIRED = False
 
@@ -40,19 +46,19 @@ class DVRouter(DVRouterBase):
         DO NOT remove any existing code from this method.
         However, feel free to add to it for memory purposes in the final stage!
         """
-        assert not (self.SPLIT_HORIZON and self.POISON_REVERSE), \
-                    "Split horizon and poison reverse can't both be on"
-        
+        assert not (
+            self.SPLIT_HORIZON and self.POISON_REVERSE
+        ), "Split horizon and poison reverse can't both be on"
+
         self.start_timer()  # Starts signaling the timer at correct rate.
 
         # Contains all current ports and their latencies.
         # See the write-up for documentation.
         self.ports = Ports()
-        
+
         # This is the table that contains all current routes
         self.table = Table()
         self.table.owner = self
-
 
     def add_static_route(self, host, port):
         """

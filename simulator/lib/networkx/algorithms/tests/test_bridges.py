@@ -19,10 +19,21 @@ class TestBridges(TestCase):
     def test_single_bridge(self):
         edges = [
             # DFS tree edges.
-            (1, 2), (2, 3), (3, 4), (3, 5), (5, 6), (6, 7), (7, 8), (5, 9),
+            (1, 2),
+            (2, 3),
+            (3, 4),
+            (3, 5),
+            (5, 6),
+            (6, 7),
+            (7, 8),
+            (5, 9),
             (9, 10),
             # Nontree edges.
-            (1, 3), (1, 4), (2, 5), (5, 10), (6, 8)
+            (1, 3),
+            (1, 4),
+            (2, 5),
+            (5, 10),
+            (6, 8),
         ]
         G = nx.Graph(edges)
         source = 1
@@ -48,11 +59,13 @@ class TestLocalBridges(TestCase):
     def test_nospan(self):
         expected = {(3, 4), (4, 3)}
         assert_in(next(nx.local_bridges(self.BB, with_span=False)), expected)
-        assert_equal(set(nx.local_bridges(self.square, with_span=False)), self.square.edges)
+        assert_equal(
+            set(nx.local_bridges(self.square, with_span=False)), self.square.edges
+        )
         assert_equal(list(nx.local_bridges(self.tri, with_span=False)), [])
 
     def test_no_weight(self):
-        inf = float('inf')
+        inf = float("inf")
         expected = {(3, 4, inf), (4, 3, inf)}
         assert_in(next(nx.local_bridges(self.BB)), expected)
         expected = {(u, v, 3) for u, v, in self.square.edges}
@@ -60,12 +73,12 @@ class TestLocalBridges(TestCase):
         assert_equal(list(nx.local_bridges(self.tri)), [])
 
     def test_weight(self):
-        inf = float('inf')
+        inf = float("inf")
         G = self.square.copy()
 
-        G.edges[1, 2]['weight'] = 2
-        expected = {(u, v, 5 - wt) for u, v, wt in G.edges(data='weight', default=1)}
-        assert_equal(set(nx.local_bridges(G, weight='weight')), expected)
+        G.edges[1, 2]["weight"] = 2
+        expected = {(u, v, 5 - wt) for u, v, wt in G.edges(data="weight", default=1)}
+        assert_equal(set(nx.local_bridges(G, weight="weight")), expected)
 
         expected = {(u, v, 6) for u, v in G.edges}
         lb = nx.local_bridges(G, weight=lambda u, v, d: 2)

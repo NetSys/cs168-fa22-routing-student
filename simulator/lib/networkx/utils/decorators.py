@@ -9,11 +9,11 @@ from decorator import decorator
 from networkx.utils import is_string_like
 
 __all__ = [
-    'not_implemented_for',
-    'open_file',
-    'nodes_or_number',
-    'preserve_random_state',
-    'random_state',
+    "not_implemented_for",
+    "open_file",
+    "nodes_or_number",
+    "preserve_random_state",
+    "random_state",
 ]
 
 
@@ -52,47 +52,54 @@ def not_implemented_for(*graph_types):
        def sp_np_function(G):
            pass
     """
+
     @decorator
     def _not_implemented_for(not_implement_for_func, *args, **kwargs):
         graph = args[0]
-        terms = {'directed': graph.is_directed(),
-                 'undirected': not graph.is_directed(),
-                 'multigraph': graph.is_multigraph(),
-                 'graph': not graph.is_multigraph()}
+        terms = {
+            "directed": graph.is_directed(),
+            "undirected": not graph.is_directed(),
+            "multigraph": graph.is_multigraph(),
+            "graph": not graph.is_multigraph(),
+        }
         match = True
         try:
             for t in graph_types:
                 match = match and terms[t]
         except KeyError:
-            raise KeyError('use one or more of ',
-                           'directed, undirected, multigraph, graph')
+            raise KeyError(
+                "use one or more of ", "directed, undirected, multigraph, graph"
+            )
         if match:
-            msg = 'not implemented for %s type' % ' '.join(graph_types)
+            msg = "not implemented for %s type" % " ".join(graph_types)
             raise nx.NetworkXNotImplemented(msg)
         else:
             return not_implement_for_func(*args, **kwargs)
+
     return _not_implemented_for
 
 
 def _open_gz(path, mode):
     import gzip
+
     return gzip.open(path, mode=mode)
 
 
 def _open_bz2(path, mode):
     import bz2
+
     return bz2.BZ2File(path, mode=mode)
 
 
 # To handle new extensions, define a function accepting a `path` and `mode`.
 # Then add the extension to _dispatch_dict.
 _dispatch_dict = defaultdict(lambda: open)
-_dispatch_dict['.gz'] = _open_gz
-_dispatch_dict['.bz2'] = _open_bz2
-_dispatch_dict['.gzip'] = _open_gz
+_dispatch_dict[".gz"] = _open_gz
+_dispatch_dict[".bz2"] = _open_bz2
+_dispatch_dict[".gzip"] = _open_gz
 
 
-def open_file(path_arg, mode='r'):
+def open_file(path_arg, mode="r"):
     """Decorator to ensure clean opening and closing of files.
 
     Parameters
@@ -184,7 +191,7 @@ def open_file(path_arg, mode='r'):
             except KeyError:
                 # Could not find the keyword. Thus, no default was specified
                 # in the function signature and the user did not provide it.
-                msg = 'Missing required keyword argument: {0}'
+                msg = "Missing required keyword argument: {0}"
                 raise nx.NetworkXError(msg.format(path_arg))
             else:
                 is_kwarg = True
@@ -204,7 +211,7 @@ def open_file(path_arg, mode='r'):
             ext = splitext(path)[1]
             fobj = _dispatch_dict[ext](path, mode=mode)
             close_fobj = True
-        elif hasattr(path, 'read'):
+        elif hasattr(path, "read"):
             # path is already a file-like object
             fobj = path
             close_fobj = False
@@ -267,6 +274,7 @@ def nodes_or_number(which_args):
            # r is a number. n can be a number of a list of nodes
            pass
     """
+
     @decorator
     def _nodes_or_number(func_to_be_decorated, *args, **kw):
         # form tuple of arg positions to be converted.
@@ -288,11 +296,12 @@ def nodes_or_number(which_args):
                     raise nx.NetworkXError(msg)
             new_args[i] = (n, nodes)
         return func_to_be_decorated(*new_args, **kw)
+
     return _nodes_or_number
 
 
 def preserve_random_state(func):
-    """ Decorator to preserve the numpy.random state during a function.
+    """Decorator to preserve the numpy.random state during a function.
 
     Parameters
     ----------
@@ -332,6 +341,7 @@ def preserve_random_state(func):
             with save_random_state():
                 seed(1234567890)
                 return func(*args, **kwargs)
+
         wrapper.__name__ = func.__name__
         return wrapper
     except ImportError:
@@ -368,6 +378,7 @@ def random_state(random_state_index):
        def random_array(dims, random_state=1):
            return random_state.rand(*dims)
     """
+
     @decorator
     def _random_state(func, *args, **kwargs):
         # Parse the decorator arguments.
@@ -385,4 +396,5 @@ def random_state(random_state_index):
         new_args = list(args)
         new_args[random_state_index] = random_state_instance
         return func(*new_args, **kwargs)
+
     return _random_state

@@ -25,14 +25,14 @@ from functools import partial
 import itertools as it
 
 __all__ = [
-    'k_edge_components',
-    'k_edge_subgraphs',
-    'bridge_components',
-    'EdgeComponentAuxGraph',
+    "k_edge_components",
+    "k_edge_subgraphs",
+    "bridge_components",
+    "EdgeComponentAuxGraph",
 ]
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def k_edge_components(G, k):
     """Generates nodes in each maximal k-edge-connected component in G.
 
@@ -97,7 +97,7 @@ def k_edge_components(G, k):
     """
     # Compute k-edge-ccs using the most efficient algorithms available.
     if k < 1:
-        raise ValueError('k cannot be less than 1')
+        raise ValueError("k cannot be less than 1")
     if G.is_directed():
         if k == 1:
             return nx.strongly_connected_components(G)
@@ -115,7 +115,7 @@ def k_edge_components(G, k):
             return aux_graph.k_edge_components(k)
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def k_edge_subgraphs(G, k):
     """Generates nodes in each maximal k-edge-connected subgraph in G.
 
@@ -176,7 +176,7 @@ def k_edge_subgraphs(G, k):
         https://openproceedings.org/2012/conf/edbt/ZhouLYLCL12.pdf
     """
     if k < 1:
-        raise ValueError('k cannot be less than 1')
+        raise ValueError("k cannot be less than 1")
     if G.is_directed():
         if k <= 1:
             # For directed graphs ,
@@ -202,8 +202,8 @@ def _k_edge_subgraphs_nodes(G, k):
         yield set(C.nodes())
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def bridge_components(G):
     """Finds all bridge-connected components G.
 
@@ -342,7 +342,7 @@ class EdgeComponentAuxGraph(object):
         G : NetworkX graph
         """
         # workaround for classmethod decorator
-        not_implemented_for('multigraph')(lambda G: G)(G)
+        not_implemented_for("multigraph")(lambda G: G)(G)
 
         def _recursive_build(H, A, source, avail):
             # Terminate once the flow has been compute to every node.
@@ -408,11 +408,11 @@ class EdgeComponentAuxGraph(object):
         k-edge-ccs in the original graph.
         """
         if k < 1:
-            raise ValueError('k cannot be less than 1')
+            raise ValueError("k cannot be less than 1")
         A = self.A
         # "traverse the auxiliary graph A and delete all edges with weights less
         # than k"
-        aux_weights = nx.get_edge_attributes(A, 'weight')
+        aux_weights = nx.get_edge_attributes(A, "weight")
         # Create a relevant graph with the auxillary edges with weights >= k
         R = nx.Graph()
         R.add_nodes_from(A.nodes())
@@ -444,12 +444,12 @@ class EdgeComponentAuxGraph(object):
         then use this method.
         """
         if k < 1:
-            raise ValueError('k cannot be less than 1')
+            raise ValueError("k cannot be less than 1")
         H = self.H
         A = self.A
         # "traverse the auxiliary graph A and delete all edges with weights less
         # than k"
-        aux_weights = nx.get_edge_attributes(A, 'weight')
+        aux_weights = nx.get_edge_attributes(A, "weight")
         # Create a relevant graph with the auxillary edges with weights >= k
         R = nx.Graph()
         R.add_nodes_from(A.nodes())
@@ -563,7 +563,7 @@ def general_k_edge_subgraphs(G, k):
     [1, 1, 1, 4, 4]
     """
     if k < 1:
-        raise ValueError('k cannot be less than 1')
+        raise ValueError("k cannot be less than 1")
 
     # Node pruning optimization (incorporates early return)
     # find_ccs is either connected_components/strongly_connected_components

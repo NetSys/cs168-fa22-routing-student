@@ -12,12 +12,14 @@
 import networkx as nx
 from networkx.utils import not_implemented_for
 
-__all__ = ['project',
-           'projected_graph',
-           'weighted_projected_graph',
-           'collaboration_weighted_projected_graph',
-           'overlap_weighted_projected_graph',
-           'generic_weighted_projected_graph']
+__all__ = [
+    "project",
+    "projected_graph",
+    "weighted_projected_graph",
+    "collaboration_weighted_projected_graph",
+    "overlap_weighted_projected_graph",
+    "generic_weighted_projected_graph",
+]
 
 
 def projected_graph(B, nodes, multigraph=False):
@@ -123,7 +125,7 @@ def projected_graph(B, nodes, multigraph=False):
     return G
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def weighted_projected_graph(B, nodes, ratio=False):
     r"""Returns a weighted projection of B onto one of its node sets.
 
@@ -212,7 +214,7 @@ def weighted_projected_graph(B, nodes, ratio=False):
     return G
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def collaboration_weighted_projected_graph(B, nodes):
     r"""Newman's weighted projection of B onto one of its node sets.
 
@@ -305,7 +307,7 @@ def collaboration_weighted_projected_graph(B, nodes):
     return G
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def overlap_weighted_projected_graph(B, nodes, jaccard=True):
     r"""Overlap weighted projection of B onto one of its node sets.
 
@@ -404,7 +406,7 @@ def overlap_weighted_projected_graph(B, nodes, jaccard=True):
     return G
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def generic_weighted_projected_graph(B, nodes, weight_function=None):
     r"""Weighted projection of B with a user-specified weight function.
 
@@ -454,7 +456,7 @@ def generic_weighted_projected_graph(B, nodes, weight_function=None):
     >>> # Add some arbitrary weight to the edges
     >>> for i,(u,v) in enumerate(B.edges()):
     ...     B.edges[u, v]['weight'] = i + 1
-    ... 
+    ...
     >>> for edge in B.edges(data=True):
     ...     print(edge)
     ...
@@ -500,9 +502,11 @@ def generic_weighted_projected_graph(B, nodes, weight_function=None):
         pred = B.adj
         G = nx.Graph()
     if weight_function is None:
+
         def weight_function(G, u, v):
             # Notice that we use set(pred[v]) for handling the directed case.
             return len(set(G[u]) & set(pred[v]))
+
     G.graph.update(B.graph)
     G.add_nodes_from((n, B.nodes[n]) for n in nodes)
     for u in nodes:

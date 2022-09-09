@@ -3,20 +3,30 @@ import itertools
 import math
 import random
 import networkx as nx
+
 #    Copyright(C) 2011, 2015 by
 #    Ben Edwards <bedwards@cs.unm.edu>
 #    Aric Hagberg <hagberg@lanl.gov>
 #    Konstantinos Karakatsanis <dinoskarakas@gmail.com>
 #    All rights reserved.
 #    BSD license.
-__author__ = """\n""".join(['Ben Edwards (bedwards@cs.unm.edu)',
-                            'Aric Hagberg (hagberg@lanl.gov)',
-                            'Konstantinos Karakatsanis '
-                            '<dinoskarakas@gmail.com>'])
-__all__ = ['caveman_graph', 'connected_caveman_graph',
-           'relaxed_caveman_graph', 'random_partition_graph',
-           'planted_partition_graph', 'gaussian_random_partition_graph',
-           'ring_of_cliques', 'windmill_graph']
+__author__ = """\n""".join(
+    [
+        "Ben Edwards (bedwards@cs.unm.edu)",
+        "Aric Hagberg (hagberg@lanl.gov)",
+        "Konstantinos Karakatsanis " "<dinoskarakas@gmail.com>",
+    ]
+)
+__all__ = [
+    "caveman_graph",
+    "connected_caveman_graph",
+    "relaxed_caveman_graph",
+    "random_partition_graph",
+    "planted_partition_graph",
+    "gaussian_random_partition_graph",
+    "ring_of_cliques",
+    "windmill_graph",
+]
 
 
 def caveman_graph(l, k):
@@ -224,7 +234,7 @@ def random_partition_graph(sizes, p_in, p_out, seed=None, directed=False):
         G = nx.DiGraph()
     else:
         G = nx.Graph()
-    G.graph['partition'] = []
+    G.graph["partition"] = []
     n = sum(sizes)
     G.add_nodes_from(range(n))
     # start with len(sizes) groups of gnp random graphs with parameter p_in
@@ -234,12 +244,13 @@ def random_partition_graph(sizes, p_in, p_out, seed=None, directed=False):
     start = 0
     group = 0
     for n in sizes:
-        edges = ((u + start, v + start)
-                 for u, v in
-                 nx.fast_gnp_random_graph(n, p_in, directed=directed).edges())
+        edges = (
+            (u + start, v + start)
+            for u, v in nx.fast_gnp_random_graph(n, p_in, directed=directed).edges()
+        )
         G.add_edges_from(edges)
         next_group.update(dict.fromkeys(range(start, start + n), start + n))
-        G.graph['partition'].append(set(range(start, start + n)))
+        G.graph["partition"].append(set(range(start, start + n)))
         group += 1
         start += n
     # handle edge cases
@@ -333,8 +344,7 @@ def planted_partition_graph(l, k, p_in, p_out, seed=None, directed=False):
     return random_partition_graph([k] * l, p_in, p_out, seed, directed)
 
 
-def gaussian_random_partition_graph(n, s, v, p_in, p_out, directed=False,
-                                    seed=None):
+def gaussian_random_partition_graph(n, s, v, p_in, p_out, directed=False, seed=None):
     """Generate a Gaussian random partition graph.
 
     A Gaussian random partition graph is created by creating k partitions
@@ -447,18 +457,19 @@ def ring_of_cliques(num_cliques, clique_size):
     simply adds the link without removing any link from the cliques.
     """
     if num_cliques < 2:
-        raise nx.NetworkXError('A ring of cliques must have at least '
-                               'two cliques')
+        raise nx.NetworkXError("A ring of cliques must have at least " "two cliques")
     if clique_size < 2:
-        raise nx.NetworkXError('The cliques must have at least two nodes')
+        raise nx.NetworkXError("The cliques must have at least two nodes")
 
     G = nx.Graph()
     for i in range(num_cliques):
-        edges = itertools.combinations(range(i * clique_size, i * clique_size +
-                                             clique_size), 2)
+        edges = itertools.combinations(
+            range(i * clique_size, i * clique_size + clique_size), 2
+        )
         G.add_edges_from(edges)
-        G.add_edge(i * clique_size + 1, (i + 1) * clique_size %
-                   (num_cliques * clique_size))
+        G.add_edge(
+            i * clique_size + 1, (i + 1) * clique_size % (num_cliques * clique_size)
+        )
     return G
 
 
@@ -500,13 +511,15 @@ def windmill_graph(n, k):
     are in the opposite order as the parameters of this method.
     """
     if n < 2:
-        msg = 'A windmill graph must have at least two cliques'
+        msg = "A windmill graph must have at least two cliques"
         raise nx.NetworkXError(msg)
     if k < 2:
-        raise nx.NetworkXError('The cliques must have at least two nodes')
+        raise nx.NetworkXError("The cliques must have at least two nodes")
 
-    G = nx.disjoint_union_all(itertools.chain([nx.complete_graph(k)],
-                                              (nx.complete_graph(k - 1)
-                                               for _ in range(n - 1))))
+    G = nx.disjoint_union_all(
+        itertools.chain(
+            [nx.complete_graph(k)], (nx.complete_graph(k - 1) for _ in range(n - 1))
+        )
+    )
     G.add_edges_from((0, i) for i in range(k, G.number_of_nodes()))
     return G

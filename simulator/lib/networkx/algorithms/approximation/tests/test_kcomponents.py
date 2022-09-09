@@ -14,21 +14,25 @@ def build_k_number_dict(k_components):
                 k_num[node] = k
     return k_num
 
+
 ##
 # Some nice synthetic graphs
 ##
 
 
 def graph_example_1():
-    G = nx.convert_node_labels_to_integers(nx.grid_graph([5, 5]),
-                                           label_attribute='labels')
-    rlabels = nx.get_node_attributes(G, 'labels')
+    G = nx.convert_node_labels_to_integers(
+        nx.grid_graph([5, 5]), label_attribute="labels"
+    )
+    rlabels = nx.get_node_attributes(G, "labels")
     labels = {v: k for k, v in rlabels.items()}
 
-    for nodes in [(labels[(0, 0)], labels[(1, 0)]),
-                  (labels[(0, 4)], labels[(1, 4)]),
-                  (labels[(3, 0)], labels[(4, 0)]),
-                  (labels[(3, 4)], labels[(4, 4)])]:
+    for nodes in [
+        (labels[(0, 0)], labels[(1, 0)]),
+        (labels[(0, 4)], labels[(1, 4)]),
+        (labels[(3, 0)], labels[(4, 0)]),
+        (labels[(3, 4)], labels[(4, 4)]),
+    ]:
         new_node = G.order() + 1
         # Petersen graph is triconnected
         P = nx.petersen_graph()
@@ -54,13 +58,13 @@ def graph_example_1():
 
 
 def torrents_and_ferraro_graph():
-    G = nx.convert_node_labels_to_integers(nx.grid_graph([5, 5]),
-                                           label_attribute='labels')
-    rlabels = nx.get_node_attributes(G, 'labels')
+    G = nx.convert_node_labels_to_integers(
+        nx.grid_graph([5, 5]), label_attribute="labels"
+    )
+    rlabels = nx.get_node_attributes(G, "labels")
     labels = {v: k for k, v in rlabels.items()}
 
-    for nodes in [(labels[(0, 4)], labels[(1, 4)]),
-                  (labels[(3, 4)], labels[(4, 4)])]:
+    for nodes in [(labels[(0, 4)], labels[(1, 4)]), (labels[(3, 4)], labels[(4, 4)])]:
         new_node = G.order() + 1
         # Petersen graph is triconnected
         P = nx.petersen_graph()
@@ -85,8 +89,7 @@ def torrents_and_ferraro_graph():
         # This stupid mistake make one reviewer very angry :P
         G.add_edge(new_node + 16, new_node + 8)
 
-    for nodes in [(labels[(0, 0)], labels[(1, 0)]),
-                  (labels[(3, 0)], labels[(4, 0)])]:
+    for nodes in [(labels[(0, 0)], labels[(1, 0)]), (labels[(3, 0)], labels[(4, 0)])]:
         new_node = G.order() + 1
         # Petersen graph is triconnected
         P = nx.petersen_graph()
@@ -112,6 +115,7 @@ def torrents_and_ferraro_graph():
         for nbr in nbrs2:
             G.add_edge(new_node + 18, nbr)
     return G
+
 
 # Helper function
 
@@ -143,10 +147,42 @@ def test_karate_0():
 
 
 def test_karate_1():
-    karate_k_num = {0: 4, 1: 4, 2: 4, 3: 4, 4: 3, 5: 3, 6: 3, 7: 4, 8: 4, 9: 2,
-                    10: 3, 11: 1, 12: 2, 13: 4, 14: 2, 15: 2, 16: 2, 17: 2, 18: 2,
-                    19: 3, 20: 2, 21: 2, 22: 2, 23: 3, 24: 3, 25: 3, 26: 2, 27: 3,
-                    28: 3, 29: 3, 30: 4, 31: 3, 32: 4, 33: 4}
+    karate_k_num = {
+        0: 4,
+        1: 4,
+        2: 4,
+        3: 4,
+        4: 3,
+        5: 3,
+        6: 3,
+        7: 4,
+        8: 4,
+        9: 2,
+        10: 3,
+        11: 1,
+        12: 2,
+        13: 4,
+        14: 2,
+        15: 2,
+        16: 2,
+        17: 2,
+        18: 2,
+        19: 3,
+        20: 2,
+        21: 2,
+        22: 2,
+        23: 3,
+        24: 3,
+        25: 3,
+        26: 2,
+        27: 3,
+        28: 3,
+        29: 3,
+        30: 4,
+        31: 3,
+        32: 4,
+        33: 4,
+    }
     approx_karate_k_num = karate_k_num.copy()
     approx_karate_k_num[24] = 2
     approx_karate_k_num[25] = 2
@@ -184,9 +220,9 @@ def test_directed():
 
 
 def test_same():
-    equal = {'A': 2, 'B': 2, 'C': 2}
-    slightly_different = {'A': 2, 'B': 1, 'C': 2}
-    different = {'A': 2, 'B': 8, 'C': 18}
+    equal = {"A": 2, "B": 2, "C": 2}
+    slightly_different = {"A": 2, "B": 1, "C": 2}
+    different = {"A": 2, "B": 8, "C": 18}
     assert_true(_same(equal))
     assert_false(_same(slightly_different))
     assert_true(_same(slightly_different, tol=1))
@@ -202,9 +238,7 @@ class TestAntiGraph:
         self.Ad = _AntiGraph(nx.complement(self.Gd))
         self.Gk = nx.karate_club_graph()
         self.Ak = _AntiGraph(nx.complement(self.Gk))
-        self.GA = [(self.Gnp, self.Anp),
-                   (self.Gd, self.Ad),
-                   (self.Gk, self.Ak)]
+        self.GA = [(self.Gnp, self.Anp), (self.Gd, self.Ad), (self.Gk, self.Ak)]
 
     def test_size(self):
         for G, A in self.GA:
@@ -247,7 +281,7 @@ class TestAntiGraph:
 
     def test_node_not_in_graph(self):
         for G, A in self.GA:
-            node = 'non_existent_node'
+            node = "non_existent_node"
             assert_raises(nx.NetworkXError, A.neighbors, node)
             assert_raises(nx.NetworkXError, G.neighbors, node)
 
@@ -258,7 +292,10 @@ class TestAntiGraph:
             assert_equal(G.degree(node), A.degree(node))
             assert_equal(sum(d for n, d in G.degree()), sum(d for n, d in A.degree()))
             # AntiGraph is a ThinGraph, so all the weights are 1
-            assert_equal(sum(d for n, d in A.degree()),
-                         sum(d for n, d in A.degree(weight='weight')))
-            assert_equal(sum(d for n, d in G.degree(nodes)),
-                         sum(d for n, d in A.degree(nodes)))
+            assert_equal(
+                sum(d for n, d in A.degree()),
+                sum(d for n, d in A.degree(weight="weight")),
+            )
+            assert_equal(
+                sum(d for n, d in G.degree(nodes)), sum(d for n, d in A.degree(nodes))
+            )

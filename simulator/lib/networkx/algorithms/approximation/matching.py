@@ -14,6 +14,7 @@ edges; that is, no two edges share a common vertex.
 #   All rights reserved.
 #   BSD license.
 import networkx as nx
+
 __all__ = ["min_maximal_matching"]
 __author__ = """Nicholas Mancuso (nick.mancuso@gmail.com)"""
 

@@ -9,17 +9,21 @@
 """Betweenness centrality measures for subsets of nodes."""
 import networkx as nx
 
-from networkx.algorithms.centrality.betweenness import\
-    _single_source_dijkstra_path_basic as dijkstra
-from networkx.algorithms.centrality.betweenness import\
-    _single_source_shortest_path_basic as shortest_path
+from networkx.algorithms.centrality.betweenness import (
+    _single_source_dijkstra_path_basic as dijkstra,
+)
+from networkx.algorithms.centrality.betweenness import (
+    _single_source_shortest_path_basic as shortest_path,
+)
 
-__all__ = ['betweenness_centrality_subset', 'betweenness_centrality_source',
-           'edge_betweenness_centrality_subset']
+__all__ = [
+    "betweenness_centrality_subset",
+    "betweenness_centrality_source",
+    "edge_betweenness_centrality_subset",
+]
 
 
-def betweenness_centrality_subset(G, sources, targets, normalized=False,
-                                  weight=None):
+def betweenness_centrality_subset(G, sources, targets, normalized=False, weight=None):
     r"""Compute betweenness centrality for a subset of nodes.
 
     .. math::
@@ -100,8 +104,9 @@ def betweenness_centrality_subset(G, sources, targets, normalized=False,
     return b
 
 
-def edge_betweenness_centrality_subset(G, sources, targets, normalized=False,
-                                       weight=None):
+def edge_betweenness_centrality_subset(
+    G, sources, targets, normalized=False, weight=None
+):
     r"""Compute betweenness centrality for edges for a subset of nodes.
 
     .. math::
@@ -182,13 +187,11 @@ def edge_betweenness_centrality_subset(G, sources, targets, normalized=False,
 
 
 # obsolete name
-def betweenness_centrality_source(G, normalized=True, weight=None,
-                                  sources=None):
+def betweenness_centrality_source(G, normalized=True, weight=None, sources=None):
     if sources is None:
         sources = G.nodes()
     targets = list(G)
-    return betweenness_centrality_subset(G, sources, targets, normalized,
-                                         weight)
+    return betweenness_centrality_subset(G, sources, targets, normalized, weight)
 
 
 def _accumulate_subset(betweenness, S, P, sigma, s, targets):

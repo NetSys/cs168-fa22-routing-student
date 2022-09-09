@@ -87,7 +87,7 @@ import pbr.hooks
 
 # A simplified RE for this; just checks that the line ends with version
 # predicates in ()
-_VERSION_SPEC_RE = re.compile(r'\s*(.*?)\s*\((.*)\)\s*$')
+_VERSION_SPEC_RE = re.compile(r"\s*(.*?)\s*\((.*)\)\s*$")
 
 
 # Mappings from setup() keyword arguments to setup.cfg options;
@@ -117,13 +117,13 @@ D1_D2_SETUP_ARGS = {
     "python_requires": ("metadata",),
     "provides": ("metadata", "provides_dist"),  # **
     "obsoletes": ("metadata", "obsoletes_dist"),  # **
-    "package_dir": ("files", 'packages_root'),
+    "package_dir": ("files", "packages_root"),
     "packages": ("files",),
     "package_data": ("files",),
     "namespace_packages": ("files",),
     "data_files": ("files",),
     "scripts": ("files",),
-    "py_modules": ("files", "modules"),   # **
+    "py_modules": ("files", "modules"),  # **
     "cmdclass": ("global", "commands"),
     # Not supported in distutils2, but provided for
     # backwards compatibility with setuptools
@@ -135,21 +135,23 @@ D1_D2_SETUP_ARGS = {
 }
 
 # setup() arguments that can have multiple values in setup.cfg
-MULTI_FIELDS = ("classifiers",
-                "platforms",
-                "install_requires",
-                "provides",
-                "obsoletes",
-                "namespace_packages",
-                "packages",
-                "package_data",
-                "data_files",
-                "scripts",
-                "py_modules",
-                "dependency_links",
-                "setup_requires",
-                "tests_require",
-                "cmdclass")
+MULTI_FIELDS = (
+    "classifiers",
+    "platforms",
+    "install_requires",
+    "provides",
+    "obsoletes",
+    "namespace_packages",
+    "packages",
+    "package_data",
+    "data_files",
+    "scripts",
+    "py_modules",
+    "dependency_links",
+    "setup_requires",
+    "tests_require",
+    "cmdclass",
+)
 
 # setup() arguments that can have mapping values in setup.cfg
 MAP_FIELDS = ("project_urls",)
@@ -167,14 +169,14 @@ def resolve_name(name):
     Raise ImportError if the module or name is not found.
     """
 
-    parts = name.split('.')
+    parts = name.split(".")
     cursor = len(parts) - 1
     module_name = parts[:cursor]
     attr_name = parts[-1]
 
     while cursor > 0:
         try:
-            ret = __import__('.'.join(module_name), fromlist=[attr_name])
+            ret = __import__(".".join(module_name), fromlist=[attr_name])
             break
         except ImportError:
             if cursor == 0:
@@ -182,7 +184,7 @@ def resolve_name(name):
             cursor -= 1
             module_name = parts[:cursor]
             attr_name = parts[cursor]
-            ret = ''
+            ret = ""
 
     for part in parts[cursor:]:
         try:
@@ -193,7 +195,7 @@ def resolve_name(name):
     return ret
 
 
-def cfg_to_args(path='setup.cfg', script_args=()):
+def cfg_to_args(path="setup.cfg", script_args=()):
     """Distutils2 to distutils1 compatibility util.
 
     This method uses an existing setup.cfg to generate a dictionary of
@@ -209,14 +211,15 @@ def cfg_to_args(path='setup.cfg', script_args=()):
 
     # The method source code really starts here.
     if sys.version_info >= (3, 2):
-            parser = configparser.ConfigParser()
+        parser = configparser.ConfigParser()
     else:
-            parser = configparser.SafeConfigParser()
+        parser = configparser.SafeConfigParser()
     if not os.path.exists(path):
-        raise errors.DistutilsFileError("file '%s' does not exist" %
-                                        os.path.abspath(path))
+        raise errors.DistutilsFileError(
+            "file '%s' does not exist" % os.path.abspath(path)
+        )
     try:
-        parser.read(path, encoding='utf-8')
+        parser.read(path, encoding="utf-8")
     except TypeError:
         # Python 2 doesn't accept the encoding kwarg
         parser.read(path)
@@ -224,11 +227,11 @@ def cfg_to_args(path='setup.cfg', script_args=()):
     for section in parser.sections():
         config[section] = dict()
         for k, value in parser.items(section):
-            config[section][k.replace('-', '_')] = value
+            config[section][k.replace("-", "_")] = value
 
     # Run setup_hooks, if configured
-    setup_hooks = has_get_option(config, 'global', 'setup_hooks')
-    package_dir = has_get_option(config, 'files', 'packages_root')
+    setup_hooks = has_get_option(config, "global", "setup_hooks")
+    package_dir = has_get_option(config, "files", "packages_root")
 
     # Add the source package directory to sys.path in case it contains
     # additional hooks, and to make sure it's on the path before any existing
@@ -240,18 +243,19 @@ def cfg_to_args(path='setup.cfg', script_args=()):
     try:
         if setup_hooks:
             setup_hooks = [
-                hook for hook in split_multiline(setup_hooks)
-                if hook != 'pbr.hooks.setup_hook']
+                hook
+                for hook in split_multiline(setup_hooks)
+                if hook != "pbr.hooks.setup_hook"
+            ]
             for hook in setup_hooks:
                 hook_fn = resolve_name(hook)
-                try :
+                try:
                     hook_fn(config)
                 except SystemExit:
-                    log.error('setup hook %s terminated the installation')
+                    log.error("setup hook %s terminated the installation")
                 except:
                     e = sys.exc_info()[1]
-                    log.error('setup hook %s raised exception: %s\n' %
-                              (hook, e))
+                    log.error("setup hook %s raised exception: %s\n" % (hook, e))
                     log.error(traceback.format_exc())
                     sys.exit(1)
 
@@ -261,21 +265,21 @@ def cfg_to_args(path='setup.cfg', script_args=()):
         kwargs = setup_cfg_to_setup_kwargs(config, script_args)
 
         # Set default config overrides
-        kwargs['include_package_data'] = True
-        kwargs['zip_safe'] = False
+        kwargs["include_package_data"] = True
+        kwargs["zip_safe"] = False
 
         register_custom_compilers(config)
 
         ext_modules = get_extension_modules(config)
         if ext_modules:
-            kwargs['ext_modules'] = ext_modules
+            kwargs["ext_modules"] = ext_modules
 
         entry_points = get_entry_points(config)
         if entry_points:
-            kwargs['entry_points'] = entry_points
+            kwargs["entry_points"] = entry_points
 
         # Handle the [files]/extra_files option
-        files_extra_files = has_get_option(config, 'files', 'extra_files')
+        files_extra_files = has_get_option(config, "files", "extra_files")
         if files_extra_files:
             extra_files.set_extra_files(split_multiline(files_extra_files))
 
@@ -312,15 +316,14 @@ def setup_cfg_to_setup_kwargs(config, script_args=()):
         if not in_cfg_value:
             # There is no such option in the setup.cfg
             if arg == "long_description":
-                in_cfg_value = has_get_option(config, section,
-                                              "description_file")
+                in_cfg_value = has_get_option(config, section, "description_file")
                 if in_cfg_value:
                     in_cfg_value = split_multiline(in_cfg_value)
-                    value = ''
+                    value = ""
                     for filename in in_cfg_value:
                         description_file = open(filename)
                         try:
-                            value += description_file.read().strip() + '\n\n'
+                            value += description_file.read().strip() + "\n\n"
                         finally:
                             description_file.close()
                     in_cfg_value = value
@@ -334,42 +337,45 @@ def setup_cfg_to_setup_kwargs(config, script_args=()):
         elif arg in MAP_FIELDS:
             in_cfg_map = {}
             for i in split_multiline(in_cfg_value):
-                k, v = i.split('=')
+                k, v = i.split("=")
                 in_cfg_map[k.strip()] = v.strip()
             in_cfg_value = in_cfg_map
         elif arg in BOOL_FIELDS:
             # Provide some flexibility here...
-            if in_cfg_value.lower() in ('true', 't', '1', 'yes', 'y'):
+            if in_cfg_value.lower() in ("true", "t", "1", "yes", "y"):
                 in_cfg_value = True
             else:
                 in_cfg_value = False
 
         if in_cfg_value:
-            if arg in ('install_requires', 'tests_require'):
+            if arg in ("install_requires", "tests_require"):
                 # Replaces PEP345-style version specs with the sort expected by
                 # setuptools
-                in_cfg_value = [_VERSION_SPEC_RE.sub(r'\1\2', pred)
-                                for pred in in_cfg_value]
-            if arg == 'install_requires':
+                in_cfg_value = [
+                    _VERSION_SPEC_RE.sub(r"\1\2", pred) for pred in in_cfg_value
+                ]
+            if arg == "install_requires":
                 # Split install_requires into package,env_marker tuples
                 # These will be re-assembled later
                 install_requires = []
-                requirement_pattern = '(?P<package>[^;]*);?(?P<env_marker>[^#]*?)(?:\s*#.*)?$'
+                requirement_pattern = (
+                    "(?P<package>[^;]*);?(?P<env_marker>[^#]*?)(?:\s*#.*)?$"
+                )
                 for requirement in in_cfg_value:
                     m = re.match(requirement_pattern, requirement)
-                    requirement_package = m.group('package').strip()
-                    env_marker = m.group('env_marker').strip()
-                    install_requires.append((requirement_package,env_marker))
-                all_requirements[''] = install_requires
-            elif arg == 'package_dir':
-                in_cfg_value = {'': in_cfg_value}
-            elif arg in ('package_data', 'data_files'):
+                    requirement_package = m.group("package").strip()
+                    env_marker = m.group("env_marker").strip()
+                    install_requires.append((requirement_package, env_marker))
+                all_requirements[""] = install_requires
+            elif arg == "package_dir":
+                in_cfg_value = {"": in_cfg_value}
+            elif arg in ("package_data", "data_files"):
                 data_files = {}
                 firstline = True
                 prev = None
                 for line in in_cfg_value:
-                    if '=' in line:
-                        key, value = line.split('=', 1)
+                    if "=" in line:
+                        key, value = line.split("=", 1)
                         key, value = (key.strip(), value.strip())
                         if key in data_files:
                             # Multiple duplicates of the same package name;
@@ -381,17 +387,18 @@ def setup_cfg_to_setup_kwargs(config, script_args=()):
                             prev = data_files[key.strip()] = value.split()
                     elif firstline:
                         raise errors.DistutilsOptionError(
-                            'malformed package_data first line %r (misses '
-                            '"=")' % line)
+                            "malformed package_data first line %r (misses "
+                            '"=")' % line
+                        )
                     else:
                         prev.extend(line.strip().split())
                     firstline = False
-                if arg == 'data_files':
+                if arg == "data_files":
                     # the data_files value is a pointlessly different structure
                     # from the package_data value
                     data_files = data_files.items()
                 in_cfg_value = data_files
-            elif arg == 'cmdclass':
+            elif arg == "cmdclass":
                 cmdclass = {}
                 dist = st_dist.Distribution()
                 for cls_name in in_cfg_value:
@@ -413,24 +420,26 @@ def setup_cfg_to_setup_kwargs(config, script_args=()):
     #     bar
     # -> {'fred': ['bar'], 'fred:marker':['foo']}
 
-    if 'extras' in config:
-        requirement_pattern = '(?P<package>[^:]*):?(?P<env_marker>[^#]*?)(?:\s*#.*)?$'
-        extras = config['extras']
+    if "extras" in config:
+        requirement_pattern = "(?P<package>[^:]*):?(?P<env_marker>[^#]*?)(?:\s*#.*)?$"
+        extras = config["extras"]
         # Add contents of test-requirements, if any, into an extra named
         # 'test' if one does not already exist.
-        if 'test' not in extras:
+        if "test" not in extras:
             from pbr import packaging
-            extras['test'] = "\n".join(packaging.parse_requirements(
-                packaging.TEST_REQUIREMENTS_FILES)).replace(';', ':')
+
+            extras["test"] = "\n".join(
+                packaging.parse_requirements(packaging.TEST_REQUIREMENTS_FILES)
+            ).replace(";", ":")
 
         for extra in extras:
             extra_requirements = []
             requirements = split_multiline(extras[extra])
             for requirement in requirements:
                 m = re.match(requirement_pattern, requirement)
-                extras_value = m.group('package').strip()
-                env_marker = m.group('env_marker')
-                extra_requirements.append((extras_value,env_marker))
+                extras_value = m.group("package").strip()
+                env_marker = m.group("env_marker")
+                extra_requirements.append((extras_value, env_marker))
             all_requirements[extra] = extra_requirements
 
     # Transform the full list of requirements into:
@@ -445,14 +454,14 @@ def setup_cfg_to_setup_kwargs(config, script_args=()):
     for req_group in all_requirements:
         for requirement, env_marker in all_requirements[req_group]:
             if env_marker:
-                extras_key = '%s:(%s)' % (req_group, env_marker)
+                extras_key = "%s:(%s)" % (req_group, env_marker)
                 # We do not want to poison wheel creation with locally
                 # evaluated markers.  sdists always re-create the egg_info
                 # and as such do not need guarded, and pip will never call
                 # multiple setup.py commands at once.
-                if 'bdist_wheel' not in script_args:
+                if "bdist_wheel" not in script_args:
                     try:
-                        if pkg_resources.evaluate_marker('(%s)' % env_marker):
+                        if pkg_resources.evaluate_marker("(%s)" % env_marker):
                             extras_key = req_group
                     except SyntaxError:
                         log.error(
@@ -466,8 +475,8 @@ def setup_cfg_to_setup_kwargs(config, script_args=()):
                 extras_key = req_group
             extras_require.setdefault(extras_key, []).append(requirement)
 
-    kwargs['install_requires'] = extras_require.pop('', [])
-    kwargs['extras_require'] = extras_require
+    kwargs["install_requires"] = extras_require.pop("", [])
+    kwargs["extras_require"] = extras_require
 
     return kwargs
 
@@ -478,7 +487,7 @@ def register_custom_compilers(config):
     hack it in somehow.
     """
 
-    compilers = has_get_option(config, 'global', 'compilers')
+    compilers = has_get_option(config, "global", "compilers")
     if compilers:
         compilers = split_multiline(compilers)
         for compiler in compilers:
@@ -486,14 +495,14 @@ def register_custom_compilers(config):
 
             # In distutils2 compilers these class attributes exist; for
             # distutils1 we just have to make something up
-            if hasattr(compiler, 'name'):
+            if hasattr(compiler, "name"):
                 name = compiler.name
             else:
                 name = compiler.__name__
-            if hasattr(compiler, 'description'):
+            if hasattr(compiler, "description"):
                 desc = compiler.description
             else:
-                desc = 'custom compiler %s' % name
+                desc = "custom compiler %s" % name
 
             module_name = compiler.__module__
             # Note; this *will* override built in compilers with the same name
@@ -503,35 +512,37 @@ def register_custom_compilers(config):
 
             # HACK!!!!  Distutils assumes all compiler modules are in the
             # distutils package
-            sys.modules['distutils.' + module_name] = sys.modules[module_name]
+            sys.modules["distutils." + module_name] = sys.modules[module_name]
 
 
 def get_extension_modules(config):
     """Handle extension modules"""
 
-    EXTENSION_FIELDS = ("sources",
-                        "include_dirs",
-                        "define_macros",
-                        "undef_macros",
-                        "library_dirs",
-                        "libraries",
-                        "runtime_library_dirs",
-                        "extra_objects",
-                        "extra_compile_args",
-                        "extra_link_args",
-                        "export_symbols",
-                        "swig_opts",
-                        "depends")
+    EXTENSION_FIELDS = (
+        "sources",
+        "include_dirs",
+        "define_macros",
+        "undef_macros",
+        "library_dirs",
+        "libraries",
+        "runtime_library_dirs",
+        "extra_objects",
+        "extra_compile_args",
+        "extra_link_args",
+        "export_symbols",
+        "swig_opts",
+        "depends",
+    )
 
     ext_modules = []
     for section in config:
-        if ':' in section:
-            labels = section.split(':', 1)
+        if ":" in section:
+            labels = section.split(":", 1)
         else:
             # Backwards compatibility for old syntax; don't use this though
-            labels = section.split('=', 1)
+            labels = section.split("=", 1)
         labels = [l.strip() for l in labels]
-        if (len(labels) == 2) and (labels[0] == 'extension'):
+        if (len(labels) == 2) and (labels[0] == "extension"):
             ext_args = {}
             for field in EXTENSION_FIELDS:
                 value = has_get_option(config, section, field)
@@ -540,10 +551,10 @@ def get_extension_modules(config):
                 if not value:
                     continue
                 value = split_multiline(value)
-                if field == 'define_macros':
+                if field == "define_macros":
                     macros = []
                     for macro in value:
-                        macro = macro.split('=', 1)
+                        macro = macro.split("=", 1)
                         if len(macro) == 1:
                             macro = (macro[0].strip(), None)
                         else:
@@ -552,10 +563,11 @@ def get_extension_modules(config):
                     value = macros
                 ext_args[field] = value
             if ext_args:
-                if 'name' not in ext_args:
-                    ext_args['name'] = labels[1]
-                ext_modules.append(extension.Extension(ext_args.pop('name'),
-                                                       **ext_args))
+                if "name" not in ext_args:
+                    ext_args["name"] = labels[1]
+                ext_modules.append(
+                    extension.Extension(ext_args.pop("name"), **ext_args)
+                )
     return ext_modules
 
 
@@ -566,11 +578,13 @@ def get_entry_points(config):
     in packaging, we provide support for them.
     """
 
-    if not 'entry_points' in config:
+    if not "entry_points" in config:
         return {}
 
-    return dict((option, split_multiline(value))
-                for option, value in config['entry_points'].items())
+    return dict(
+        (option, split_multiline(value))
+        for option, value in config["entry_points"].items()
+    )
 
 
 def has_get_option(config, section, option):
@@ -583,18 +597,20 @@ def has_get_option(config, section, option):
 def split_multiline(value):
     """Special behaviour when we have a multi line options"""
 
-    value = [element for element in
-             (line.strip() for line in value.split('\n'))
-             if element and not element.startswith('#')]
+    value = [
+        element
+        for element in (line.strip() for line in value.split("\n"))
+        if element and not element.startswith("#")
+    ]
     return value
 
 
 def split_csv(value):
     """Special behaviour when we have a comma separated options"""
 
-    value = [element for element in
-             (chunk.strip() for chunk in value.split(','))
-             if element]
+    value = [
+        element for element in (chunk.strip() for chunk in value.split(",")) if element
+    ]
     return value
 
 

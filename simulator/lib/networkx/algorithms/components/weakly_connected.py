@@ -14,14 +14,14 @@ import networkx as nx
 from networkx.utils.decorators import not_implemented_for
 
 __all__ = [
-    'number_weakly_connected_components',
-    'weakly_connected_components',
-    'weakly_connected_component_subgraphs',
-    'is_weakly_connected',
+    "number_weakly_connected_components",
+    "weakly_connected_components",
+    "weakly_connected_component_subgraphs",
+    "is_weakly_connected",
 ]
 
 
-@not_implemented_for('undirected')
+@not_implemented_for("undirected")
 def weakly_connected_components(G):
     """Generate weakly connected components of G.
 
@@ -74,7 +74,7 @@ def weakly_connected_components(G):
             seen.update(c)
 
 
-@not_implemented_for('undirected')
+@not_implemented_for("undirected")
 def number_weakly_connected_components(G):
     """Return the number of weakly connected components in G.
 
@@ -107,14 +107,16 @@ def number_weakly_connected_components(G):
     return sum(1 for wcc in weakly_connected_components(G))
 
 
-@not_implemented_for('undirected')
+@not_implemented_for("undirected")
 def weakly_connected_component_subgraphs(G, copy=True):
     """DEPRECATED: Use ``(G.subgraph(c) for c in weakly_connected_components(G))``
 
-           Or ``(G.subgraph(c).copy() for c in weakly_connected_components(G))``
+    Or ``(G.subgraph(c).copy() for c in weakly_connected_components(G))``
     """
-    msg = "weakly_connected_component_subgraphs is deprecated and will be removed in 2.2" \
+    msg = (
+        "weakly_connected_component_subgraphs is deprecated and will be removed in 2.2"
         "use (G.subgraph(c).copy() for c in weakly_connected_components(G))"
+    )
     _warnings.warn(msg, DeprecationWarning)
     for c in weakly_connected_components(G):
         if copy:
@@ -123,7 +125,7 @@ def weakly_connected_component_subgraphs(G, copy=True):
             yield G.subgraph(c)
 
 
-@not_implemented_for('undirected')
+@not_implemented_for("undirected")
 def is_weakly_connected(G):
     """Test directed graph for weak connectivity.
 
@@ -164,7 +166,8 @@ def is_weakly_connected(G):
     """
     if len(G) == 0:
         raise nx.NetworkXPointlessConcept(
-            """Connectivity is undefined for the null graph.""")
+            """Connectivity is undefined for the null graph."""
+        )
 
     return len(list(weakly_connected_components(G))[0]) == len(G)
 

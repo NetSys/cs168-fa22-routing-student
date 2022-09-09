@@ -68,7 +68,7 @@ def max_clique(G):
 
 
 def clique_removal(G):
-    """ Repeatedly remove cliques from the graph.
+    """Repeatedly remove cliques from the graph.
 
     Results in a $O(|V|/(\log |V|)^2)$ approximation of maximum clique
     and independent set. Returns the largest independent set found, along
@@ -106,8 +106,8 @@ def clique_removal(G):
     return maxiset, cliques
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def large_clique_size(G):
     """Find the size of a large clique in a graph.
 

@@ -30,8 +30,7 @@ from networkx.exception import NetworkXError
 from networkx.utils import open_file, not_implemented_for
 from networkx.readwrite.graph6 import data_to_n, n_to_data
 
-__all__ = ['from_sparse6_bytes', 'read_sparse6', 'to_sparse6_bytes',
-           'write_sparse6']
+__all__ = ["from_sparse6_bytes", "read_sparse6", "to_sparse6_bytes", "write_sparse6"]
 
 
 def _generate_sparse6_bytes(G, nodes, header):
@@ -56,12 +55,13 @@ def _generate_sparse6_bytes(G, nodes, header):
 
     """
     n = len(G)
-    if n >= 2 ** 36:
-        raise ValueError('sparse6 is only defined if number of nodes is less '
-                         'than 2 ** 36')
+    if n >= 2**36:
+        raise ValueError(
+            "sparse6 is only defined if number of nodes is less " "than 2 ** 36"
+        )
     if header:
-        yield b'>>sparse6<<'
-    yield b':'
+        yield b">>sparse6<<"
+    yield b":"
     for d in n_to_data(n):
         yield str.encode(chr(d + 63))
 
@@ -100,12 +100,19 @@ def _generate_sparse6_bytes(G, nodes, header):
     else:
         bits.extend([1] * ((-len(bits)) % 6))
 
-    data = [(bits[i + 0] << 5) + (bits[i + 1] << 4) + (bits[i + 2] << 3) + (bits[i + 3] << 2) +
-            (bits[i + 4] << 1) + (bits[i + 5] << 0) for i in range(0, len(bits), 6)]
+    data = [
+        (bits[i + 0] << 5)
+        + (bits[i + 1] << 4)
+        + (bits[i + 2] << 3)
+        + (bits[i + 3] << 2)
+        + (bits[i + 4] << 1)
+        + (bits[i + 5] << 0)
+        for i in range(0, len(bits), 6)
+    ]
 
     for d in data:
         yield str.encode(chr(d + 63))
-    yield b'\n'
+    yield b"\n"
 
 
 def from_sparse6_bytes(string):
@@ -141,12 +148,12 @@ def from_sparse6_bytes(string):
            <http://users.cecs.anu.edu.au/~bdm/data/formats.html>
 
     """
-    if string.startswith(b'>>sparse6<<'):
+    if string.startswith(b">>sparse6<<"):
         string = string[11:]
-    if not string.startswith(b':'):
-        raise NetworkXError('Expected leading colon in sparse6')
+    if not string.startswith(b":"):
+        raise NetworkXError("Expected leading colon in sparse6")
 
-    if sys.version_info < (3, ):
+    if sys.version_info < (3,):
         chars = [ord(c) - 63 for c in string[1:]]
     else:
         chars = [c - 63 for c in string[1:]]
@@ -169,13 +176,13 @@ def from_sparse6_bytes(string):
             b = (d >> dLen) & 1  # grab top remaining bit
 
             x = d & ((1 << dLen) - 1)  # partially built up value of x
-            xLen = dLen		# how many bits included so far in x
+            xLen = dLen  # how many bits included so far in x
             while xLen < k:  # now grab full chunks until we have enough
                 d = next(chunks)
                 dLen = 6
                 x = (x << 6) + d
                 xLen += 6
-            x = (x >> (xLen - k))  # shift back the extra bits
+            x = x >> (xLen - k)  # shift back the extra bits
             dLen = xLen - k
             yield b, x
 
@@ -248,11 +255,11 @@ def to_sparse6_bytes(G, nodes=None, header=True):
     """
     if nodes is not None:
         G = G.subgraph(nodes)
-    G = nx.convert_node_labels_to_integers(G, ordering='sorted')
-    return b''.join(_generate_sparse6_bytes(G, nodes, header))
+    G = nx.convert_node_labels_to_integers(G, ordering="sorted")
+    return b"".join(_generate_sparse6_bytes(G, nodes, header))
 
 
-@open_file(0, mode='rb')
+@open_file(0, mode="rb")
 def read_sparse6(path):
     """Read an undirected graph in sparse6 format from path.
 
@@ -315,8 +322,8 @@ def read_sparse6(path):
         return glist
 
 
-@not_implemented_for('directed')
-@open_file(1, mode='wb')
+@not_implemented_for("directed")
+@open_file(1, mode="wb")
 def write_sparse6(G, path, nodes=None, header=True):
     """Write graph G to given path in sparse6 format.
 
@@ -373,6 +380,6 @@ def write_sparse6(G, path, nodes=None, header=True):
     """
     if nodes is not None:
         G = G.subgraph(nodes)
-    G = nx.convert_node_labels_to_integers(G, ordering='sorted')
+    G = nx.convert_node_labels_to_integers(G, ordering="sorted")
     for b in _generate_sparse6_bytes(G, nodes, header):
         path.write(b)

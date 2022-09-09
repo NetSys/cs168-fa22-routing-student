@@ -37,7 +37,7 @@ import json
 import networkx as nx
 from networkx.utils.decorators import not_implemented_for
 
-__all__ = ['jit_graph', 'jit_data']
+__all__ = ["jit_graph", "jit_data"]
 
 
 def jit_graph(data, create_using=None):
@@ -61,14 +61,14 @@ def jit_graph(data, create_using=None):
         G.clear()
 
     for node in data:
-        G.add_node(node['id'], **node['data'])
-        if node.get('adjacencies') is not None:
-            for adj in node['adjacencies']:
-                G.add_edge(node['id'], adj['nodeTo'], **adj['data'])
+        G.add_node(node["id"], **node["data"])
+        if node.get("adjacencies") is not None:
+            for adj in node["adjacencies"]:
+                G.add_edge(node["id"], adj["nodeTo"], **adj["data"])
     return G
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def jit_data(G, indent=None):
     """Return data in JIT JSON format.
 
@@ -88,10 +88,7 @@ def jit_data(G, indent=None):
     """
     json_graph = []
     for node in G.nodes():
-        json_node = {
-            "id": node,
-            "name": node
-        }
+        json_node = {"id": node, "name": node}
         # node data
         json_node["data"] = G.nodes[node]
         # adjacencies

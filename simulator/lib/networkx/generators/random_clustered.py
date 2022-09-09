@@ -12,11 +12,10 @@
 import random
 import networkx as nx
 
-__all__ = ['random_clustered_graph']
+__all__ = ["random_clustered_graph"]
 
 
-def random_clustered_graph(joint_degree_sequence, create_using=None,
-                           seed=None):
+def random_clustered_graph(joint_degree_sequence, create_using=None, seed=None):
     r"""Generate a random graph with the given joint independent edge degree and
     triangle degree sequence.
 
@@ -116,7 +115,7 @@ def random_clustered_graph(joint_degree_sequence, create_using=None,
             tlist.append(n)
 
     if len(ilist) % 2 != 0 or len(tlist) % 3 != 0:
-        raise nx.NetworkXError('Invalid degree sequence')
+        raise nx.NetworkXError("Invalid degree sequence")
 
     random.shuffle(ilist)
     random.shuffle(tlist)

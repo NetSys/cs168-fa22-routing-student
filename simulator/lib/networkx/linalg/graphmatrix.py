@@ -8,17 +8,23 @@ Adjacency matrix and incidence matrix of graphs.
 #    All rights reserved.
 #    BSD license.
 import networkx as nx
-__author__ = "\n".join(['Aric Hagberg (hagberg@lanl.gov)',
-                        'Pieter Swart (swart@lanl.gov)',
-                        'Dan Schult(dschult@colgate.edu)'])
 
-__all__ = ['incidence_matrix',
-           'adj_matrix', 'adjacency_matrix',
-           ]
+__author__ = "\n".join(
+    [
+        "Aric Hagberg (hagberg@lanl.gov)",
+        "Pieter Swart (swart@lanl.gov)",
+        "Dan Schult(dschult@colgate.edu)",
+    ]
+)
+
+__all__ = [
+    "incidence_matrix",
+    "adj_matrix",
+    "adjacency_matrix",
+]
 
 
-def incidence_matrix(G, nodelist=None, edgelist=None,
-                     oriented=False, weight=None):
+def incidence_matrix(G, nodelist=None, edgelist=None, oriented=False, weight=None):
     """Return incidence matrix of G.
 
     The incidence matrix assigns each row to a node and each column to an edge.
@@ -69,6 +75,7 @@ def incidence_matrix(G, nodelist=None, edgelist=None,
        http://academicearth.org/lectures/network-applications-incidence-matrix
     """
     import scipy.sparse
+
     if nodelist is None:
         nodelist = list(G)
     if edgelist is None:
@@ -86,8 +93,9 @@ def incidence_matrix(G, nodelist=None, edgelist=None,
             ui = node_index[u]
             vi = node_index[v]
         except KeyError:
-            raise nx.NetworkXError('node %s or %s in edgelist '
-                                   'but not in nodelist' % (u, v))
+            raise nx.NetworkXError(
+                "node %s or %s in edgelist " "but not in nodelist" % (u, v)
+            )
         if weight is None:
             wt = 1
         else:
@@ -102,10 +110,10 @@ def incidence_matrix(G, nodelist=None, edgelist=None,
         else:
             A[ui, ei] = wt
             A[vi, ei] = wt
-    return A.asformat('csc')
+    return A.asformat("csc")
 
 
-def adjacency_matrix(G, nodelist=None, weight='weight'):
+def adjacency_matrix(G, nodelist=None, weight="weight"):
     """Return adjacency matrix of G.
 
     Parameters
@@ -169,6 +177,7 @@ adj_matrix = adjacency_matrix
 
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import scipy
     except:

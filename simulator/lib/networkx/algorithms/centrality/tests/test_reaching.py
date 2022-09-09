@@ -18,19 +18,19 @@ class TestGlobalReachingCentrality(TestCase):
     @raises(nx.NetworkXError)
     def test_non_positive_weights(self):
         G = nx.DiGraph()
-        nx.global_reaching_centrality(G, weight='weight')
+        nx.global_reaching_centrality(G, weight="weight")
 
     @raises(nx.NetworkXError)
     def test_negatively_weighted(self):
         G = nx.Graph()
         G.add_weighted_edges_from([(0, 1, -2), (1, 2, +1)])
-        nx.global_reaching_centrality(G, weight='weight')
+        nx.global_reaching_centrality(G, weight="weight")
 
     def test_directed_star(self):
         G = nx.DiGraph()
         G.add_weighted_edges_from([(1, 2, 0.5), (1, 3, 0.5)])
         grc = nx.global_reaching_centrality
-        assert_equal(grc(G, normalized=False, weight='weight'), 0.5)
+        assert_equal(grc(G, normalized=False, weight="weight"), 0.5)
         assert_equal(grc(G), 1)
 
     def test_undirected_unweighted_star(self):
@@ -42,7 +42,7 @@ class TestGlobalReachingCentrality(TestCase):
         G = nx.Graph()
         G.add_weighted_edges_from([(1, 2, 1), (1, 3, 2)])
         grc = nx.global_reaching_centrality
-        assert_equal(grc(G, normalized=False, weight='weight'), 0.375)
+        assert_equal(grc(G, normalized=False, weight="weight"), 0.375)
 
     def test_cycle_directed_unweighted(self):
         G = nx.DiGraph()
@@ -84,7 +84,7 @@ class TestGlobalReachingCentrality(TestCase):
         max_local = max(local_reach_ctrs)
         expected = sum(max_local - lrc for lrc in local_reach_ctrs) / denom
         grc = nx.global_reaching_centrality
-        actual = grc(G, normalized=False, weight='weight')
+        actual = grc(G, normalized=False, weight="weight")
         assert_almost_equal(expected, actual, places=7)
 
 
@@ -95,13 +95,13 @@ class TestLocalReachingCentrality(TestCase):
     def test_non_positive_weights(self):
         G = nx.DiGraph()
         G.add_weighted_edges_from([(0, 1, 0)])
-        nx.local_reaching_centrality(G, 0, weight='weight')
+        nx.local_reaching_centrality(G, 0, weight="weight")
 
     @raises(nx.NetworkXError)
     def test_negatively_weighted(self):
         G = nx.Graph()
         G.add_weighted_edges_from([(0, 1, -2), (1, 2, +1)])
-        nx.local_reaching_centrality(G, 0, weight='weight')
+        nx.local_reaching_centrality(G, 0, weight="weight")
 
     def test_undirected_unweighted_star(self):
         G = nx.star_graph(2)
@@ -111,5 +111,7 @@ class TestLocalReachingCentrality(TestCase):
     def test_undirected_weighted_star(self):
         G = nx.Graph()
         G.add_weighted_edges_from([(1, 2, 1), (1, 3, 2)])
-        centrality = nx.local_reaching_centrality(G, 1, normalized=False, weight='weight')
+        centrality = nx.local_reaching_centrality(
+            G, 1, normalized=False, weight="weight"
+        )
         assert_equal(centrality, 1.5)

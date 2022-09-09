@@ -47,6 +47,7 @@ except ImportError:
             total = func(total, element)
             yield total
 
+
 # 2.x/3.x compatibility
 try:
     basestring
@@ -65,7 +66,7 @@ def is_string_like(obj):  # from John Hunter, types-free version
 
 
 def iterable(obj):
-    """ Return True if obj is iterable with a well-defined len()."""
+    """Return True if obj is iterable with a well-defined len()."""
     if hasattr(obj, "__iter__"):
         return True
     try:
@@ -76,7 +77,7 @@ def iterable(obj):
 
 
 def flatten(obj, result=None):
-    """ Return flattened version of (possibly nested) iterable object. """
+    """Return flattened version of (possibly nested) iterable object."""
     if not iterable(obj) or is_string_like(obj):
         return obj
     if result is None:
@@ -90,7 +91,7 @@ def flatten(obj, result=None):
 
 
 def is_list_of_ints(intlist):
-    """ Return True if list is a list of ints. """
+    """Return True if list is a list of ints."""
     if not isinstance(intlist, list):
         return False
     for i in intlist:
@@ -101,6 +102,7 @@ def is_list_of_ints(intlist):
 
 PY2 = sys.version_info[0] == 2
 if PY2:
+
     def make_str(x):
         """Return the string representation of t."""
         if isinstance(x, unicode):
@@ -114,15 +116,17 @@ if PY2:
             # Also, the str() is necessary to convert integers, etc.
             # unicode(3) works, but unicode(3, 'unicode-escape') wants a buffer.
             #
-            return unicode(str(x), 'unicode-escape')
+            return unicode(str(x), "unicode-escape")
+
 else:
+
     def make_str(x):
         """Return the string representation of t."""
         return str(x)
 
 
 def generate_unique_node():
-    """ Generate a unique node label."""
+    """Generate a unique node label."""
     return str(uuid.uuid1())
 
 
@@ -137,10 +141,12 @@ def default_opener(filename):
     """
     from subprocess import call
 
-    cmds = {'darwin': ['open'],
-            'linux': ['xdg-open'],
-            'linux2': ['xdg-open'],
-            'win32': ['cmd.exe', '/C', 'start', '']}
+    cmds = {
+        "darwin": ["open"],
+        "linux": ["xdg-open"],
+        "linux2": ["xdg-open"],
+        "win32": ["cmd.exe", "/C", "start", ""],
+    }
     cmd = cmds[sys.platform] + [filename]
     call(cmd)
 
@@ -162,6 +168,7 @@ def dict_to_numpy_array2(d, mapping=None):
 
     """
     import numpy
+
     if mapping is None:
         s = set(d.keys())
         for k, v in d.items():
@@ -184,6 +191,7 @@ def dict_to_numpy_array1(d, mapping=None):
 
     """
     import numpy
+
     if mapping is None:
         s = set(d.keys())
         mapping = dict(zip(s, range(len(s))))
@@ -200,7 +208,7 @@ def is_iterator(obj):
     object.
 
     """
-    has_next_attr = hasattr(obj, '__next__') or hasattr(obj, 'next')
+    has_next_attr = hasattr(obj, "__next__") or hasattr(obj, "next")
     return iter(obj) is obj and has_next_attr
 
 
@@ -227,7 +235,7 @@ def arbitrary_element(iterable):
 
     """
     if is_iterator(iterable):
-        raise ValueError('cannot return an arbitrary item from an iterator')
+        raise ValueError("cannot return an arbitrary item from an iterator")
     # Another possible implementation is ``for x in iterable: return x``.
     return next(iter(iterable))
 
@@ -308,5 +316,5 @@ def create_random_state(random_state=None):
         return random_state
     if isinstance(random_state, int):
         return np.random.RandomState(random_state)
-    msg = '%r cannot be used to generate a numpy.random.RandomState instance'
+    msg = "%r cannot be used to generate a numpy.random.RandomState instance"
     raise ValueError(msg % random_state)

@@ -22,9 +22,13 @@ adjacency list (anything following the # in a line is a comment)::
      a b c # source target target
      d e
 """
-__author__ = '\n'.join(['Aric Hagberg <hagberg@lanl.gov>',
-                        'Dan Schult <dschult@colgate.edu>',
-                        'Loïc Séguin-C. <loicseguin@gmail.com>'])
+__author__ = "\n".join(
+    [
+        "Aric Hagberg <hagberg@lanl.gov>",
+        "Dan Schult <dschult@colgate.edu>",
+        "Loïc Séguin-C. <loicseguin@gmail.com>",
+    ]
+)
 #    Copyright (C) 2004-2018 by
 #    Aric Hagberg <hagberg@lanl.gov>
 #    Dan Schult <dschult@colgate.edu>
@@ -32,16 +36,13 @@ __author__ = '\n'.join(['Aric Hagberg <hagberg@lanl.gov>',
 #    All rights reserved.
 #    BSD license.
 
-__all__ = ['generate_adjlist',
-           'write_adjlist',
-           'parse_adjlist',
-           'read_adjlist']
+__all__ = ["generate_adjlist", "write_adjlist", "parse_adjlist", "read_adjlist"]
 
 from networkx.utils import make_str, open_file
 import networkx as nx
 
 
-def generate_adjlist(G, delimiter=' '):
+def generate_adjlist(G, delimiter=" "):
     """Generate a single line of the graph G in adjacency list format.
 
     Parameters
@@ -88,11 +89,11 @@ def generate_adjlist(G, delimiter=' '):
                 line += make_str(t) + delimiter
         if not directed:
             seen.add(s)
-        yield line[:-len(delimiter)]
+        yield line[: -len(delimiter)]
 
 
-@open_file(1, mode='wb')
-def write_adjlist(G, path, comments="#", delimiter=' ', encoding='utf-8'):
+@open_file(1, mode="wb")
+def write_adjlist(G, path, comments="#", delimiter=" ", encoding="utf-8"):
     """Write graph G in single-line adjacency-list format to path.
 
 
@@ -134,19 +135,25 @@ def write_adjlist(G, path, comments="#", delimiter=' ', encoding='utf-8'):
     """
     import sys
     import time
-    pargs = comments + " ".join(sys.argv) + '\n'
-    header = (pargs
-              + comments + " GMT {}\n".format(time.asctime(time.gmtime()))
-              + comments + " {}\n".format(G.name))
+
+    pargs = comments + " ".join(sys.argv) + "\n"
+    header = (
+        pargs
+        + comments
+        + " GMT {}\n".format(time.asctime(time.gmtime()))
+        + comments
+        + " {}\n".format(G.name)
+    )
     path.write(header.encode(encoding))
 
     for line in generate_adjlist(G, delimiter):
-        line += '\n'
+        line += "\n"
         path.write(line.encode(encoding))
 
 
-def parse_adjlist(lines, comments='#', delimiter=None,
-                  create_using=None, nodetype=None):
+def parse_adjlist(
+    lines, comments="#", delimiter=None, create_using=None, nodetype=None
+):
     """Parse lines of a graph adjacency list representation.
 
     Parameters
@@ -213,22 +220,32 @@ def parse_adjlist(lines, comments='#', delimiter=None,
             try:
                 u = nodetype(u)
             except:
-                raise TypeError("Failed to convert node ({}) to type {}"
-                                .format(u, nodetype))
+                raise TypeError(
+                    "Failed to convert node ({}) to type {}".format(u, nodetype)
+                )
         G.add_node(u)
         if nodetype is not None:
             try:
                 vlist = map(nodetype, vlist)
             except:
-                raise TypeError("Failed to convert nodes ({}) to type {}"
-                                .format(','.join(vlist), nodetype))
+                raise TypeError(
+                    "Failed to convert nodes ({}) to type {}".format(
+                        ",".join(vlist), nodetype
+                    )
+                )
         G.add_edges_from([(u, v) for v in vlist])
     return G
 
 
-@open_file(0, mode='rb')
-def read_adjlist(path, comments="#", delimiter=None, create_using=None,
-                 nodetype=None, encoding='utf-8'):
+@open_file(0, mode="rb")
+def read_adjlist(
+    path,
+    comments="#",
+    delimiter=None,
+    create_using=None,
+    nodetype=None,
+    encoding="utf-8",
+):
     """Read graph in adjacency list format from path.
 
     Parameters
@@ -297,17 +314,21 @@ def read_adjlist(path, comments="#", delimiter=None, create_using=None,
     write_adjlist
     """
     lines = (line.decode(encoding) for line in path)
-    return parse_adjlist(lines,
-                         comments=comments,
-                         delimiter=delimiter,
-                         create_using=create_using,
-                         nodetype=nodetype)
+    return parse_adjlist(
+        lines,
+        comments=comments,
+        delimiter=delimiter,
+        create_using=create_using,
+        nodetype=nodetype,
+    )
+
 
 # fixture for nose tests
 
 
 def teardown_module(module):
     import os
-    for fname in ['test.adjlist', 'test.adjlist.gz']:
+
+    for fname in ["test.adjlist", "test.adjlist.gz"]:
         if os.path.isfile(fname):
             os.unlink(fname)

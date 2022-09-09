@@ -11,15 +11,18 @@ Communicability.
 #    BSD license.
 import networkx as nx
 from networkx.utils import *
-__author__ = "\n".join(['Aric Hagberg (hagberg@lanl.gov)',
-                        'Franck Kalala (franckkalala@yahoo.fr'])
-__all__ = ['communicability',
-           'communicability_exp',
-           ]
+
+__author__ = "\n".join(
+    ["Aric Hagberg (hagberg@lanl.gov)", "Franck Kalala (franckkalala@yahoo.fr"]
+)
+__all__ = [
+    "communicability",
+    "communicability_exp",
+]
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def communicability(G):
     r"""Return communicability between all pairs of nodes in G.
 
@@ -78,6 +81,7 @@ def communicability(G):
     """
     import numpy
     import scipy.linalg
+
     nodelist = list(G)  # ordering of nodes in matrix
     A = nx.to_numpy_matrix(G, nodelist)
     # convert to 0-1 matrix
@@ -99,8 +103,8 @@ def communicability(G):
     return c
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def communicability_exp(G):
     r"""Return communicability between all pairs of nodes in G.
 
@@ -155,6 +159,7 @@ def communicability_exp(G):
     >>> c = nx.communicability_exp(G)
     """
     import scipy.linalg
+
     nodelist = list(G)  # ordering of nodes in matrix
     A = nx.to_numpy_matrix(G, nodelist)
     # convert to 0-1 matrix
@@ -169,11 +174,13 @@ def communicability_exp(G):
             c[u][v] = float(expA[mapping[u], mapping[v]])
     return c
 
+
 # fixture for nose tests
 
 
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import numpy
     except:

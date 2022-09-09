@@ -20,9 +20,11 @@ import os
 
 try:
     import cStringIO as io
+
     BytesIO = io.StringIO
 except ImportError:
     import io
+
     BytesIO = io.BytesIO
 
 import fixtures
@@ -36,38 +38,94 @@ from pbr.tests import base
 class SkipFileWrites(base.BaseTestCase):
 
     scenarios = [
-        ('changelog_option_true',
-         dict(option_key='skip_changelog', option_value='True',
-              env_key='SKIP_WRITE_GIT_CHANGELOG', env_value=None,
-              pkg_func=git.write_git_changelog, filename='ChangeLog')),
-        ('changelog_option_false',
-         dict(option_key='skip_changelog', option_value='False',
-              env_key='SKIP_WRITE_GIT_CHANGELOG', env_value=None,
-              pkg_func=git.write_git_changelog, filename='ChangeLog')),
-        ('changelog_env_true',
-         dict(option_key='skip_changelog', option_value='False',
-              env_key='SKIP_WRITE_GIT_CHANGELOG', env_value='True',
-              pkg_func=git.write_git_changelog, filename='ChangeLog')),
-        ('changelog_both_true',
-         dict(option_key='skip_changelog', option_value='True',
-              env_key='SKIP_WRITE_GIT_CHANGELOG', env_value='True',
-              pkg_func=git.write_git_changelog, filename='ChangeLog')),
-        ('authors_option_true',
-         dict(option_key='skip_authors', option_value='True',
-              env_key='SKIP_GENERATE_AUTHORS', env_value=None,
-              pkg_func=git.generate_authors, filename='AUTHORS')),
-        ('authors_option_false',
-         dict(option_key='skip_authors', option_value='False',
-              env_key='SKIP_GENERATE_AUTHORS', env_value=None,
-              pkg_func=git.generate_authors, filename='AUTHORS')),
-        ('authors_env_true',
-         dict(option_key='skip_authors', option_value='False',
-              env_key='SKIP_GENERATE_AUTHORS', env_value='True',
-              pkg_func=git.generate_authors, filename='AUTHORS')),
-        ('authors_both_true',
-         dict(option_key='skip_authors', option_value='True',
-              env_key='SKIP_GENERATE_AUTHORS', env_value='True',
-              pkg_func=git.generate_authors, filename='AUTHORS')),
+        (
+            "changelog_option_true",
+            dict(
+                option_key="skip_changelog",
+                option_value="True",
+                env_key="SKIP_WRITE_GIT_CHANGELOG",
+                env_value=None,
+                pkg_func=git.write_git_changelog,
+                filename="ChangeLog",
+            ),
+        ),
+        (
+            "changelog_option_false",
+            dict(
+                option_key="skip_changelog",
+                option_value="False",
+                env_key="SKIP_WRITE_GIT_CHANGELOG",
+                env_value=None,
+                pkg_func=git.write_git_changelog,
+                filename="ChangeLog",
+            ),
+        ),
+        (
+            "changelog_env_true",
+            dict(
+                option_key="skip_changelog",
+                option_value="False",
+                env_key="SKIP_WRITE_GIT_CHANGELOG",
+                env_value="True",
+                pkg_func=git.write_git_changelog,
+                filename="ChangeLog",
+            ),
+        ),
+        (
+            "changelog_both_true",
+            dict(
+                option_key="skip_changelog",
+                option_value="True",
+                env_key="SKIP_WRITE_GIT_CHANGELOG",
+                env_value="True",
+                pkg_func=git.write_git_changelog,
+                filename="ChangeLog",
+            ),
+        ),
+        (
+            "authors_option_true",
+            dict(
+                option_key="skip_authors",
+                option_value="True",
+                env_key="SKIP_GENERATE_AUTHORS",
+                env_value=None,
+                pkg_func=git.generate_authors,
+                filename="AUTHORS",
+            ),
+        ),
+        (
+            "authors_option_false",
+            dict(
+                option_key="skip_authors",
+                option_value="False",
+                env_key="SKIP_GENERATE_AUTHORS",
+                env_value=None,
+                pkg_func=git.generate_authors,
+                filename="AUTHORS",
+            ),
+        ),
+        (
+            "authors_env_true",
+            dict(
+                option_key="skip_authors",
+                option_value="False",
+                env_key="SKIP_GENERATE_AUTHORS",
+                env_value="True",
+                pkg_func=git.generate_authors,
+                filename="AUTHORS",
+            ),
+        ),
+        (
+            "authors_both_true",
+            dict(
+                option_key="skip_authors",
+                option_value="True",
+                env_key="SKIP_GENERATE_AUTHORS",
+                env_value="True",
+                pkg_func=git.generate_authors,
+                filename="AUTHORS",
+            ),
+        ),
     ]
 
     def setUp(self):
@@ -76,25 +134,26 @@ class SkipFileWrites(base.BaseTestCase):
         self.root_dir = os.path.abspath(os.path.curdir)
         self.git_dir = os.path.join(self.root_dir, ".git")
         if not os.path.exists(self.git_dir):
-            self.skipTest("%s is missing; skipping git-related checks"
-                          % self.git_dir)
+            self.skipTest("%s is missing; skipping git-related checks" % self.git_dir)
             return
         self.filename = os.path.join(self.temp_path, self.filename)
         self.option_dict = dict()
         if self.option_key is not None:
-            self.option_dict[self.option_key] = ('setup.cfg',
-                                                 self.option_value)
-        self.useFixture(
-            fixtures.EnvironmentVariable(self.env_key, self.env_value))
+            self.option_dict[self.option_key] = ("setup.cfg", self.option_value)
+        self.useFixture(fixtures.EnvironmentVariable(self.env_key, self.env_value))
 
     def test_skip(self):
-        self.pkg_func(git_dir=self.git_dir,
-                      dest_dir=self.temp_path,
-                      option_dict=self.option_dict)
+        self.pkg_func(
+            git_dir=self.git_dir, dest_dir=self.temp_path, option_dict=self.option_dict
+        )
         self.assertEqual(
             not os.path.exists(self.filename),
-            (self.option_value.lower() in options.TRUE_VALUES
-             or self.env_value is not None))
+            (
+                self.option_value.lower() in options.TRUE_VALUES
+                or self.env_value is not None
+            ),
+        )
+
 
 _changelog_content = """7780758\x00Break parser\x00 (tag: refs/tags/1_foo.1)
 04316fe\x00Make python\x00 (refs/heads/review/monty_taylor/27519)
@@ -121,20 +180,21 @@ def _make_old_git_changelog_format(line):
 
     if not line.strip():
         return line
-    sha, msg, refname = line.split('\x00')
-    refname = refname.replace('tag: ', '')
-    return '\x00'.join((sha, msg, refname))
+    sha, msg, refname = line.split("\x00")
+    refname = refname.replace("tag: ", "")
+    return "\x00".join((sha, msg, refname))
 
-_old_git_changelog_content = '\n'.join(
-    _make_old_git_changelog_format(line)
-    for line in _changelog_content.split('\n'))
+
+_old_git_changelog_content = "\n".join(
+    _make_old_git_changelog_format(line) for line in _changelog_content.split("\n")
+)
 
 
 class GitLogsTest(base.BaseTestCase):
 
     scenarios = [
-        ('pre1.8.3', {'changelog': _old_git_changelog_content}),
-        ('post1.8.3', {'changelog': _changelog_content}),
+        ("pre1.8.3", {"changelog": _old_git_changelog_content}),
+        ("post1.8.3", {"changelog": _changelog_content}),
     ]
 
     def setUp(self):
@@ -142,18 +202,17 @@ class GitLogsTest(base.BaseTestCase):
         self.temp_path = self.useFixture(fixtures.TempDir()).path
         self.root_dir = os.path.abspath(os.path.curdir)
         self.git_dir = os.path.join(self.root_dir, ".git")
-        self.useFixture(
-            fixtures.EnvironmentVariable('SKIP_GENERATE_AUTHORS'))
-        self.useFixture(
-            fixtures.EnvironmentVariable('SKIP_WRITE_GIT_CHANGELOG'))
+        self.useFixture(fixtures.EnvironmentVariable("SKIP_GENERATE_AUTHORS"))
+        self.useFixture(fixtures.EnvironmentVariable("SKIP_WRITE_GIT_CHANGELOG"))
 
     def test_write_git_changelog(self):
-        self.useFixture(fixtures.FakePopen(lambda _: {
-            "stdout": BytesIO(self.changelog.encode('utf-8'))
-        }))
+        self.useFixture(
+            fixtures.FakePopen(
+                lambda _: {"stdout": BytesIO(self.changelog.encode("utf-8"))}
+            )
+        )
 
-        git.write_git_changelog(git_dir=self.git_dir,
-                                dest_dir=self.temp_path)
+        git.write_git_changelog(git_dir=self.git_dir, dest_dir=self.temp_path)
 
         with open(os.path.join(self.temp_path, "ChangeLog"), "r") as ch_fh:
             changelog_contents = ch_fh.read()
@@ -162,8 +221,8 @@ class GitLogsTest(base.BaseTestCase):
             self.assertIn("------", changelog_contents)
             self.assertIn("Refactor hooks file", changelog_contents)
             self.assertIn(
-                "Bug fix: create\_stack() fails when waiting",
-                changelog_contents)
+                "Bug fix: create\_stack() fails when waiting", changelog_contents
+            )
             self.assertNotIn("Refactor hooks file.", changelog_contents)
             self.assertNotIn("182feb3", changelog_contents)
             self.assertNotIn("review/monty_taylor/27519", changelog_contents)
@@ -176,18 +235,16 @@ class GitLogsTest(base.BaseTestCase):
             self.assertNotIn("ev)il", changelog_contents)
             self.assertNotIn("e(vi)l", changelog_contents)
             self.assertNotIn('Merge "', changelog_contents)
-            self.assertNotIn('1\_foo.1', changelog_contents)
+            self.assertNotIn("1\_foo.1", changelog_contents)
 
     def test_generate_authors(self):
-        author_old = u"Foo Foo <email@foo.com>"
-        author_new = u"Bar Bar <email@bar.com>"
-        co_author = u"Foo Bar <foo@bar.com>"
-        co_author_by = u"Co-authored-by: " + co_author
+        author_old = "Foo Foo <email@foo.com>"
+        author_new = "Bar Bar <email@bar.com>"
+        co_author = "Foo Bar <foo@bar.com>"
+        co_author_by = "Co-authored-by: " + co_author
 
-        git_log_cmd = (
-            "git --git-dir=%s log --format=%%aN <%%aE>"
-            % self.git_dir)
-        git_co_log_cmd = ("git --git-dir=%s log" % self.git_dir)
+        git_log_cmd = "git --git-dir=%s log --format=%%aN <%%aE>" % self.git_dir
+        git_co_log_cmd = "git --git-dir=%s log" % self.git_dir
         git_top_level = "git rev-parse --show-toplevel"
         cmd_map = {
             git_log_cmd: author_new,
@@ -195,24 +252,24 @@ class GitLogsTest(base.BaseTestCase):
             git_top_level: self.root_dir,
         }
 
-        exist_files = [self.git_dir,
-                       os.path.join(self.temp_path, "AUTHORS.in")]
-        self.useFixture(fixtures.MonkeyPatch(
-            "os.path.exists",
-            lambda path: os.path.abspath(path) in exist_files))
+        exist_files = [self.git_dir, os.path.join(self.temp_path, "AUTHORS.in")]
+        self.useFixture(
+            fixtures.MonkeyPatch(
+                "os.path.exists", lambda path: os.path.abspath(path) in exist_files
+            )
+        )
 
         def _fake_run_shell_command(cmd, **kwargs):
             return cmd_map[" ".join(cmd)]
 
-        self.useFixture(fixtures.MonkeyPatch(
-            "pbr.git._run_shell_command",
-            _fake_run_shell_command))
+        self.useFixture(
+            fixtures.MonkeyPatch("pbr.git._run_shell_command", _fake_run_shell_command)
+        )
 
         with open(os.path.join(self.temp_path, "AUTHORS.in"), "w") as auth_fh:
             auth_fh.write("%s\n" % author_old)
 
-        git.generate_authors(git_dir=self.git_dir,
-                             dest_dir=self.temp_path)
+        git.generate_authors(git_dir=self.git_dir, dest_dir=self.temp_path)
 
         with open(os.path.join(self.temp_path, "AUTHORS"), "r") as auth_fh:
             authors = auth_fh.read()
@@ -222,11 +279,10 @@ class GitLogsTest(base.BaseTestCase):
 
 
 class _SphinxConfig(object):
-    man_pages = ['foo']
+    man_pages = ["foo"]
 
 
 class BaseSphinxTest(base.BaseTestCase):
-
     def setUp(self):
         super(BaseSphinxTest, self).setUp()
 
@@ -235,137 +291,155 @@ class BaseSphinxTest(base.BaseTestCase):
         # class (because we replace the constructor). Add default
         # values directly to the class definition.
         import sphinx.application
+
         sphinx.application.Sphinx.messagelog = []
         sphinx.application.Sphinx.statuscode = 0
 
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.application.Sphinx.__init__", lambda *a, **kw: None))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.application.Sphinx.build", lambda *a, **kw: None))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.application.Sphinx.config", _SphinxConfig))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.config.Config.init_values", lambda *a: None))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.config.Config.__init__", lambda *a: None))
+        self.useFixture(
+            fixtures.MonkeyPatch(
+                "sphinx.application.Sphinx.__init__", lambda *a, **kw: None
+            )
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch(
+                "sphinx.application.Sphinx.build", lambda *a, **kw: None
+            )
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch("sphinx.application.Sphinx.config", _SphinxConfig)
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch("sphinx.config.Config.init_values", lambda *a: None)
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch("sphinx.config.Config.__init__", lambda *a: None)
+        )
         from distutils import dist
+
         self.distr = dist.Distribution()
         self.distr.packages = ("fake_package",)
-        self.distr.command_options["build_sphinx"] = {
-            "source_dir": ["a", "."]}
+        self.distr.command_options["build_sphinx"] = {"source_dir": ["a", "."]}
         pkg_fixture = fixtures.PythonPackage(
-            "fake_package", [("fake_module.py", b""),
-                             ("another_fake_module_for_testing.py", b""),
-                             ("fake_private_module.py", b"")])
+            "fake_package",
+            [
+                ("fake_module.py", b""),
+                ("another_fake_module_for_testing.py", b""),
+                ("fake_private_module.py", b""),
+            ],
+        )
         self.useFixture(pkg_fixture)
         self.useFixture(base.DiveDir(pkg_fixture.base))
         self.distr.command_options["pbr"] = {}
         if hasattr(self, "excludes"):
             self.distr.command_options["pbr"]["autodoc_exclude_modules"] = (
-                'setup.cfg',
+                "setup.cfg",
                 "fake_package.fake_private_module\n"
                 "fake_package.another_fake_*\n"
-                "fake_package.unknown_module")
-        if hasattr(self, 'has_opt') and self.has_opt:
+                "fake_package.unknown_module",
+            )
+        if hasattr(self, "has_opt") and self.has_opt:
             options = self.distr.command_options["pbr"]
-            options["autodoc_index_modules"] = ('setup.cfg', self.autodoc)
+            options["autodoc_index_modules"] = ("setup.cfg", self.autodoc)
 
 
 class BuildSphinxTest(BaseSphinxTest):
 
     scenarios = [
-        ('true_autodoc_caps',
-         dict(has_opt=True, autodoc='True', has_autodoc=True)),
-        ('true_autodoc_caps_with_excludes',
-         dict(has_opt=True, autodoc='True', has_autodoc=True,
-              excludes="fake_package.fake_private_module\n"
-              "fake_package.another_fake_*\n"
-              "fake_package.unknown_module")),
-        ('true_autodoc_lower',
-         dict(has_opt=True, autodoc='true', has_autodoc=True)),
-        ('false_autodoc',
-         dict(has_opt=True, autodoc='False', has_autodoc=False)),
-        ('no_autodoc',
-         dict(has_opt=False, autodoc='False', has_autodoc=False)),
+        ("true_autodoc_caps", dict(has_opt=True, autodoc="True", has_autodoc=True)),
+        (
+            "true_autodoc_caps_with_excludes",
+            dict(
+                has_opt=True,
+                autodoc="True",
+                has_autodoc=True,
+                excludes="fake_package.fake_private_module\n"
+                "fake_package.another_fake_*\n"
+                "fake_package.unknown_module",
+            ),
+        ),
+        ("true_autodoc_lower", dict(has_opt=True, autodoc="true", has_autodoc=True)),
+        ("false_autodoc", dict(has_opt=True, autodoc="False", has_autodoc=False)),
+        ("no_autodoc", dict(has_opt=False, autodoc="False", has_autodoc=False)),
     ]
 
     def test_build_doc(self):
         build_doc = packaging.LocalBuildDoc(self.distr)
         build_doc.run()
 
+        self.assertTrue(os.path.exists("api/autoindex.rst") == self.has_autodoc)
         self.assertTrue(
-            os.path.exists("api/autoindex.rst") == self.has_autodoc)
-        self.assertTrue(
-            os.path.exists(
-                "api/fake_package.fake_module.rst") == self.has_autodoc)
+            os.path.exists("api/fake_package.fake_module.rst") == self.has_autodoc
+        )
         if not self.has_autodoc or hasattr(self, "excludes"):
             assertion = self.assertFalse
         else:
             assertion = self.assertTrue
+        assertion(os.path.exists("api/fake_package.fake_private_module.rst"))
         assertion(
-            os.path.exists(
-                "api/fake_package.fake_private_module.rst"))
-        assertion(
-            os.path.exists(
-                "api/fake_package.another_fake_module_for_testing.rst"))
+            os.path.exists("api/fake_package.another_fake_module_for_testing.rst")
+        )
 
     def test_builders_config(self):
         build_doc = packaging.LocalBuildDoc(self.distr)
         build_doc.finalize_options()
 
         self.assertEqual(1, len(build_doc.builders))
-        self.assertIn('html', build_doc.builders)
+        self.assertIn("html", build_doc.builders)
 
         build_doc = packaging.LocalBuildDoc(self.distr)
-        build_doc.builders = ''
+        build_doc.builders = ""
         build_doc.finalize_options()
 
-        self.assertEqual('', build_doc.builders)
+        self.assertEqual("", build_doc.builders)
 
         build_doc = packaging.LocalBuildDoc(self.distr)
-        build_doc.builders = 'man'
+        build_doc.builders = "man"
         build_doc.finalize_options()
 
         self.assertEqual(1, len(build_doc.builders))
-        self.assertIn('man', build_doc.builders)
+        self.assertIn("man", build_doc.builders)
 
         build_doc = packaging.LocalBuildDoc(self.distr)
-        build_doc.builders = 'html,man,doctest'
+        build_doc.builders = "html,man,doctest"
         build_doc.finalize_options()
 
-        self.assertIn('html', build_doc.builders)
-        self.assertIn('man', build_doc.builders)
-        self.assertIn('doctest', build_doc.builders)
+        self.assertIn("html", build_doc.builders)
+        self.assertIn("man", build_doc.builders)
+        self.assertIn("doctest", build_doc.builders)
 
     def test_cmd_builder_override(self):
 
         if self.has_opt:
             self.distr.command_options["pbr"] = {
-                "autodoc_index_modules": ('setup.cfg', self.autodoc)
+                "autodoc_index_modules": ("setup.cfg", self.autodoc)
             }
 
         self.distr.command_options["build_sphinx"]["builder"] = (
-            "command line", "non-existing-builder")
+            "command line",
+            "non-existing-builder",
+        )
 
         build_doc = packaging.LocalBuildDoc(self.distr)
-        self.assertNotIn('non-existing-builder', build_doc.builders)
-        self.assertIn('html', build_doc.builders)
+        self.assertNotIn("non-existing-builder", build_doc.builders)
+        self.assertIn("html", build_doc.builders)
 
         # process command line options which should override config
         build_doc.finalize_options()
 
-        self.assertIn('non-existing-builder', build_doc.builders)
-        self.assertNotIn('html', build_doc.builders)
+        self.assertIn("non-existing-builder", build_doc.builders)
+        self.assertNotIn("html", build_doc.builders)
 
     def test_cmd_builder_override_multiple_builders(self):
 
         if self.has_opt:
             self.distr.command_options["pbr"] = {
-                "autodoc_index_modules": ('setup.cfg', self.autodoc)
+                "autodoc_index_modules": ("setup.cfg", self.autodoc)
             }
 
         self.distr.command_options["build_sphinx"]["builder"] = (
-            "command line", "builder1,builder2")
+            "command line",
+            "builder1,builder2",
+        )
 
         build_doc = packaging.LocalBuildDoc(self.distr)
         build_doc.finalize_options()
@@ -374,7 +448,6 @@ class BuildSphinxTest(BaseSphinxTest):
 
 
 class APIAutoDocTest(base.BaseTestCase):
-
     def setUp(self):
         super(APIAutoDocTest, self).setUp()
 
@@ -383,63 +456,74 @@ class APIAutoDocTest(base.BaseTestCase):
         # class (because we replace the constructor). Add default
         # values directly to the class definition.
         import sphinx.application
+
         sphinx.application.Sphinx.messagelog = []
         sphinx.application.Sphinx.statuscode = 0
 
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.application.Sphinx.__init__", lambda *a, **kw: None))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.application.Sphinx.build", lambda *a, **kw: None))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.application.Sphinx.config", _SphinxConfig))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.config.Config.init_values", lambda *a: None))
-        self.useFixture(fixtures.MonkeyPatch(
-            "sphinx.config.Config.__init__", lambda *a: None))
+        self.useFixture(
+            fixtures.MonkeyPatch(
+                "sphinx.application.Sphinx.__init__", lambda *a, **kw: None
+            )
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch(
+                "sphinx.application.Sphinx.build", lambda *a, **kw: None
+            )
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch("sphinx.application.Sphinx.config", _SphinxConfig)
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch("sphinx.config.Config.init_values", lambda *a: None)
+        )
+        self.useFixture(
+            fixtures.MonkeyPatch("sphinx.config.Config.__init__", lambda *a: None)
+        )
         from distutils import dist
+
         self.distr = dist.Distribution()
         self.distr.packages = ("fake_package",)
-        self.distr.command_options["build_sphinx"] = {
-            "source_dir": ["a", "."]}
+        self.distr.command_options["build_sphinx"] = {"source_dir": ["a", "."]}
         self.sphinx_options = self.distr.command_options["build_sphinx"]
         pkg_fixture = fixtures.PythonPackage(
-            "fake_package", [("fake_module.py", b""),
-                             ("another_fake_module_for_testing.py", b""),
-                             ("fake_private_module.py", b"")])
+            "fake_package",
+            [
+                ("fake_module.py", b""),
+                ("another_fake_module_for_testing.py", b""),
+                ("fake_private_module.py", b""),
+            ],
+        )
         self.useFixture(pkg_fixture)
         self.useFixture(base.DiveDir(pkg_fixture.base))
-        self.pbr_options = self.distr.command_options.setdefault('pbr', {})
-        self.pbr_options["autodoc_index_modules"] = ('setup.cfg', 'True')
+        self.pbr_options = self.distr.command_options.setdefault("pbr", {})
+        self.pbr_options["autodoc_index_modules"] = ("setup.cfg", "True")
 
     def test_default_api_build_dir(self):
         build_doc = packaging.LocalBuildDoc(self.distr)
         build_doc.run()
 
-        print('PBR OPTIONS:', self.pbr_options)
-        print('DISTR OPTIONS:', self.distr.command_options)
+        print("PBR OPTIONS:", self.pbr_options)
+        print("DISTR OPTIONS:", self.distr.command_options)
 
         self.assertTrue(os.path.exists("api/autoindex.rst"))
         self.assertTrue(os.path.exists("api/fake_package.fake_module.rst"))
+        self.assertTrue(os.path.exists("api/fake_package.fake_private_module.rst"))
         self.assertTrue(
-            os.path.exists(
-                "api/fake_package.fake_private_module.rst"))
-        self.assertTrue(
-            os.path.exists(
-                "api/fake_package.another_fake_module_for_testing.rst"))
+            os.path.exists("api/fake_package.another_fake_module_for_testing.rst")
+        )
 
     def test_different_api_build_dir(self):
         # Options have to come out of the settings dict as a tuple
         # showing the source and the value.
-        self.pbr_options['api_doc_dir'] = (None, 'contributor/api')
+        self.pbr_options["api_doc_dir"] = (None, "contributor/api")
         build_doc = packaging.LocalBuildDoc(self.distr)
         build_doc.run()
 
-        print('PBR OPTIONS:', self.pbr_options)
-        print('DISTR OPTIONS:', self.distr.command_options)
+        print("PBR OPTIONS:", self.pbr_options)
+        print("DISTR OPTIONS:", self.distr.command_options)
 
         self.assertTrue(os.path.exists("contributor/api/autoindex.rst"))
+        self.assertTrue(os.path.exists("contributor/api/fake_package.fake_module.rst"))
         self.assertTrue(
-            os.path.exists("contributor/api/fake_package.fake_module.rst"))
-        self.assertTrue(
-            os.path.exists(
-                "contributor/api/fake_package.fake_private_module.rst"))
+            os.path.exists("contributor/api/fake_package.fake_private_module.rst")
+        )

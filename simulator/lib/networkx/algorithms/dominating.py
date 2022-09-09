@@ -5,8 +5,8 @@ from itertools import chain
 import networkx as nx
 from networkx.utils import arbitrary_element
 
-__author__ = '\n'.join(['Jordi Torrents <jtorrents@milnou.net>'])
-__all__ = ['dominating_set', 'is_dominating_set']
+__author__ = "\n".join(["Jordi Torrents <jtorrents@milnou.net>"])
+__all__ = ["dominating_set", "is_dominating_set"]
 
 
 def dominating_set(G, start_with=None):
@@ -49,7 +49,7 @@ def dominating_set(G, start_with=None):
     if start_with is None:
         start_with = arbitrary_element(all_nodes)
     if start_with not in G:
-        raise nx.NetworkXError('node {} is not in G'.format(start_with))
+        raise nx.NetworkXError("node {} is not in G".format(start_with))
     dominating_set = {start_with}
     dominated_nodes = set(G[start_with])
     remaining_nodes = all_nodes - dominated_nodes - dominating_set

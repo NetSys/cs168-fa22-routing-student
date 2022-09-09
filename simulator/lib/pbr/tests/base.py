@@ -68,28 +68,25 @@ class DiveDir(fixtures.Fixture):
 
 
 class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
-
     def setUp(self):
         super(BaseTestCase, self).setUp()
-        test_timeout = os.environ.get('OS_TEST_TIMEOUT', 30)
+        test_timeout = os.environ.get("OS_TEST_TIMEOUT", 30)
         try:
             test_timeout = int(test_timeout)
         except ValueError:
             # If timeout value is invalid, fail hard.
-            print("OS_TEST_TIMEOUT set to invalid value"
-                  " defaulting to no timeout")
+            print("OS_TEST_TIMEOUT set to invalid value" " defaulting to no timeout")
             test_timeout = 0
         if test_timeout > 0:
             self.useFixture(fixtures.Timeout(test_timeout, gentle=True))
 
-        if os.environ.get('OS_STDOUT_CAPTURE') in options.TRUE_VALUES:
-            stdout = self.useFixture(fixtures.StringStream('stdout')).stream
-            self.useFixture(fixtures.MonkeyPatch('sys.stdout', stdout))
-        if os.environ.get('OS_STDERR_CAPTURE') in options.TRUE_VALUES:
-            stderr = self.useFixture(fixtures.StringStream('stderr')).stream
-            self.useFixture(fixtures.MonkeyPatch('sys.stderr', stderr))
-        self.log_fixture = self.useFixture(
-            fixtures.FakeLogger('pbr'))
+        if os.environ.get("OS_STDOUT_CAPTURE") in options.TRUE_VALUES:
+            stdout = self.useFixture(fixtures.StringStream("stdout")).stream
+            self.useFixture(fixtures.MonkeyPatch("sys.stdout", stdout))
+        if os.environ.get("OS_STDERR_CAPTURE") in options.TRUE_VALUES:
+            stderr = self.useFixture(fixtures.StringStream("stderr")).stream
+            self.useFixture(fixtures.MonkeyPatch("sys.stderr", stderr))
+        self.log_fixture = self.useFixture(fixtures.FakeLogger("pbr"))
 
         # Older git does not have config --local, so create a temporary home
         # directory to permit using git config --global without stepping on
@@ -100,39 +97,39 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         # TODO(lifeless) we should remove PBR_VERSION from the environment.
         # rather than setting it, because thats not representative - we need to
         # test non-preversioned codepaths too!
-        self.useFixture(fixtures.EnvironmentVariable('PBR_VERSION', '0.0'))
+        self.useFixture(fixtures.EnvironmentVariable("PBR_VERSION", "0.0"))
 
         self.temp_dir = self.useFixture(fixtures.TempDir()).path
-        self.package_dir = os.path.join(self.temp_dir, 'testpackage')
-        shutil.copytree(os.path.join(os.path.dirname(__file__), 'testpackage'),
-                        self.package_dir)
+        self.package_dir = os.path.join(self.temp_dir, "testpackage")
+        shutil.copytree(
+            os.path.join(os.path.dirname(__file__), "testpackage"), self.package_dir
+        )
         self.addCleanup(os.chdir, os.getcwd())
         os.chdir(self.package_dir)
         self.addCleanup(self._discard_testpackage)
         # Tests can opt into non-PBR_VERSION by setting preversioned=False as
         # an attribute.
-        if not getattr(self, 'preversioned', True):
-            self.useFixture(fixtures.EnvironmentVariable('PBR_VERSION'))
-            setup_cfg_path = os.path.join(self.package_dir, 'setup.cfg')
-            with open(setup_cfg_path, 'rt') as cfg:
+        if not getattr(self, "preversioned", True):
+            self.useFixture(fixtures.EnvironmentVariable("PBR_VERSION"))
+            setup_cfg_path = os.path.join(self.package_dir, "setup.cfg")
+            with open(setup_cfg_path, "rt") as cfg:
                 content = cfg.read()
-            content = content.replace(u'version = 0.1.dev', u'')
-            with open(setup_cfg_path, 'wt') as cfg:
+            content = content.replace("version = 0.1.dev", "")
+            with open(setup_cfg_path, "wt") as cfg:
                 cfg.write(content)
 
     def _discard_testpackage(self):
         # Remove pbr.testpackage from sys.modules so that it can be freshly
         # re-imported by the next test
         for k in list(sys.modules):
-            if (k == 'pbr_testpackage' or
-                    k.startswith('pbr_testpackage.')):
+            if k == "pbr_testpackage" or k.startswith("pbr_testpackage."):
                 del sys.modules[k]
 
     def run_pbr(self, *args, **kwargs):
-        return self._run_cmd('pbr', args, **kwargs)
+        return self._run_cmd("pbr", args, **kwargs)
 
     def run_setup(self, *args, **kwargs):
-        return self._run_cmd(sys.executable, ('setup.py',) + args, **kwargs)
+        return self._run_cmd(sys.executable, ("setup.py",) + args, **kwargs)
 
     def _run_cmd(self, cmd, args=[], allow_fail=True, cwd=None):
         """Run a command in the root of the test working copy.
@@ -173,24 +170,24 @@ class CapturedSubprocess(fixtures.Fixture):
         self.label = label
         self.args = args
         self.kwargs = kwargs
-        self.kwargs['stderr'] = subprocess.PIPE
-        self.kwargs['stdin'] = subprocess.PIPE
-        self.kwargs['stdout'] = subprocess.PIPE
+        self.kwargs["stderr"] = subprocess.PIPE
+        self.kwargs["stdin"] = subprocess.PIPE
+        self.kwargs["stdout"] = subprocess.PIPE
 
     def setUp(self):
         super(CapturedSubprocess, self).setUp()
         proc = subprocess.Popen(*self.args, **self.kwargs)
         out, err = proc.communicate()
-        self.out = out.decode('utf-8', 'replace')
-        self.err = err.decode('utf-8', 'replace')
-        self.addDetail(self.label + '-stdout', content.text_content(self.out))
-        self.addDetail(self.label + '-stderr', content.text_content(self.err))
+        self.out = out.decode("utf-8", "replace")
+        self.err = err.decode("utf-8", "replace")
+        self.addDetail(self.label + "-stdout", content.text_content(self.out))
+        self.addDetail(self.label + "-stderr", content.text_content(self.err))
         self.returncode = proc.returncode
         if proc.returncode:
-            raise AssertionError('Failed process %s' % proc.returncode)
-        self.addCleanup(delattr, self, 'out')
-        self.addCleanup(delattr, self, 'err')
-        self.addCleanup(delattr, self, 'returncode')
+            raise AssertionError("Failed process %s" % proc.returncode)
+        self.addCleanup(delattr, self, "out")
+        self.addCleanup(delattr, self, "err")
+        self.addCleanup(delattr, self, "returncode")
 
 
 def _run_cmd(args, cwd):
@@ -201,21 +198,21 @@ def _run_cmd(args, cwd):
     :return: ((stdout, stderr), returncode)
     """
     p = subprocess.Popen(
-        args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE, cwd=cwd)
-    streams = tuple(s.decode('latin1').strip() for s in p.communicate())
+        args,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=cwd,
+    )
+    streams = tuple(s.decode("latin1").strip() for s in p.communicate())
     for stream_content in streams:
         print(stream_content)
     return (streams) + (p.returncode,)
 
 
 def _config_git():
+    _run_cmd(["git", "config", "--global", "user.email", "example@example.com"], None)
+    _run_cmd(["git", "config", "--global", "user.name", "OpenStack Developer"], None)
     _run_cmd(
-        ['git', 'config', '--global', 'user.email', 'example@example.com'],
-        None)
-    _run_cmd(
-        ['git', 'config', '--global', 'user.name', 'OpenStack Developer'],
-        None)
-    _run_cmd(
-        ['git', 'config', '--global', 'user.signingkey',
-         'example@example.com'], None)
+        ["git", "config", "--global", "user.signingkey", "example@example.com"], None
+    )

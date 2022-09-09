@@ -15,6 +15,7 @@ class TestReverseView(object):
 
     def test_pickle(self):
         import pickle
+
         rv = self.rv
         prv = pickle.loads(pickle.dumps(rv, -1))
         assert_equal(rv._node, prv._node)
@@ -44,6 +45,7 @@ class TestMultiReverseView(object):
 
     def test_pickle(self):
         import pickle
+
         rv = self.rv
         prv = pickle.loads(pickle.dumps(rv, -1))
         assert_equal(rv._node, prv._node)
@@ -87,6 +89,7 @@ class TestToDirected(object):
 
     def test_pickle(self):
         import pickle
+
         dv = self.dv
         pdv = pickle.loads(pickle.dumps(dv, -1))
         assert_equal(dv._node, pdv._node)
@@ -130,12 +133,13 @@ class TestToUndirected(object):
 
     def test_pickle(self):
         import pickle
+
         uv = self.uv
         puv = pickle.loads(pickle.dumps(uv, -1))
         assert_equal(uv._node, puv._node)
         assert_equal(uv._adj, puv._adj)
         assert_equal(uv.graph, puv.graph)
-        assert_true(hasattr(uv, '_graph'))
+        assert_true(hasattr(uv, "_graph"))
 
     def test_contains(self):
         assert_in((2, 3), self.DG.edges)
@@ -165,14 +169,24 @@ class TestChainsOfViews(object):
         self.MDGv = nx.to_directed(self.MG)
         self.Rv = self.DG.reverse()
         self.MRv = self.MDG.reverse()
-        self.graphs = [self.G, self.DG, self.MG, self.MDG,
-                       self.Gv, self.DGv, self.MGv, self.MDGv,
-                       self.Rv, self.MRv]
+        self.graphs = [
+            self.G,
+            self.DG,
+            self.MG,
+            self.MDG,
+            self.Gv,
+            self.DGv,
+            self.MGv,
+            self.MDGv,
+            self.Rv,
+            self.MRv,
+        ]
         for G in self.graphs:
             G.edges, G.nodes, G.degree
 
     def test_pickle(self):
         import pickle
+
         for G in self.graphs:
             H = pickle.loads(pickle.dumps(G, -1))
             assert_edges_equal(H.edges, G.edges)
@@ -192,7 +206,7 @@ class TestChainsOfViews(object):
             assert_is(SSG._graph, G)
 
     def test_restricted_induced_subgraph_chains(self):
-        """ Test subgraph chains that both restrict and show nodes/edges.
+        """Test subgraph chains that both restrict and show nodes/edges.
 
         A restricted_view subgraph should allow induced subgraphs using
         G.subgraph that automagically without a chain (meaning the result
@@ -262,29 +276,29 @@ class TestChainsOfViews(object):
         SG = G.subgraph([4, 5, 6])
         CSG = SG.copy(as_view=True)
         DCSG = SG.copy(as_view=False)
-        assert_equal(CSG.__class__.__name__, 'GraphView')
-        assert_equal(DCSG.__class__.__name__, 'Graph')
+        assert_equal(CSG.__class__.__name__, "GraphView")
+        assert_equal(DCSG.__class__.__name__, "Graph")
 
     def test_copy_disubgraph(self):
         G = self.DG.copy()
         SG = G.subgraph([4, 5, 6])
         CSG = SG.copy(as_view=True)
         DCSG = SG.copy(as_view=False)
-        assert_equal(CSG.__class__.__name__, 'DiGraphView')
-        assert_equal(DCSG.__class__.__name__, 'DiGraph')
+        assert_equal(CSG.__class__.__name__, "DiGraphView")
+        assert_equal(DCSG.__class__.__name__, "DiGraph")
 
     def test_copy_multidisubgraph(self):
         G = self.MDG.copy()
         SG = G.subgraph([4, 5, 6])
         CSG = SG.copy(as_view=True)
         DCSG = SG.copy(as_view=False)
-        assert_equal(CSG.__class__.__name__, 'MultiDiGraphView')
-        assert_equal(DCSG.__class__.__name__, 'MultiDiGraph')
+        assert_equal(CSG.__class__.__name__, "MultiDiGraphView")
+        assert_equal(DCSG.__class__.__name__, "MultiDiGraph")
 
     def test_copy_multisubgraph(self):
         G = self.MGv.copy()
         SG = G.subgraph([4, 5, 6])
         CSG = SG.copy(as_view=True)
         DCSG = SG.copy(as_view=False)
-        assert_equal(CSG.__class__.__name__, 'MultiGraphView')
-        assert_equal(DCSG.__class__.__name__, 'MultiGraph')
+        assert_equal(CSG.__class__.__name__, "MultiGraphView")
+        assert_equal(DCSG.__class__.__name__, "MultiGraph")

@@ -40,7 +40,7 @@ class TestPruferSequence(object):
 
     @raises(KeyError)
     def test_bad_integer_labels(self):
-        T = nx.Graph(nx.utils.pairwise('abc'))
+        T = nx.Graph(nx.utils.pairwise("abc"))
         nx.to_prufer_sequence(T)
 
     def test_encoding(self):
@@ -71,9 +71,7 @@ class TestPruferSequence(object):
         assert_edges_equal(list(tree.edges()), edges)
 
     def test_inverse(self):
-        """Tests that the encoding and decoding functions are inverses.
-
-        """
+        """Tests that the encoding and decoding functions are inverses."""
         for T in nx.nonisomorphic_trees(4):
             T2 = nx.from_prufer_sequence(nx.to_prufer_sequence(T))
             assert_nodes_equal(list(T), list(T2))
@@ -85,9 +83,7 @@ class TestPruferSequence(object):
 
 
 class TestNestedTuple(object):
-    """Unit tests for the nested tuple encoding and decoding functions.
-
-    """
+    """Unit tests for the nested tuple encoding and decoding functions."""
 
     @raises(nx.NotATree)
     def test_nontree(self):
@@ -97,10 +93,10 @@ class TestNestedTuple(object):
     @raises(nx.NodeNotFound)
     def test_unknown_root(self):
         G = nx.path_graph(2)
-        nx.to_nested_tuple(G, 'bogus')
+        nx.to_nested_tuple(G, "bogus")
 
     def test_encoding(self):
-        T = nx.full_rary_tree(2, 2 ** 3 - 1)
+        T = nx.full_rary_tree(2, 2**3 - 1)
         expected = (((), ()), ((), ()))
         actual = nx.to_nested_tuple(T, 0)
         assert_nodes_equal(expected, actual)
@@ -117,7 +113,7 @@ class TestNestedTuple(object):
 
     def test_decoding(self):
         balanced = (((), ()), ((), ()))
-        expected = nx.full_rary_tree(2, 2 ** 3 - 1)
+        expected = nx.full_rary_tree(2, 2**3 - 1)
         actual = nx.from_nested_tuple(balanced)
         assert_true(nx.is_isomorphic(expected, actual))
 
@@ -125,5 +121,5 @@ class TestNestedTuple(object):
         balanced = (((), ()), ((), ()))
         T = nx.from_nested_tuple(balanced, sensible_relabeling=True)
         edges = [(0, 1), (0, 2), (1, 3), (1, 4), (2, 5), (2, 6)]
-        assert_nodes_equal(list(T), list(range(2 ** 3 - 1)))
+        assert_nodes_equal(list(T), list(range(2**3 - 1)))
         assert_edges_equal(list(T.edges()), edges)

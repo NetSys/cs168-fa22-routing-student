@@ -21,20 +21,20 @@ import sys
 
 def application(env, start_response, data):
     sys.stderr.flush()  # Force the previous request log to be written.
-    start_response('200 OK', [('Content-Type', 'text/html')])
-    return [data.encode('utf-8')]
+    start_response("200 OK", [("Content-Type", "text/html")])
+    return [data.encode("utf-8")]
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Return a string.')
-    parser.add_argument('--content', '-c', help='String returned',
-                        default='Hello World')
+    parser = argparse.ArgumentParser(description="Return a string.")
+    parser.add_argument(
+        "--content", "-c", help="String returned", default="Hello World"
+    )
     args = parser.parse_args()
     return functools.partial(application, data=args.content)
 
 
 class WSGI(object):
-
     @classmethod
     def app(self):
-        return functools.partial(application, data='Hello World')
+        return functools.partial(application, data="Hello World")

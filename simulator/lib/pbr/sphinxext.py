@@ -34,8 +34,9 @@ def _find_setup_cfg(srcdir):
     # an sdist or wheel? Perhaps we should check for 'PKG-INFO' or
     # 'METADATA' files, a la 'pbr.packaging._get_version_from_pkg_metadata'
     for path in [
-            os.path.join(srcdir, os.pardir, 'setup.cfg'),
-            os.path.join(srcdir, os.pardir, os.pardir, 'setup.cfg')]:
+        os.path.join(srcdir, os.pardir, "setup.cfg"),
+        os.path.join(srcdir, os.pardir, os.pardir, "setup.cfg"),
+    ]:
         if os.path.exists(path):
             return path
 
@@ -56,19 +57,18 @@ def _get_project_name(srcdir):
 
         path = _find_setup_cfg(srcdir)
         if not path or not parser.read(path):
-            logger.info('Could not find a setup.cfg to extract project name '
-                        'from')
+            logger.info("Could not find a setup.cfg to extract project name " "from")
             return None
 
         try:
             # for project name we use the name in setup.cfg, but if the
             # length is longer then 32 we use summary. Otherwise thAe
             # menu rendering looks brolen
-            project = parser.get('metadata', 'name')
+            project = parser.get("metadata", "name")
             if len(project.split()) == 1 and len(project) > 32:
-                project = parser.get('metadata', 'summary')
+                project = parser.get("metadata", "summary")
         except configparser.Error:
-            logger.info('Could not extract project metadata from setup.cfg')
+            logger.info("Could not extract project metadata from setup.cfg")
             return None
 
         _project = project
@@ -92,8 +92,8 @@ def _builder_inited(app):
 
 
 def setup(app):
-    app.connect('builder-inited', _builder_inited)
+    app.connect("builder-inited", _builder_inited)
     return {
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

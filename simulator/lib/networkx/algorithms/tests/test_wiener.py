@@ -26,7 +26,7 @@ class TestWienerIndex(object):
         positive infinity.
 
         """
-        eq_(wiener_index(empty_graph(2)), float('inf'))
+        eq_(wiener_index(empty_graph(2)), float("inf"))
 
     def test_directed(self):
         """Tests that each pair of nodes in the directed graph is
