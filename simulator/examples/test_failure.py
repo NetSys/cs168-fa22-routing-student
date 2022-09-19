@@ -24,51 +24,52 @@ import sim.basics as basics
 from examples.test_simple import GetPacketHost
 
 
-def launch ():
-  h1 = GetPacketHost.create("h1")
-  h2 = GetPacketHost.create("h2")
+def launch():
+    h1 = GetPacketHost.create("h1")
+    h2 = GetPacketHost.create("h2")
 
-  s1 = sim.config.default_switch_type.create('s1')
-  s2 = sim.config.default_switch_type.create('s2')
-  s3 = sim.config.default_switch_type.create('s3')
-  s4 = sim.config.default_switch_type.create('s4')
-  s5 = sim.config.default_switch_type.create('s5')
+    s1 = sim.config.default_switch_type.create("s1")
+    s2 = sim.config.default_switch_type.create("s2")
+    s3 = sim.config.default_switch_type.create("s3")
+    s4 = sim.config.default_switch_type.create("s4")
+    s5 = sim.config.default_switch_type.create("s5")
 
-  h1.linkTo(s1)
-  h2.linkTo(s2)
+    h1.linkTo(s1)
+    h2.linkTo(s2)
 
-  s1.linkTo(s2)
+    s1.linkTo(s2)
 
-  s1.linkTo(s3)
-  s3.linkTo(s4)
-  s4.linkTo(s5)
-  s5.linkTo(s2)
+    s1.linkTo(s3)
+    s3.linkTo(s4)
+    s4.linkTo(s5)
+    s5.linkTo(s2)
 
-  def test_tasklet ():
-    yield 10 # Wait five seconds for routing to converge
+    def test_tasklet():
+        yield 10  # Wait five seconds for routing to converge
 
-    api.userlog.debug("Sending test ping 1")
-    h1.ping(h2)
+        api.userlog.debug("Sending test ping 1")
+        h1.ping(h2)
 
-    yield 10
+        yield 10
 
-    api.userlog.debug("Failing s1-s2 link")
-    s1.unlinkTo(s2)
+        api.userlog.debug("Failing s1-s2 link")
+        s1.unlinkTo(s2)
 
-    yield 10
+        yield 10
 
-    api.userlog.debug("Sending test ping 2")
-    h1.ping(h2)
+        api.userlog.debug("Sending test ping 2")
+        h1.ping(h2)
 
-    yield 10
+        yield 10
 
-    if h2.pings != 2:
-      api.userlog.error("h2 got %s packets instead of 2", h2.pings)
-    else:
-      api.userlog.debug("Test passed successfully!")
+        if h2.pings != 2:
+            api.userlog.error("h2 got %s packets instead of 2", h2.pings)
+        else:
+            api.userlog.debug("Test passed successfully!")
 
-    # End the simulation and (if not running in interactive mode) exit.
-    import sys
-    sys.exit(0)
+        # End the simulation and (if not running in interactive mode) exit.
+        import sys
 
-  api.run_tasklet(test_tasklet)
+        sys.exit(0)
+
+    api.run_tasklet(test_tasklet)

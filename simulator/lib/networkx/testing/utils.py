@@ -1,6 +1,6 @@
 from nose.tools import assert_equal, assert_in
 
-__all__ = ['assert_nodes_equal', 'assert_edges_equal', 'assert_graphs_equal']
+__all__ = ["assert_nodes_equal", "assert_edges_equal", "assert_graphs_equal"]
 
 
 def assert_nodes_equal(nodes1, nodes2):
@@ -22,6 +22,7 @@ def assert_edges_equal(edges1, edges2):
     # edge tuples with data dicts (u,v,d), or
     # edge tuples with keys and data dicts (u,v,k, d)
     from collections import defaultdict
+
     d1 = defaultdict(dict)
     d2 = defaultdict(dict)
     c1 = 0

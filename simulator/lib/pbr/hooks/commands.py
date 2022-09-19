@@ -24,43 +24,42 @@ from pbr import packaging
 
 class CommandsConfig(base.BaseConfig):
 
-    section = 'global'
+    section = "global"
 
     def __init__(self, config):
         super(CommandsConfig, self).__init__(config)
-        self.commands = self.config.get('commands', "")
+        self.commands = self.config.get("commands", "")
 
     def save(self):
-        self.config['commands'] = self.commands
+        self.config["commands"] = self.commands
         super(CommandsConfig, self).save()
 
     def add_command(self, command):
         self.commands = "%s\n%s" % (self.commands, command)
 
     def hook(self):
-        self.add_command('pbr.packaging.LocalEggInfo')
-        self.add_command('pbr.packaging.LocalSDist')
-        self.add_command('pbr.packaging.LocalInstallScripts')
-        self.add_command('pbr.packaging.LocalDevelop')
-        self.add_command('pbr.packaging.LocalRPMVersion')
-        self.add_command('pbr.packaging.LocalDebVersion')
-        if os.name != 'nt':
+        self.add_command("pbr.packaging.LocalEggInfo")
+        self.add_command("pbr.packaging.LocalSDist")
+        self.add_command("pbr.packaging.LocalInstallScripts")
+        self.add_command("pbr.packaging.LocalDevelop")
+        self.add_command("pbr.packaging.LocalRPMVersion")
+        self.add_command("pbr.packaging.LocalDebVersion")
+        if os.name != "nt":
             easy_install.get_script_args = packaging.override_get_script_args
 
         if packaging.have_sphinx():
-            self.add_command('pbr.builddoc.LocalBuildDoc')
+            self.add_command("pbr.builddoc.LocalBuildDoc")
 
-        if os.path.exists('.testr.conf') and packaging.have_testr():
+        if os.path.exists(".testr.conf") and packaging.have_testr():
             # There is a .testr.conf file. We want to use it.
-            self.add_command('pbr.packaging.TestrTest')
-        elif self.config.get('nosetests', False) and packaging.have_nose():
+            self.add_command("pbr.packaging.TestrTest")
+        elif self.config.get("nosetests", False) and packaging.have_nose():
             # We seem to still have nose configured
-            self.add_command('pbr.packaging.NoseTest')
+            self.add_command("pbr.packaging.NoseTest")
 
-        use_egg = options.get_boolean_option(
-            self.pbr_config, 'use-egg', 'PBR_USE_EGG')
+        use_egg = options.get_boolean_option(self.pbr_config, "use-egg", "PBR_USE_EGG")
         # We always want non-egg install unless explicitly requested
-        if 'manpages' in self.pbr_config or not use_egg:
-            self.add_command('pbr.packaging.LocalInstall')
+        if "manpages" in self.pbr_config or not use_egg:
+            self.add_command("pbr.packaging.LocalInstall")
         else:
-            self.add_command('pbr.packaging.InstallWithGit')
+            self.add_command("pbr.packaging.InstallWithGit")

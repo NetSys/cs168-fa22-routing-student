@@ -18,16 +18,16 @@ class TestYaml(object):
         try:
             import yaml
         except ImportError:
-            raise SkipTest('yaml not available.')
+            raise SkipTest("yaml not available.")
 
     def setUp(self):
         self.build_graphs()
 
     def build_graphs(self):
         self.G = nx.Graph(name="test")
-        e = [('a', 'b'), ('b', 'c'), ('c', 'd'), ('d', 'e'), ('e', 'f'), ('a', 'f')]
+        e = [("a", "b"), ("b", "c"), ("c", "d"), ("d", "e"), ("e", "f"), ("a", "f")]
         self.G.add_edges_from(e)
-        self.G.add_node('g')
+        self.G.add_node("g")
 
         self.DG = nx.DiGraph(self.G)
 

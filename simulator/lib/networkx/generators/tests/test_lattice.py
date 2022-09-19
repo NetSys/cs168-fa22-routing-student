@@ -39,12 +39,15 @@ class TestGrid2DGraph:
         G = nx.grid_2d_graph(0, 0, periodic=True)
         assert_equal(dict(G.degree()), {})
 
-        for m, n, H in [(2, 2, nx.cycle_graph(4)), (1, 7, nx.cycle_graph(7)),
-                        (7, 1, nx.cycle_graph(7)),
-                        (2, 5, nx.circular_ladder_graph(5)),
-                        (5, 2, nx.circular_ladder_graph(5)),
-                        (2, 4, nx.cubical_graph()),
-                        (4, 2, nx.cubical_graph())]:
+        for m, n, H in [
+            (2, 2, nx.cycle_graph(4)),
+            (1, 7, nx.cycle_graph(7)),
+            (7, 1, nx.cycle_graph(7)),
+            (2, 5, nx.circular_ladder_graph(5)),
+            (5, 2, nx.circular_ladder_graph(5)),
+            (2, 4, nx.cubical_graph()),
+            (4, 2, nx.cubical_graph()),
+        ]:
             G = nx.grid_2d_graph(m, n, periodic=True)
             assert_true(nx.could_be_isomorphic(G, H))
 
@@ -83,8 +86,9 @@ class TestGridGraph:
             dim = [n, m]
             g = nx.grid_graph(dim)
             assert_equal(len(g), n * m)
-            assert_equal(nx.degree_histogram(g), [0, 0, 4, 2 * (n + m) - 8,
-                                                  (n - 2) * (m - 2)])
+            assert_equal(
+                nx.degree_histogram(g), [0, 0, 4, 2 * (n + m) - 8, (n - 2) * (m - 2)]
+            )
 
         for n, m in [(1, 5), (5, 1)]:
             dim = [n, m]
@@ -92,8 +96,8 @@ class TestGridGraph:
             assert_equal(len(g), n * m)
             assert_true(nx.is_isomorphic(g, nx.path_graph(5)))
 
-#        mg = nx.grid_graph([n,m], create_using=MultiGraph())
-#        assert_equal(mg.edges(), g.edges())
+    #        mg = nx.grid_graph([n,m], create_using=MultiGraph())
+    #        assert_equal(mg.edges(), g.edges())
 
     def test_node_input(self):
         G = nx.grid_graph([range(7, 9), range(3, 6)])
@@ -105,15 +109,19 @@ class TestHypercubeGraph:
     """Unit tests for :func:`networkx.generators.lattice.hypercube_graph`"""
 
     def test_special_cases(self):
-        for n, H in [(0, nx.null_graph()), (1, nx.path_graph(2)),
-                     (2, nx.cycle_graph(4)), (3, nx.cubical_graph())]:
+        for n, H in [
+            (0, nx.null_graph()),
+            (1, nx.path_graph(2)),
+            (2, nx.cycle_graph(4)),
+            (3, nx.cubical_graph()),
+        ]:
             G = nx.hypercube_graph(n)
             assert_true(nx.could_be_isomorphic(G, H))
 
     def test_degree_distribution(self):
         for n in range(1, 10):
             G = nx.hypercube_graph(n)
-            expected_histogram = [0] * n + [2 ** n]
+            expected_histogram = [0] * n + [2**n]
             assert_equal(nx.degree_histogram(G), expected_histogram)
 
 
@@ -188,7 +196,7 @@ class TestHexagonalLatticeGraph:
         G = nx.hexagonal_lattice_graph(3, 5, create_using=nx.Graph())
         H = nx.hexagonal_lattice_graph(3, 5, create_using=nx.DiGraph())
         assert_true(H.is_directed())
-        pos = nx.get_node_attributes(H, 'pos')
+        pos = nx.get_node_attributes(H, "pos")
         for u, v in H.edges():
             assert_true(pos[v][1] >= pos[u][1])
             if pos[v][1] == pos[u][1]:

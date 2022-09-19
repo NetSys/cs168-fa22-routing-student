@@ -15,11 +15,11 @@ from networkx.classes import MultiDiGraph
 from networkx.utils import not_implemented_for
 
 __author__ = "Aric Hagberg <aric.hagberg@gmail.com>"
-__all__ = ['stochastic_graph']
+__all__ = ["stochastic_graph"]
 
 
-@not_implemented_for('undirected')
-def stochastic_graph(G, copy=True, weight='weight'):
+@not_implemented_for("undirected")
+def stochastic_graph(G, copy=True, weight="weight"):
     """Returns a right-stochastic representation of directed graph `G`.
 
     A right-stochastic graph is a weighted digraph in which for each

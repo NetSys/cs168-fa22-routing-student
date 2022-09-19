@@ -16,8 +16,13 @@ from networkx.classes.graph import Graph  # for doctests
 from networkx.classes.digraph import DiGraph
 from networkx.classes.multigraph import MultiGraph
 from networkx.classes.coreviews import MultiAdjacencyView
-from networkx.classes.reportviews import OutMultiEdgeView, InMultiEdgeView, \
-    DiMultiDegreeView, OutMultiDegreeView, InMultiDegreeView
+from networkx.classes.reportviews import (
+    OutMultiEdgeView,
+    InMultiEdgeView,
+    DiMultiDegreeView,
+    OutMultiDegreeView,
+    InMultiDegreeView,
+)
 from networkx.exception import NetworkXError
 
 
@@ -240,6 +245,7 @@ class MultiDiGraph(MultiGraph, DiGraph):
     creating graph subclasses by overwriting the base class `dict` with
     a dictionary-like object.
     """
+
     # node_dict_factory = dict    # already assigned in Graph
     # adjlist_outer_dict_factory = dict
     # adjlist_inner_dict_factory = dict
@@ -479,8 +485,7 @@ class MultiDiGraph(MultiGraph, DiGraph):
         try:
             d = self._adj[u][v]
         except KeyError:
-            raise NetworkXError(
-                "The edge %s-%s is not in the graph." % (u, v))
+            raise NetworkXError("The edge %s-%s is not in the graph." % (u, v))
         # remove the edge with specified data
         if key is None:
             d.popitem()
@@ -566,8 +571,8 @@ class MultiDiGraph(MultiGraph, DiGraph):
         --------
         in_edges, out_edges
         """
-        self.__dict__['edges'] = edges = OutMultiEdgeView(self)
-        self.__dict__['out_edges'] = edges
+        self.__dict__["edges"] = edges = OutMultiEdgeView(self)
+        self.__dict__["out_edges"] = edges
         return edges
 
     # alias out_edges to edges
@@ -604,7 +609,7 @@ class MultiDiGraph(MultiGraph, DiGraph):
         --------
         edges
         """
-        self.__dict__['in_edges'] = in_edges = InMultiEdgeView(self)
+        self.__dict__["in_edges"] = in_edges = InMultiEdgeView(self)
         return in_edges
 
     @property
@@ -652,7 +657,7 @@ class MultiDiGraph(MultiGraph, DiGraph):
         [(0, 1), (1, 2), (2, 2)]
 
         """
-        self.__dict__['degree'] = degree = DiMultiDegreeView(self)
+        self.__dict__["degree"] = degree = DiMultiDegreeView(self)
         return degree
 
     @property
@@ -700,7 +705,7 @@ class MultiDiGraph(MultiGraph, DiGraph):
         [(0, 0), (1, 1), (2, 1)]
 
         """
-        self.__dict__['in_degree'] = in_degree = InMultiDegreeView(self)
+        self.__dict__["in_degree"] = in_degree = InMultiDegreeView(self)
         return in_degree
 
     @property
@@ -747,7 +752,7 @@ class MultiDiGraph(MultiGraph, DiGraph):
         [(0, 1), (1, 1), (2, 1)]
 
         """
-        self.__dict__['out_degree'] = out_degree = OutMultiDegreeView(self)
+        self.__dict__["out_degree"] = out_degree = OutMultiDegreeView(self)
         return out_degree
 
     def is_multigraph(self):
@@ -855,10 +860,12 @@ class MultiDiGraph(MultiGraph, DiGraph):
         G = self.fresh_copy()
         G.graph.update(self.graph)
         G.add_nodes_from((n, d.copy()) for n, d in self._node.items())
-        G.add_edges_from((u, v, key, datadict.copy())
-                         for u, nbrs in self._adj.items()
-                         for v, keydict in nbrs.items()
-                         for key, datadict in keydict.items())
+        G.add_edges_from(
+            (u, v, key, datadict.copy())
+            for u, nbrs in self._adj.items()
+            for v, keydict in nbrs.items()
+            for key, datadict in keydict.items()
+        )
         return G
 
     def to_undirected(self, reciprocal=False, as_view=False):
@@ -919,16 +926,20 @@ class MultiDiGraph(MultiGraph, DiGraph):
         G.graph.update(deepcopy(self.graph))
         G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
         if reciprocal is True:
-            G.add_edges_from((u, v, key, deepcopy(data))
-                             for u, nbrs in self._adj.items()
-                             for v, keydict in nbrs.items()
-                             for key, data in keydict.items()
-                             if v in self._pred[u] and key in self._pred[u][v])
+            G.add_edges_from(
+                (u, v, key, deepcopy(data))
+                for u, nbrs in self._adj.items()
+                for v, keydict in nbrs.items()
+                for key, data in keydict.items()
+                if v in self._pred[u] and key in self._pred[u][v]
+            )
         else:
-            G.add_edges_from((u, v, key, deepcopy(data))
-                             for u, nbrs in self._adj.items()
-                             for v, keydict in nbrs.items()
-                             for key, data in keydict.items())
+            G.add_edges_from(
+                (u, v, key, deepcopy(data))
+                for u, nbrs in self._adj.items()
+                for v, keydict in nbrs.items()
+                for key, data in keydict.items()
+            )
         return G
 
     def subgraph(self, nodes):
@@ -971,7 +982,7 @@ class MultiDiGraph(MultiGraph, DiGraph):
         induced_nodes = nx.filters.show_nodes(self.nbunch_iter(nodes))
         SubGraph = nx.graphviews.SubMultiDiGraph
         # if already a subgraph, don't make a chain
-        if hasattr(self, '_NODE_OK'):
+        if hasattr(self, "_NODE_OK"):
             return SubGraph(self._graph, induced_nodes, self._EDGE_OK)
         return SubGraph(self, induced_nodes)
 
@@ -992,7 +1003,9 @@ class MultiDiGraph(MultiGraph, DiGraph):
             H = self.fresh_copy()
             H.graph.update(deepcopy(self.graph))
             H.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
-            H.add_edges_from((v, u, k, deepcopy(d)) for u, v, k, d
-                             in self.edges(keys=True, data=True))
+            H.add_edges_from(
+                (v, u, k, deepcopy(d))
+                for u, v, k, d in self.edges(keys=True, data=True)
+            )
             return H
         return nx.graphviews.MultiReverseView(self)

@@ -30,7 +30,7 @@ class TestQuotient(object):
         # neighbor set.
 
         def same_neighbors(u, v):
-            return (u not in G[v] and v not in G[u] and G[u] == G[v])
+            return u not in G[v] and v not in G[u] and G[u] == G[v]
 
         expected = nx.complete_graph(3)
         actual = nx.quotient_graph(G, same_neighbors)
@@ -48,7 +48,7 @@ class TestQuotient(object):
         # neighbor set.
 
         def same_neighbors(u, v):
-            return (u not in G[v] and v not in G[u] and G[u] == G[v])
+            return u not in G[v] and v not in G[u] and G[u] == G[v]
 
         expected = nx.complete_graph(2)
         actual = nx.quotient_graph(G, same_neighbors)
@@ -67,7 +67,7 @@ class TestQuotient(object):
             return u == v
 
         def same_parity(b, c):
-            return (arbitrary_element(b) % 2 == arbitrary_element(c) % 2)
+            return arbitrary_element(b) % 2 == arbitrary_element(c) % 2
 
         actual = nx.quotient_graph(G, identity, same_parity)
         expected = nx.Graph()
@@ -83,13 +83,34 @@ class TestQuotient(object):
         """
         # This example graph comes from the file `test_strongly_connected.py`.
         G = nx.DiGraph()
-        G.add_edges_from([(1, 2), (2, 3), (2, 11), (2, 12), (3, 4), (4, 3),
-                          (4, 5), (5, 6), (6, 5), (6, 7), (7, 8), (7, 9),
-                          (7, 10), (8, 9), (9, 7), (10, 6), (11, 2), (11, 4),
-                          (11, 6), (12, 6), (12, 11)])
+        G.add_edges_from(
+            [
+                (1, 2),
+                (2, 3),
+                (2, 11),
+                (2, 12),
+                (3, 4),
+                (4, 3),
+                (4, 5),
+                (5, 6),
+                (6, 5),
+                (6, 7),
+                (7, 8),
+                (7, 9),
+                (7, 10),
+                (8, 9),
+                (9, 7),
+                (10, 6),
+                (11, 2),
+                (11, 4),
+                (11, 6),
+                (12, 6),
+                (12, 11),
+            ]
+        )
         scc = list(nx.strongly_connected_components(G))
         C = nx.condensation(G, scc)
-        component_of = C.graph['mapping']
+        component_of = C.graph["mapping"]
         # Two nodes are equivalent if they are in the same connected component.
 
         def same_component(u, v):
@@ -105,9 +126,9 @@ class TestQuotient(object):
         assert_nodes_equal(M, [0, 1, 2])
         assert_edges_equal(M.edges(), [(0, 1), (1, 2)])
         for n in M:
-            assert_equal(M.nodes[n]['nedges'], 1)
-            assert_equal(M.nodes[n]['nnodes'], 2)
-            assert_equal(M.nodes[n]['density'], 1)
+            assert_equal(M.nodes[n]["nedges"], 1)
+            assert_equal(M.nodes[n]["nnodes"], 2)
+            assert_equal(M.nodes[n]["density"], 1)
 
     def test_multigraph_path(self):
         G = nx.MultiGraph(nx.path_graph(6))
@@ -116,9 +137,9 @@ class TestQuotient(object):
         assert_nodes_equal(M, [0, 1, 2])
         assert_edges_equal(M.edges(), [(0, 1), (1, 2)])
         for n in M:
-            assert_equal(M.nodes[n]['nedges'], 1)
-            assert_equal(M.nodes[n]['nnodes'], 2)
-            assert_equal(M.nodes[n]['density'], 1)
+            assert_equal(M.nodes[n]["nedges"], 1)
+            assert_equal(M.nodes[n]["nnodes"], 2)
+            assert_equal(M.nodes[n]["density"], 1)
 
     def test_directed_path(self):
         G = nx.DiGraph()
@@ -128,9 +149,9 @@ class TestQuotient(object):
         assert_nodes_equal(M, [0, 1, 2])
         assert_edges_equal(M.edges(), [(0, 1), (1, 2)])
         for n in M:
-            assert_equal(M.nodes[n]['nedges'], 1)
-            assert_equal(M.nodes[n]['nnodes'], 2)
-            assert_equal(M.nodes[n]['density'], 0.5)
+            assert_equal(M.nodes[n]["nedges"], 1)
+            assert_equal(M.nodes[n]["nnodes"], 2)
+            assert_equal(M.nodes[n]["density"], 0.5)
 
     def test_directed_multigraph_path(self):
         G = nx.MultiDiGraph()
@@ -140,9 +161,9 @@ class TestQuotient(object):
         assert_nodes_equal(M, [0, 1, 2])
         assert_edges_equal(M.edges(), [(0, 1), (1, 2)])
         for n in M:
-            assert_equal(M.nodes[n]['nedges'], 1)
-            assert_equal(M.nodes[n]['nnodes'], 2)
-            assert_equal(M.nodes[n]['density'], 0.5)
+            assert_equal(M.nodes[n]["nedges"], 1)
+            assert_equal(M.nodes[n]["nnodes"], 2)
+            assert_equal(M.nodes[n]["density"], 0.5)
 
     @raises(nx.NetworkXException)
     def test_overlapping_blocks(self):
@@ -153,17 +174,17 @@ class TestQuotient(object):
     def test_weighted_path(self):
         G = nx.path_graph(6)
         for i in range(5):
-            G[i][i + 1]['weight'] = i + 1
+            G[i][i + 1]["weight"] = i + 1
         partition = [{0, 1}, {2, 3}, {4, 5}]
         M = nx.quotient_graph(G, partition, relabel=True)
         assert_nodes_equal(M, [0, 1, 2])
         assert_edges_equal(M.edges(), [(0, 1), (1, 2)])
-        assert_equal(M[0][1]['weight'], 2)
-        assert_equal(M[1][2]['weight'], 4)
+        assert_equal(M[0][1]["weight"], 2)
+        assert_equal(M[1][2]["weight"], 4)
         for n in M:
-            assert_equal(M.nodes[n]['nedges'], 1)
-            assert_equal(M.nodes[n]['nnodes'], 2)
-            assert_equal(M.nodes[n]['density'], 1)
+            assert_equal(M.nodes[n]["nedges"], 1)
+            assert_equal(M.nodes[n]["nnodes"], 2)
+            assert_equal(M.nodes[n]["density"], 1)
 
     def test_barbell(self):
         G = nx.barbell_graph(3, 0)
@@ -172,9 +193,9 @@ class TestQuotient(object):
         assert_nodes_equal(M, [0, 1])
         assert_edges_equal(M.edges(), [(0, 1)])
         for n in M:
-            assert_equal(M.nodes[n]['nedges'], 3)
-            assert_equal(M.nodes[n]['nnodes'], 3)
-            assert_equal(M.nodes[n]['density'], 1)
+            assert_equal(M.nodes[n]["nedges"], 3)
+            assert_equal(M.nodes[n]["nnodes"], 3)
+            assert_equal(M.nodes[n]["density"], 1)
 
     def test_barbell_plus(self):
         G = nx.barbell_graph(3, 0)
@@ -184,11 +205,11 @@ class TestQuotient(object):
         M = nx.quotient_graph(G, partition, relabel=True)
         assert_nodes_equal(M, [0, 1])
         assert_edges_equal(M.edges(), [(0, 1)])
-        assert_equal(M[0][1]['weight'], 2)
+        assert_equal(M[0][1]["weight"], 2)
         for n in M:
-            assert_equal(M.nodes[n]['nedges'], 3)
-            assert_equal(M.nodes[n]['nnodes'], 3)
-            assert_equal(M.nodes[n]['density'], 1)
+            assert_equal(M.nodes[n]["nedges"], 3)
+            assert_equal(M.nodes[n]["nnodes"], 3)
+            assert_equal(M.nodes[n]["density"], 1)
 
     def test_blockmodel(self):
         G = nx.path_graph(6)
@@ -197,21 +218,20 @@ class TestQuotient(object):
         assert_nodes_equal(M.nodes(), [0, 1, 2])
         assert_edges_equal(M.edges(), [(0, 1), (1, 2)])
         for n in M.nodes():
-            assert_equal(M.nodes[n]['nedges'], 1)
-            assert_equal(M.nodes[n]['nnodes'], 2)
-            assert_equal(M.nodes[n]['density'], 1.0)
+            assert_equal(M.nodes[n]["nedges"], 1)
+            assert_equal(M.nodes[n]["nnodes"], 2)
+            assert_equal(M.nodes[n]["density"], 1.0)
 
     def test_multigraph_blockmodel(self):
         G = nx.MultiGraph(nx.path_graph(6))
         partition = [[0, 1], [2, 3], [4, 5]]
-        M = nx.quotient_graph(G, partition,
-                              create_using=nx.MultiGraph(), relabel=True)
+        M = nx.quotient_graph(G, partition, create_using=nx.MultiGraph(), relabel=True)
         assert_nodes_equal(M.nodes(), [0, 1, 2])
         assert_edges_equal(M.edges(), [(0, 1), (1, 2)])
         for n in M.nodes():
-            assert_equal(M.nodes[n]['nedges'], 1)
-            assert_equal(M.nodes[n]['nnodes'], 2)
-            assert_equal(M.nodes[n]['density'], 1.0)
+            assert_equal(M.nodes[n]["nedges"], 1)
+            assert_equal(M.nodes[n]["nnodes"], 2)
+            assert_equal(M.nodes[n]["density"], 1.0)
 
     def test_quotient_graph_incomplete_partition(self):
         G = nx.path_graph(6)
@@ -280,16 +300,16 @@ class TestContraction(object):
         """Tests that node contraction preserves node attributes."""
         G = nx.cycle_graph(4)
         # Add some data to the two nodes being contracted.
-        G.nodes[0]['foo'] = 'bar'
-        G.nodes[1]['baz'] = 'xyzzy'
+        G.nodes[0]["foo"] = "bar"
+        G.nodes[1]["baz"] = "xyzzy"
         actual = nx.contracted_nodes(G, 0, 1)
         # We expect that contracting the nodes 0 and 1 in C_4 yields K_3, but
         # with nodes labeled 0, 2, and 3, and with a self-loop on 0.
         expected = nx.complete_graph(3)
         expected = nx.relabel_nodes(expected, {1: 2, 2: 3})
         expected.add_edge(0, 0)
-        cdict = {1: {'baz': 'xyzzy'}}
-        expected.nodes[0].update(dict(foo='bar', contraction=cdict))
+        cdict = {1: {"baz": "xyzzy"}}
+        expected.nodes[0].update(dict(foo="bar", contraction=cdict))
         assert_true(nx.is_isomorphic(actual, expected))
         assert_equal(actual.nodes, expected.nodes)
 

@@ -3,6 +3,7 @@
 from nose.tools import *
 from networkx import *
 from networkx.algorithms.isomorphism.isomorph import graph_could_be_isomorphic
+
 is_isomorphic = graph_could_be_isomorphic
 
 """Generators - Small
@@ -14,7 +15,7 @@ Some small graphs
 null = null_graph()
 
 
-class TestGeneratorsSmall():
+class TestGeneratorsSmall:
     def test_make_small_graph(self):
         d = ["adjacencylist", "Bull Graph", 5, [[2, 3], [1, 3, 4], [1, 2, 5], [2], [3]]]
         G = make_small_graph(d)
@@ -117,16 +118,16 @@ class TestGeneratorsSmall():
         G = icosahedral_graph()
         assert_equal(G.number_of_nodes(), 12)
         assert_equal(G.number_of_edges(), 30)
-        assert_equal(list(d for n, d in G.degree()),
-                     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
+        assert_equal(
+            list(d for n, d in G.degree()), [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        )
         assert_equal(diameter(G), 3)
         assert_equal(radius(G), 3)
 
         G = krackhardt_kite_graph()
         assert_equal(G.number_of_nodes(), 10)
         assert_equal(G.number_of_edges(), 18)
-        assert_equal(sorted(d for n, d in G.degree()),
-                     [1, 2, 3, 3, 3, 4, 4, 5, 5, 6])
+        assert_equal(sorted(d for n, d in G.degree()), [1, 2, 3, 3, 3, 4, 4, 5, 5, 6])
 
         G = moebius_kantor_graph()
         assert_equal(G.number_of_nodes(), 16)
@@ -182,7 +183,8 @@ class TestGeneratorsSmall():
         assert_equal(list(d for n, d in G.degree()), 46 * [3])
 
         # Test create_using with directed or multigraphs on small graphs
-        assert_raises(networkx.exception.NetworkXError, tutte_graph,
-                      create_using=DiGraph())
+        assert_raises(
+            networkx.exception.NetworkXError, tutte_graph, create_using=DiGraph()
+        )
         MG = tutte_graph(create_using=MultiGraph())
         assert_equal(sorted(MG.edges()), sorted(G.edges()))

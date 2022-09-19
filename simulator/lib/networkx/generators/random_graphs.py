@@ -20,29 +20,31 @@ from .classic import empty_graph, path_graph, complete_graph
 from .degree_seq import degree_sequence_tree
 from collections import defaultdict
 
-__all__ = ['fast_gnp_random_graph',
-           'gnp_random_graph',
-           'dense_gnm_random_graph',
-           'gnm_random_graph',
-           'erdos_renyi_graph',
-           'binomial_graph',
-           'newman_watts_strogatz_graph',
-           'watts_strogatz_graph',
-           'connected_watts_strogatz_graph',
-           'random_regular_graph',
-           'barabasi_albert_graph',
-           'extended_barabasi_albert_graph',
-           'powerlaw_cluster_graph',
-           'random_lobster',
-           'random_shell_graph',
-           'random_powerlaw_tree',
-           'random_powerlaw_tree_sequence',
-           'random_kernel_graph']
+__all__ = [
+    "fast_gnp_random_graph",
+    "gnp_random_graph",
+    "dense_gnm_random_graph",
+    "gnm_random_graph",
+    "erdos_renyi_graph",
+    "binomial_graph",
+    "newman_watts_strogatz_graph",
+    "watts_strogatz_graph",
+    "connected_watts_strogatz_graph",
+    "random_regular_graph",
+    "barabasi_albert_graph",
+    "extended_barabasi_albert_graph",
+    "powerlaw_cluster_graph",
+    "random_lobster",
+    "random_shell_graph",
+    "random_powerlaw_tree",
+    "random_powerlaw_tree_sequence",
+    "random_kernel_graph",
+]
 
 
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 #  Some Famous Random Graphs
-#-------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 
 
 def fast_gnp_random_graph(n, p, seed=None, directed=False):
@@ -468,7 +470,7 @@ def connected_watts_strogatz_graph(n, k, p, tries=100, seed=None):
         G = watts_strogatz_graph(n, k, p, seed)
         if nx.is_connected(G):
             return G
-    raise nx.NetworkXError('Maximum number of tries exceeded')
+    raise nx.NetworkXError("Maximum number of tries exceeded")
 
 
 def random_regular_graph(d, n, seed=None):
@@ -565,8 +567,11 @@ def random_regular_graph(d, n, seed=None):
             if not _suitable(edges, potential_edges):
                 return None  # failed to find suitable edge set
 
-            stubs = [node for node, potential in potential_edges.items()
-                     for _ in range(potential)]
+            stubs = [
+                node
+                for node, potential in potential_edges.items()
+                for _ in range(potential)
+            ]
         return edges
 
     # Even though a suitable edge set exists,
@@ -583,7 +588,7 @@ def random_regular_graph(d, n, seed=None):
 
 
 def _random_subset(seq, m):
-    """ Return m unique elements from seq.
+    """Return m unique elements from seq.
 
     This differs from random.sample which can return repeated
     elements if seq holds repeated elements.
@@ -627,8 +632,10 @@ def barabasi_albert_graph(n, m, seed=None):
     """
 
     if m < 1 or m >= n:
-        raise nx.NetworkXError("Barabási–Albert network must have m >= 1"
-                               " and m < n, m = %d, n = %d" % (m, n))
+        raise nx.NetworkXError(
+            "Barabási–Albert network must have m >= 1"
+            " and m < n, m = %d, n = %d" % (m, n)
+        )
     if seed is not None:
         random.seed(seed)
 
@@ -733,8 +740,7 @@ def extended_barabasi_albert_graph(n, m, p, q, seed=None):
         # Adding m new edges, if there is room to add them
         if a_probability < p and G.size() <= clique_size - m:
             # Select the nodes where an edge can be added
-            elligible_nodes = [nd for nd, deg in G.degree()
-                               if deg < clique_degree]
+            elligible_nodes = [nd for nd, deg in G.degree() if deg < clique_degree]
             for i in range(m):
                 # Choosing a random source node from elligible_nodes
                 src_node = random.choice(elligible_nodes)
@@ -744,8 +750,9 @@ def extended_barabasi_albert_graph(n, m, p, q, seed=None):
                 prohibited_nodes = list(G[src_node])
                 prohibited_nodes.append(src_node)
                 # This will raise an exception if the sequence is empty
-                dest_node = random.choice([nd for nd in attachment_preference
-                                           if nd not in prohibited_nodes])
+                dest_node = random.choice(
+                    [nd for nd in attachment_preference if nd not in prohibited_nodes]
+                )
                 # Adding the new edge
                 G.add_edge(src_node, dest_node)
 
@@ -756,8 +763,10 @@ def extended_barabasi_albert_graph(n, m, p, q, seed=None):
                 # Adjusting the elligible nodes. Degree may be saturated.
                 if G.degree(src_node) == clique_degree:
                     elligible_nodes.remove(src_node)
-                if G.degree(dest_node) == clique_degree \
-                        and dest_node in elligible_nodes:
+                if (
+                    G.degree(dest_node) == clique_degree
+                    and dest_node in elligible_nodes
+                ):
                     elligible_nodes.remove(dest_node)
 
         # Rewiring m edges, if there are enough edges
@@ -765,8 +774,7 @@ def extended_barabasi_albert_graph(n, m, p, q, seed=None):
             # Selecting nodes that have at least 1 edge but that are not
             # fully connected to ALL other nodes (center of star).
             # These nodes are the pivot nodes of the edges to rewire
-            elligible_nodes = [nd for nd, deg in G.degree()
-                               if 0 < deg < clique_degree]
+            elligible_nodes = [nd for nd, deg in G.degree() if 0 < deg < clique_degree]
             for i in range(m):
                 # Choosing a random source node
                 node = random.choice(elligible_nodes)
@@ -780,8 +788,9 @@ def extended_barabasi_albert_graph(n, m, p, q, seed=None):
                 # Picking a target node that is not 'node' or
                 # neighbor with 'node', with preferential attachment
                 neighbor_nodes.append(node)
-                dest_node = random.choice([nd for nd in attachment_preference
-                                           if nd not in neighbor_nodes])
+                dest_node = random.choice(
+                    [nd for nd in attachment_preference if nd not in neighbor_nodes]
+                )
                 # Rewire
                 G.remove_edge(node, src_node)
                 G.add_edge(node, dest_node)
@@ -863,19 +872,19 @@ def powerlaw_cluster_graph(n, m, p, seed=None):
 
     if m < 1 or n < m:
         raise nx.NetworkXError(
-            "NetworkXError must have m>1 and m<n, m=%d,n=%d" % (m, n))
+            "NetworkXError must have m>1 and m<n, m=%d,n=%d" % (m, n)
+        )
 
     if p > 1 or p < 0:
-        raise nx.NetworkXError(
-            "NetworkXError p must be in [0,1], p=%f" % (p))
+        raise nx.NetworkXError("NetworkXError p must be in [0,1], p=%f" % (p))
     if seed is not None:
         random.seed(seed)
 
     G = empty_graph(m)  # add m initial nodes (m0 in barabasi-speak)
     repeated_nodes = list(G.nodes())  # list of existing nodes to sample from
     # with nodes repeated once for each adjacent edge
-    source = m               # next node is m
-    while source < n:        # Now add the other n-1 nodes
+    source = m  # next node is m
+    while source < n:  # Now add the other n-1 nodes
         possible_targets = _random_subset(repeated_nodes, m)
         # do one preferential attachment for new node
         target = possible_targets.pop()
@@ -884,9 +893,11 @@ def powerlaw_cluster_graph(n, m, p, seed=None):
         count = 1
         while count < m:  # add m-1 more new links
             if random.random() < p:  # clustering step: add triangle
-                neighborhood = [nbr for nbr in G.neighbors(target)
-                                if not G.has_edge(source, nbr)
-                                and not nbr == source]
+                neighborhood = [
+                    nbr
+                    for nbr in G.neighbors(target)
+                    if not G.has_edge(source, nbr) and not nbr == source
+                ]
                 if neighborhood:  # if there is a neighbor without a link
                     nbr = random.choice(neighborhood)
                     G.add_edge(source, nbr)  # add triangle
@@ -907,20 +918,20 @@ def powerlaw_cluster_graph(n, m, p, seed=None):
 def random_lobster(n, p1, p2, seed=None):
     """Returns a random lobster graph.
 
-     A lobster is a tree that reduces to a caterpillar when pruning all
-     leaf nodes. A caterpillar is a tree that reduces to a path graph
-     when pruning all leaf nodes; setting `p2` to zero produces a caterpillar.
+    A lobster is a tree that reduces to a caterpillar when pruning all
+    leaf nodes. A caterpillar is a tree that reduces to a path graph
+    when pruning all leaf nodes; setting `p2` to zero produces a caterpillar.
 
-     Parameters
-     ----------
-     n : int
-         The expected number of nodes in the backbone
-     p1 : float
-         Probability of adding an edge to the backbone
-     p2 : float
-         Probability of adding an edge one level beyond backbone
-     seed : int, optional
-         Seed for random number generator (default=None).
+    Parameters
+    ----------
+    n : int
+        The expected number of nodes in the backbone
+    p1 : float
+        Probability of adding an edge to the backbone
+    p2 : float
+        Probability of adding an edge one level beyond backbone
+    seed : int, optional
+        Seed for random number generator (default=None).
     """
     # a necessary ingredient in any self-respecting graph library
     if seed is not None:
@@ -974,8 +985,8 @@ def random_shell_graph(constructor, seed=None):
         inter_edges = int(m * d)
         intra_edges.append(m - inter_edges)
         g = nx.convert_node_labels_to_integers(
-            gnm_random_graph(n, inter_edges),
-            first_label=nnodes)
+            gnm_random_graph(n, inter_edges), first_label=nnodes
+        )
         glist.append(g)
         nnodes += n
         G = nx.operators.union(G, g)
@@ -1083,8 +1094,9 @@ def random_powerlaw_tree_sequence(n, gamma=3, seed=None, tries=100):
         index = random.randint(0, n - 1)
         zseq[index] = swap.pop()
 
-    raise nx.NetworkXError('Exceeded max (%d) attempts for a valid tree'
-                           ' sequence.' % tries)
+    raise nx.NetworkXError(
+        "Exceeded max (%d) attempts for a valid tree" " sequence." % tries
+    )
 
 
 def random_kernel_graph(n, kernel_integral, kernel_root=None, seed=None):
@@ -1153,7 +1165,9 @@ def random_kernel_graph(n, kernel_integral, kernel_root=None, seed=None):
         def kernel_root(y, a, r):
             def my_function(b):
                 return kernel_integral(y, a, b) - r
+
             return optimize.brentq(my_function, a, 1)
+
     graph = nx.Graph()
     graph.add_nodes_from(range(n))
     (i, j) = (1, 1)

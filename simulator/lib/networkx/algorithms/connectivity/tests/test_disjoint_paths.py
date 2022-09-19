@@ -56,26 +56,45 @@ def are_node_disjoint_paths(G, paths):
 
 def test_graph_from_pr_2053():
     G = nx.Graph()
-    G.add_edges_from([
-        ('A', 'B'), ('A', 'D'), ('A', 'F'), ('A', 'G'),
-        ('B', 'C'), ('B', 'D'), ('B', 'G'), ('C', 'D'),
-        ('C', 'E'), ('C', 'Z'), ('D', 'E'), ('D', 'F'),
-        ('E', 'F'), ('E', 'Z'), ('F', 'Z'), ('G', 'Z')])
+    G.add_edges_from(
+        [
+            ("A", "B"),
+            ("A", "D"),
+            ("A", "F"),
+            ("A", "G"),
+            ("B", "C"),
+            ("B", "D"),
+            ("B", "G"),
+            ("C", "D"),
+            ("C", "E"),
+            ("C", "Z"),
+            ("D", "E"),
+            ("D", "F"),
+            ("E", "F"),
+            ("E", "Z"),
+            ("F", "Z"),
+            ("G", "Z"),
+        ]
+    )
     for flow_func in flow_funcs:
         kwargs = dict(flow_func=flow_func)
         # edge disjoint paths
-        edge_paths = list(nx.edge_disjoint_paths(G, 'A', 'Z', **kwargs))
-        assert_true(are_edge_disjoint_paths(G, edge_paths), msg=msg.format(flow_func.__name__))
+        edge_paths = list(nx.edge_disjoint_paths(G, "A", "Z", **kwargs))
+        assert_true(
+            are_edge_disjoint_paths(G, edge_paths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(
-            nx.edge_connectivity(G, 'A', 'Z'),
+            nx.edge_connectivity(G, "A", "Z"),
             len(edge_paths),
             msg=msg.format(flow_func.__name__),
         )
         # node disjoint paths
-        node_paths = list(nx.node_disjoint_paths(G, 'A', 'Z', **kwargs))
-        assert_true(are_node_disjoint_paths(G, node_paths), msg=msg.format(flow_func.__name__))
+        node_paths = list(nx.node_disjoint_paths(G, "A", "Z", **kwargs))
+        assert_true(
+            are_node_disjoint_paths(G, node_paths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(
-            nx.node_connectivity(G, 'A', 'Z'),
+            nx.node_connectivity(G, "A", "Z"),
             len(node_paths),
             msg=msg.format(flow_func.__name__),
         )
@@ -86,18 +105,22 @@ def test_florentine_families():
     for flow_func in flow_funcs:
         kwargs = dict(flow_func=flow_func)
         # edge disjoint paths
-        edge_dpaths = list(nx.edge_disjoint_paths(G, 'Medici', 'Strozzi', **kwargs))
-        assert_true(are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__))
+        edge_dpaths = list(nx.edge_disjoint_paths(G, "Medici", "Strozzi", **kwargs))
+        assert_true(
+            are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(
-            nx.edge_connectivity(G, 'Medici', 'Strozzi'),
+            nx.edge_connectivity(G, "Medici", "Strozzi"),
             len(edge_dpaths),
             msg=msg.format(flow_func.__name__),
         )
         # node disjoint paths
-        node_dpaths = list(nx.node_disjoint_paths(G, 'Medici', 'Strozzi', **kwargs))
-        assert_true(are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__))
+        node_dpaths = list(nx.node_disjoint_paths(G, "Medici", "Strozzi", **kwargs))
+        assert_true(
+            are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(
-            nx.node_connectivity(G, 'Medici', 'Strozzi'),
+            nx.node_connectivity(G, "Medici", "Strozzi"),
             len(node_dpaths),
             msg=msg.format(flow_func.__name__),
         )
@@ -109,7 +132,9 @@ def test_karate():
         kwargs = dict(flow_func=flow_func)
         # edge disjoint paths
         edge_dpaths = list(nx.edge_disjoint_paths(G, 0, 33, **kwargs))
-        assert_true(are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(
             nx.edge_connectivity(G, 0, 33),
             len(edge_dpaths),
@@ -117,7 +142,9 @@ def test_karate():
         )
         # node disjoint paths
         node_dpaths = list(nx.node_disjoint_paths(G, 0, 33, **kwargs))
-        assert_true(are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(
             nx.node_connectivity(G, 0, 33),
             len(node_dpaths),
@@ -131,11 +158,15 @@ def test_petersen_disjoint_paths():
         kwargs = dict(flow_func=flow_func)
         # edge disjoint paths
         edge_dpaths = list(nx.edge_disjoint_paths(G, 0, 6, **kwargs))
-        assert_true(are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(3, len(edge_dpaths), msg=msg.format(flow_func.__name__))
         # node disjoint paths
         node_dpaths = list(nx.node_disjoint_paths(G, 0, 6, **kwargs))
-        assert_true(are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(3, len(node_dpaths), msg=msg.format(flow_func.__name__))
 
 
@@ -145,11 +176,15 @@ def test_octahedral_disjoint_paths():
         kwargs = dict(flow_func=flow_func)
         # edge disjoint paths
         edge_dpaths = list(nx.edge_disjoint_paths(G, 0, 5, **kwargs))
-        assert_true(are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(4, len(edge_dpaths), msg=msg.format(flow_func.__name__))
         # node disjoint paths
         node_dpaths = list(nx.node_disjoint_paths(G, 0, 5, **kwargs))
-        assert_true(are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(4, len(node_dpaths), msg=msg.format(flow_func.__name__))
 
 
@@ -159,11 +194,15 @@ def test_icosahedral_disjoint_paths():
         kwargs = dict(flow_func=flow_func)
         # edge disjoint paths
         edge_dpaths = list(nx.edge_disjoint_paths(G, 0, 6, **kwargs))
-        assert_true(are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(5, len(edge_dpaths), msg=msg.format(flow_func.__name__))
         # node disjoint paths
         node_dpaths = list(nx.node_disjoint_paths(G, 0, 6, **kwargs))
-        assert_true(are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__))
+        assert_true(
+            are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__)
+        )
         assert_equal(5, len(node_dpaths), msg=msg.format(flow_func.__name__))
 
 
@@ -172,14 +211,20 @@ def test_cutoff_disjoint_paths():
     for flow_func in flow_funcs:
         kwargs = dict(flow_func=flow_func)
         for cutoff in [2, 4]:
-            kwargs['cutoff'] = cutoff
+            kwargs["cutoff"] = cutoff
             # edge disjoint paths
             edge_dpaths = list(nx.edge_disjoint_paths(G, 0, 6, **kwargs))
-            assert_true(are_edge_disjoint_paths(G, edge_dpaths), msg=msg.format(flow_func.__name__))
+            assert_true(
+                are_edge_disjoint_paths(G, edge_dpaths),
+                msg=msg.format(flow_func.__name__),
+            )
             assert_equal(cutoff, len(edge_dpaths), msg=msg.format(flow_func.__name__))
             # node disjoint paths
             node_dpaths = list(nx.node_disjoint_paths(G, 0, 6, **kwargs))
-            assert_true(are_node_disjoint_paths(G, node_dpaths), msg=msg.format(flow_func.__name__))
+            assert_true(
+                are_node_disjoint_paths(G, node_dpaths),
+                msg=msg.format(flow_func.__name__),
+            )
             assert_equal(cutoff, len(node_dpaths), msg=msg.format(flow_func.__name__))
 
 

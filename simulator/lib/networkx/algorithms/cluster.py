@@ -15,16 +15,26 @@ from collections import Counter
 import networkx as nx
 from networkx.utils import not_implemented_for
 
-__author__ = """\n""".join(['Aric Hagberg <aric.hagberg@gmail.com>',
-                            'Dan Schult (dschult@colgate.edu)',
-                            'Pieter Swart (swart@lanl.gov)',
-                            'Jordi Torrents <jtorrents@milnou.net>'])
+__author__ = """\n""".join(
+    [
+        "Aric Hagberg <aric.hagberg@gmail.com>",
+        "Dan Schult (dschult@colgate.edu)",
+        "Pieter Swart (swart@lanl.gov)",
+        "Jordi Torrents <jtorrents@milnou.net>",
+    ]
+)
 
-__all__ = ['triangles', 'average_clustering', 'clustering', 'transitivity',
-           'square_clustering', 'generalized_degree']
+__all__ = [
+    "triangles",
+    "average_clustering",
+    "clustering",
+    "transitivity",
+    "square_clustering",
+    "generalized_degree",
+]
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def triangles(G, nodes=None):
     """Compute the number of triangles.
 
@@ -67,9 +77,9 @@ def triangles(G, nodes=None):
     return {v: t // 2 for v, d, t, _ in _triangles_and_degree_iter(G, nodes)}
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def _triangles_and_degree_iter(G, nodes=None):
-    """ Return an iterator of (node, degree, triangles, generalized degree).
+    """Return an iterator of (node, degree, triangles, generalized degree).
 
     This double counts triangles so you may want to divide by 2.
     See degree(), triangles() and generalized_degree() for definitions
@@ -88,9 +98,9 @@ def _triangles_and_degree_iter(G, nodes=None):
         yield (v, len(vs), ntriangles, gen_degree)
 
 
-@not_implemented_for('multigraph')
-def _weighted_triangles_and_degree_iter(G, nodes=None, weight='weight'):
-    """ Return an iterator of (node, degree, weighted_triangles).
+@not_implemented_for("multigraph")
+def _weighted_triangles_and_degree_iter(G, nodes=None, weight="weight"):
+    """Return an iterator of (node, degree, weighted_triangles).
 
     Used for weighted clustering.
 
@@ -118,8 +128,9 @@ def _weighted_triangles_and_degree_iter(G, nodes=None, weight='weight'):
             # Only compute the edge weight once, before the inner inner
             # loop.
             wij = wt(i, j)
-            weighted_triangles += sum((wij * wt(j, k) * wt(k, i)) ** (1 / 3)
-                                      for k in inbrs & jnbrs)
+            weighted_triangles += sum(
+                (wij * wt(j, k) * wt(k, i)) ** (1 / 3) for k in inbrs & jnbrs
+            )
         yield (i, len(inbrs), 2 * weighted_triangles)
 
 
@@ -182,7 +193,7 @@ def average_clustering(G, nodes=None, weight=None, count_zeros=True):
     return sum(c) / len(c)
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def clustering(G, nodes=None, weight=None):
     r"""Compute the clustering coefficient for nodes.
 
@@ -246,12 +257,10 @@ def clustering(G, nodes=None, weight=None):
     """
     if weight is not None:
         td_iter = _weighted_triangles_and_degree_iter(G, nodes, weight)
-        clusterc = {v: 0 if t == 0 else t / (d * (d - 1)) for
-                    v, d, t in td_iter}
+        clusterc = {v: 0 if t == 0 else t / (d * (d - 1)) for v, d, t in td_iter}
     else:
         td_iter = _triangles_and_degree_iter(G, nodes)
-        clusterc = {v: 0 if t == 0 else t / (d * (d - 1)) for
-                    v, d, t, _ in td_iter}
+        clusterc = {v: 0 if t == 0 else t / (d * (d - 1)) for v, d, t, _ in td_iter}
     if nodes in G:
         # Return the value of the sole entry in the dictionary.
         return clusterc[nodes]
@@ -292,7 +301,7 @@ def transitivity(G):
 
 
 def square_clustering(G, nodes=None):
-    r""" Compute the squares clustering coefficient for nodes.
+    r"""Compute the squares clustering coefficient for nodes.
 
     For each node return the fraction of possible squares that exist at
     the node [1]_
@@ -364,7 +373,7 @@ def square_clustering(G, nodes=None):
     return clustering
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def generalized_degree(G, nodes=None):
     """ Compute the generalized degree for nodes.
 

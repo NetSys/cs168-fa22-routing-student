@@ -14,7 +14,7 @@ class TestFlowClosenessCentrality(object):
             import numpy as np
             import scipy
         except ImportError:
-            raise SkipTest('NumPy not available.')
+            raise SkipTest("NumPy not available.")
 
     def test_K4(self):
         """Closeness centrality: K4"""
@@ -33,11 +33,11 @@ class TestFlowClosenessCentrality(object):
             assert_almost_equal(b[n], b_answer[n])
 
     def test_star(self):
-        """Closeness centrality: star """
+        """Closeness centrality: star"""
         G = nx.Graph()
-        nx.add_star(G, ['a', 'b', 'c', 'd'])
+        nx.add_star(G, ["a", "b", "c", "d"])
         b = nx.current_flow_closeness_centrality(G)
-        b_answer = {'a': 1.0 / 3, 'b': 0.6 / 3, 'c': 0.6 / 3, 'd': 0.6 / 3}
+        b_answer = {"a": 1.0 / 3, "b": 0.6 / 3, "c": 0.6 / 3, "d": 0.6 / 3}
         for n in sorted(G):
             assert_almost_equal(b[n], b_answer[n])
 

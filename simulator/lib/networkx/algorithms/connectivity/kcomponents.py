@@ -8,16 +8,18 @@ from operator import itemgetter
 
 import networkx as nx
 from networkx.utils import not_implemented_for
+
 # Define the default maximum flow function.
 from networkx.algorithms.flow import edmonds_karp
+
 default_flow_func = edmonds_karp
 
-__author__ = '\n'.join(['Jordi Torrents <jtorrents@milnou.net>'])
+__author__ = "\n".join(["Jordi Torrents <jtorrents@milnou.net>"])
 
-__all__ = ['k_components']
+__all__ = ["k_components"]
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def k_components(G, flow_func=None):
     r"""Returns the k-component structure of a graph G.
 
@@ -170,8 +172,9 @@ def _consolidate(sets, k):
     G = nx.Graph()
     nodes = {i: s for i, s in enumerate(sets)}
     G.add_nodes_from(nodes)
-    G.add_edges_from((u, v) for u, v in combinations(nodes, 2)
-                     if len(nodes[u] & nodes[v]) >= k)
+    G.add_edges_from(
+        (u, v) for u, v in combinations(nodes, 2) if len(nodes[u] & nodes[v]) >= k
+    )
     for component in nx.connected_components(G):
         yield set.union(*[nodes[n] for n in component])
 
@@ -182,9 +185,9 @@ def _generate_partition(G, cuts, k):
             if n in partition:
                 return True
         return False
+
     components = []
-    nodes = ({n for n, d in G.degree() if d > k} -
-             {n for cut in cuts for n in cut})
+    nodes = {n for n, d in G.degree() if d > k} - {n for cut in cuts for n in cut}
     H = G.subgraph(nodes)
     for cc in nx.connected_components(H):
         component = set(cc)

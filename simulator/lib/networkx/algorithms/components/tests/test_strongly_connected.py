@@ -5,12 +5,25 @@ from networkx import NetworkXNotImplemented
 
 
 class TestStronglyConnected:
-
     def setUp(self):
         self.gc = []
         G = nx.DiGraph()
-        G.add_edges_from([(1, 2), (2, 3), (2, 8), (3, 4), (3, 7), (4, 5),
-                          (5, 3), (5, 6), (7, 4), (7, 6), (8, 1), (8, 7)])
+        G.add_edges_from(
+            [
+                (1, 2),
+                (2, 3),
+                (2, 8),
+                (3, 4),
+                (3, 7),
+                (4, 5),
+                (5, 3),
+                (5, 6),
+                (7, 4),
+                (7, 6),
+                (8, 1),
+                (8, 7),
+            ]
+        )
         C = {frozenset([3, 4, 5, 7]), frozenset([1, 2, 8]), frozenset([6])}
         self.gc.append((G, C))
 
@@ -76,11 +89,31 @@ class TestStronglyConnected:
 
     def test_contract_scc1(self):
         G = nx.DiGraph()
-        G.add_edges_from([
-            (1, 2), (2, 3), (2, 11), (2, 12), (3, 4), (4, 3), (4, 5), (5, 6),
-            (6, 5), (6, 7), (7, 8), (7, 9), (7, 10), (8, 9), (9, 7), (10, 6),
-            (11, 2), (11, 4), (11, 6), (12, 6), (12, 11),
-        ])
+        G.add_edges_from(
+            [
+                (1, 2),
+                (2, 3),
+                (2, 11),
+                (2, 12),
+                (3, 4),
+                (4, 3),
+                (4, 5),
+                (5, 6),
+                (6, 5),
+                (6, 7),
+                (7, 8),
+                (7, 9),
+                (7, 10),
+                (8, 9),
+                (9, 7),
+                (10, 6),
+                (11, 2),
+                (11, 4),
+                (11, 6),
+                (12, 6),
+                (12, 11),
+            ]
+        )
         scc = list(nx.strongly_connected_components(G))
         cG = nx.condensation(G, scc)
         # DAG
@@ -129,12 +162,12 @@ class TestStronglyConnected:
         G, C = self.gc[1]
         C = sorted(C, key=len, reverse=True)
         cG = nx.condensation(G)
-        mapping = cG.graph['mapping']
+        mapping = cG.graph["mapping"]
         assert_true(all(n in G for n in mapping))
         assert_true(all(0 == cN for n, cN in mapping.items() if n in C[0]))
         assert_true(all(1 == cN for n, cN in mapping.items() if n in C[1]))
         for n, d in cG.nodes(data=True):
-            assert_equal(set(C[n]), cG.nodes[n]['members'])
+            assert_equal(set(C[n]), cG.nodes[n]["members"])
 
     def test_null_graph(self):
         G = nx.DiGraph()
@@ -142,15 +175,25 @@ class TestStronglyConnected:
         assert_equal(list(nx.kosaraju_strongly_connected_components(G)), [])
         assert_equal(list(nx.strongly_connected_components_recursive(G)), [])
         assert_equal(len(nx.condensation(G)), 0)
-        assert_raises(nx.NetworkXPointlessConcept, nx.is_strongly_connected, nx.DiGraph())
+        assert_raises(
+            nx.NetworkXPointlessConcept, nx.is_strongly_connected, nx.DiGraph()
+        )
 
     def test_connected_raise(self):
         G = nx.Graph()
         assert_raises(NetworkXNotImplemented, nx.strongly_connected_components, G)
-        assert_raises(NetworkXNotImplemented, nx.kosaraju_strongly_connected_components, G)
-        assert_raises(NetworkXNotImplemented, nx.strongly_connected_components_recursive, G)
+        assert_raises(
+            NetworkXNotImplemented, nx.kosaraju_strongly_connected_components, G
+        )
+        assert_raises(
+            NetworkXNotImplemented, nx.strongly_connected_components_recursive, G
+        )
         assert_raises(NetworkXNotImplemented, nx.is_strongly_connected, G)
-        assert_raises(nx.NetworkXPointlessConcept, nx.is_strongly_connected, nx.DiGraph())
+        assert_raises(
+            nx.NetworkXPointlessConcept, nx.is_strongly_connected, nx.DiGraph()
+        )
         assert_raises(NetworkXNotImplemented, nx.condensation, G)
         # deprecated
-        assert_raises(NetworkXNotImplemented, nx.strongly_connected_component_subgraphs, G)
+        assert_raises(
+            NetworkXNotImplemented, nx.strongly_connected_component_subgraphs, G
+        )

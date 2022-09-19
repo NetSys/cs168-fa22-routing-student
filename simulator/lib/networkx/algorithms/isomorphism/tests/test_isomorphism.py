@@ -5,7 +5,6 @@ from networkx.algorithms import isomorphism as iso
 
 
 class TestIsomorph:
-
     def setUp(self):
         self.G1 = nx.Graph()
         self.G2 = nx.Graph()

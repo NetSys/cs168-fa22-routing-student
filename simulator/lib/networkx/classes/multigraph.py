@@ -238,6 +238,7 @@ class MultiGraph(Graph):
     creating graph subclasses by overwriting the base class `dict` with
     a dictionary-like object.
     """
+
     # node_dict_factory = dict    # already assigned in Graph
     # adjlist_outer_dict_factory = dict
     # adjlist_inner_dict_factory = dict
@@ -547,8 +548,7 @@ class MultiGraph(Graph):
         try:
             d = self._adj[u][v]
         except KeyError:
-            raise NetworkXError(
-                "The edge %s-%s is not in the graph." % (u, v))
+            raise NetworkXError("The edge %s-%s is not in the graph." % (u, v))
         # remove the edge with specified data
         if key is None:
             d.popitem()
@@ -730,7 +730,7 @@ class MultiGraph(Graph):
         >>> G.edges(0)
         MultiEdgeDataView([(0, 1)])
         """
-        self.__dict__['edges'] = edges = MultiEdgeView(self)
+        self.__dict__["edges"] = edges = MultiEdgeView(self)
         return edges
 
     def get_edge_data(self, u, v, key=None, default=None):
@@ -836,7 +836,7 @@ class MultiGraph(Graph):
         [(0, 1), (1, 2)]
 
         """
-        self.__dict__['degree'] = degree = MultiDegreeView(self)
+        self.__dict__["degree"] = degree = MultiDegreeView(self)
         return degree
 
     def is_multigraph(self):
@@ -944,10 +944,12 @@ class MultiGraph(Graph):
         G = self.fresh_copy()
         G.graph.update(self.graph)
         G.add_nodes_from((n, d.copy()) for n, d in self._node.items())
-        G.add_edges_from((u, v, key, datadict.copy())
-                         for u, nbrs in self._adj.items()
-                         for v, keydict in nbrs.items()
-                         for key, datadict in keydict.items())
+        G.add_edges_from(
+            (u, v, key, datadict.copy())
+            for u, nbrs in self._adj.items()
+            for v, keydict in nbrs.items()
+            for key, datadict in keydict.items()
+        )
         return G
 
     def to_directed(self, as_view=False):
@@ -996,13 +998,16 @@ class MultiGraph(Graph):
             return nx.graphviews.MultiDiGraphView(self)
         # deepcopy when not a view
         from networkx.classes.multidigraph import MultiDiGraph
+
         G = MultiDiGraph()
         G.graph.update(deepcopy(self.graph))
         G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
-        G.add_edges_from((u, v, key, deepcopy(datadict))
-                         for u, nbrs in self.adj.items()
-                         for v, keydict in nbrs.items()
-                         for key, datadict in keydict.items())
+        G.add_edges_from(
+            (u, v, key, deepcopy(datadict))
+            for u, nbrs in self.adj.items()
+            for v, keydict in nbrs.items()
+            for key, datadict in keydict.items()
+        )
         return G
 
     def to_undirected(self, as_view=False):
@@ -1049,10 +1054,12 @@ class MultiGraph(Graph):
         G = MultiGraph()
         G.graph.update(deepcopy(self.graph))
         G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
-        G.add_edges_from((u, v, key, deepcopy(datadict))
-                         for u, nbrs in self._adj.items()
-                         for v, keydict in nbrs.items()
-                         for key, datadict in keydict.items())
+        G.add_edges_from(
+            (u, v, key, deepcopy(datadict))
+            for u, nbrs in self._adj.items()
+            for v, keydict in nbrs.items()
+            for key, datadict in keydict.items()
+        )
         return G
 
     def subgraph(self, nodes):
@@ -1096,7 +1103,7 @@ class MultiGraph(Graph):
         induced_nodes = nx.filters.show_nodes(self.nbunch_iter(nodes))
         SubGraph = nx.graphviews.SubMultiGraph
         # if already a subgraph, don't make a chain
-        if hasattr(self, '_NODE_OK'):
+        if hasattr(self, "_NODE_OK"):
             return SubGraph(self._graph, induced_nodes, self._EDGE_OK)
         return SubGraph(self, induced_nodes)
 

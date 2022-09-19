@@ -3,6 +3,7 @@ from nose.tools import *
 from networkx import *
 
 import random
+
 random.seed(0)
 
 

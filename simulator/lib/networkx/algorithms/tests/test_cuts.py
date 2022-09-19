@@ -51,8 +51,8 @@ class TestCutSize(object):
 
     def test_multigraph(self):
         """Tests that parallel edges are each counted for a cut."""
-        G = nx.MultiGraph(['ab', 'ab'])
-        assert_equal(nx.cut_size(G, {'a'}, {'b'}), 2)
+        G = nx.MultiGraph(["ab", "ab"])
+        assert_equal(nx.cut_size(G, {"a"}, {"b"}), 2)
 
 
 class TestVolume(object):
@@ -129,9 +129,7 @@ class TestEdgeExpansion(object):
 
 
 class TestNodeExpansion(object):
-    """Unit tests for the :func:`~networkx.node_expansion` function.
-
-    """
+    """Unit tests for the :func:`~networkx.node_expansion` function."""
 
     def test_graph(self):
         G = nx.path_graph(8)
@@ -144,9 +142,7 @@ class TestNodeExpansion(object):
 
 
 class TestBoundaryExpansion(object):
-    """Unit tests for the :func:`~networkx.boundary_expansion` function.
-
-    """
+    """Unit tests for the :func:`~networkx.boundary_expansion` function."""
 
     def test_graph(self):
         G = nx.complete_graph(10)
@@ -159,9 +155,7 @@ class TestBoundaryExpansion(object):
 
 
 class TestMixingExpansion(object):
-    """Unit tests for the :func:`~networkx.mixing_expansion` function.
-
-    """
+    """Unit tests for the :func:`~networkx.mixing_expansion` function."""
 
     def test_graph(self):
         G = nx.barbell_graph(5, 0)

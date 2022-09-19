@@ -5,6 +5,7 @@ from test_graph import TestGraph
 from test_digraph import TestDiGraph
 from test_multigraph import TestMultiGraph
 from test_multidigraph import TestMultiDiGraph
+
 try:  # python 2.7+
     from collections import OrderedDict
 except ImportError:  # python 2.6
@@ -12,7 +13,8 @@ except ImportError:  # python 2.6
         from ordereddict import OrderedDict
     except ImportError:
         from nose import SkipTest
-        raise SkipTest('ordereddict not available')
+
+        raise SkipTest("ordereddict not available")
 
 
 class SpecialGraphTester(TestGraph):
@@ -30,21 +32,22 @@ class OrderedGraphTester(TestGraph):
             adjlist_outer_dict_factory = OrderedDict
             adjlist_inner_dict_factory = OrderedDict
             edge_attr_dict_factory = OrderedDict
+
         self.Graph = MyGraph
 
 
 class ThinGraphTester(TestGraph):
     def setUp(self):
-        all_edge_dict = {'weight': 1}
+        all_edge_dict = {"weight": 1}
 
         class MyGraph(nx.Graph):
-            def edge_attr_dict_factory(): return all_edge_dict
+            def edge_attr_dict_factory():
+                return all_edge_dict
+
         self.Graph = MyGraph
         # build dict-of-dict-of-dict K3
         ed1, ed2, ed3 = (all_edge_dict, all_edge_dict, all_edge_dict)
-        self.k3adj = {0: {1: ed1, 2: ed2},
-                      1: {0: ed1, 2: ed3},
-                      2: {0: ed2, 1: ed3}}
+        self.k3adj = {0: {1: ed1, 2: ed2}, 1: {0: ed1, 2: ed3}, 2: {0: ed2, 1: ed3}}
         self.k3edges = [(0, 1), (0, 2), (1, 2)]
         self.k3nodes = [0, 1, 2]
         self.K3 = self.Graph()
@@ -70,21 +73,22 @@ class OrderedDiGraphTester(TestDiGraph):
             adjlist_outer_dict_factory = OrderedDict
             adjlist_inner_dict_factory = OrderedDict
             edge_attr_dict_factory = OrderedDict
+
         self.Graph = MyGraph
 
 
 class ThinDiGraphTester(TestDiGraph):
     def setUp(self):
-        all_edge_dict = {'weight': 1}
+        all_edge_dict = {"weight": 1}
 
         class MyGraph(nx.DiGraph):
-            def edge_attr_dict_factory(): return all_edge_dict
+            def edge_attr_dict_factory():
+                return all_edge_dict
+
         self.Graph = MyGraph
         # build dict-of-dict-of-dict K3
         ed1, ed2, ed3 = (all_edge_dict, all_edge_dict, all_edge_dict)
-        self.k3adj = {0: {1: ed1, 2: ed2},
-                      1: {0: ed1, 2: ed3},
-                      2: {0: ed2, 1: ed3}}
+        self.k3adj = {0: {1: ed1, 2: ed2}, 1: {0: ed1, 2: ed3}, 2: {0: ed2, 1: ed3}}
         self.k3edges = [(0, 1), (0, 2), (1, 2)]
         self.k3nodes = [0, 1, 2]
         self.K3 = self.Graph()
@@ -111,6 +115,7 @@ class OrderedMultiGraphTester(TestMultiGraph):
             adjlist_inner_dict_factory = OrderedDict
             edge_key_dict_factory = OrderedDict
             edge_attr_dict_factory = OrderedDict
+
         self.Graph = MyGraph
 
 
@@ -130,4 +135,5 @@ class OrderedMultiDiGraphTester(TestMultiDiGraph):
             adjlist_inner_dict_factory = OrderedDict
             edge_key_dict_factory = OrderedDict
             edge_attr_dict_factory = OrderedDict
+
         self.Graph = MyGraph

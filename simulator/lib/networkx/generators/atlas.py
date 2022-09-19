@@ -17,7 +17,7 @@ import os.path
 
 import networkx as nx
 
-__all__ = ['graph_atlas', 'graph_atlas_g']
+__all__ = ["graph_atlas", "graph_atlas_g"]
 
 #: The total number of graphs in the atlas.
 #:
@@ -60,7 +60,7 @@ THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 #:             f.write(bytes('NODES {}\n'.format(len(G)), encoding='utf-8'))
 #:             write_edgelist(G, f, data=False)
 #:
-ATLAS_FILE = os.path.join(THIS_DIR, 'atlas.dat.gz')
+ATLAS_FILE = os.path.join(THIS_DIR, "atlas.dat.gz")
 
 
 def _generate_graphs():
@@ -70,9 +70,9 @@ def _generate_graphs():
     This function reads the file given in :data:`.ATLAS_FILE`.
 
     """
-    with gzip.open(ATLAS_FILE, 'rb') as f:
+    with gzip.open(ATLAS_FILE, "rb") as f:
         line = f.readline()
-        while line and line.startswith(b'GRAPH'):
+        while line and line.startswith(b"GRAPH"):
             # The first two lines of each entry tell us the index of the
             # graph in the list and the number of nodes in the graph.
             # They look like this:
@@ -87,11 +87,11 @@ def _generate_graphs():
             # GRAPH line (or until the end of the file).
             edgelist = []
             line = f.readline()
-            while line and not line.startswith(b'GRAPH'):
+            while line and not line.startswith(b"GRAPH"):
                 edgelist.append(line.rstrip())
                 line = f.readline()
             G = nx.Graph()
-            G.name = 'G{}'.format(graph_index)
+            G.name = "G{}".format(graph_index)
             G.add_nodes_from(range(num_nodes))
             G.add_edges_from(tuple(map(int, e.split())) for e in edgelist)
             yield G
@@ -131,7 +131,7 @@ def graph_atlas(i):
 
     """
     if not (0 <= i < NUM_GRAPHS):
-        raise ValueError('index must be between 0 and {}'.format(NUM_GRAPHS))
+        raise ValueError("index must be between 0 and {}".format(NUM_GRAPHS))
     return next(islice(_generate_graphs(), i, None))
 
 

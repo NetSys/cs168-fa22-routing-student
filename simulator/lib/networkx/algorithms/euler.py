@@ -17,7 +17,7 @@ import networkx as nx
 
 from ..utils import arbitrary_element
 
-__all__ = ['is_eulerian', 'eulerian_circuit']
+__all__ = ["is_eulerian", "eulerian_circuit"]
 
 
 def is_eulerian(G):
@@ -50,8 +50,9 @@ def is_eulerian(G):
     if G.is_directed():
         # Every node must have equal in degree and out degree and the
         # graph must be strongly connected
-        return (all(G.in_degree(n) == G.out_degree(n) for n in G) and
-                nx.is_strongly_connected(G))
+        return all(
+            G.in_degree(n) == G.out_degree(n) for n in G
+        ) and nx.is_strongly_connected(G)
     # An undirected Eulerian graph has no vertices of odd degree and
     # must be connected.
     return all(d % 2 == 0 for v, d in G.degree()) and nx.is_connected(G)
@@ -97,7 +98,9 @@ def _multigraph_eulerian_circuit(G, source):
             last_vertex, last_key = current_vertex, current_key
             vertex_stack.pop()
         else:
-            _, next_vertex, next_key = arbitrary_element(edges(current_vertex, keys=True))
+            _, next_vertex, next_key = arbitrary_element(
+                edges(current_vertex, keys=True)
+            )
             vertex_stack.append((next_vertex, next_key))
             G.remove_edge(current_vertex, next_vertex, next_key)
 

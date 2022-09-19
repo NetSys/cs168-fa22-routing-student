@@ -11,10 +11,11 @@ class TestPrefixTree(object):
     def test_basic(self):
         # This example is from the Wikipedia article "Trie"
         # <https://en.wikipedia.org/wiki/Trie>.
-        strings = ['a', 'to', 'tea', 'ted', 'ten', 'i', 'in', 'inn']
+        strings = ["a", "to", "tea", "ted", "ten", "i", "in", "inn"]
         T, root = nx.prefix_tree(strings)
 
-        def source_label(v): return T.node[v]['source']
+        def source_label(v):
+            return T.node[v]["source"]
 
         # First, we check that the tree has the expected
         # structure. Recall that each node that corresponds to one of
@@ -56,16 +57,16 @@ class TestPrefixTree(object):
         # rightmost letter in the string corresponding to the path to
         # that node.
         assert_equal(source_label(root), None)
-        assert_equal(source_label(a), 'a')
-        assert_equal(source_label(i), 'i')
-        assert_equal(source_label(t), 't')
-        assert_equal(source_label(in_), 'n')
-        assert_equal(source_label(inn), 'n')
-        assert_equal(source_label(to), 'o')
-        assert_equal(source_label(te), 'e')
-        assert_equal(source_label(tea), 'a')
-        assert_equal(source_label(ted), 'd')
-        assert_equal(source_label(ten), 'n')
+        assert_equal(source_label(a), "a")
+        assert_equal(source_label(i), "i")
+        assert_equal(source_label(t), "t")
+        assert_equal(source_label(in_), "n")
+        assert_equal(source_label(inn), "n")
+        assert_equal(source_label(to), "o")
+        assert_equal(source_label(te), "e")
+        assert_equal(source_label(tea), "a")
+        assert_equal(source_label(ted), "d")
+        assert_equal(source_label(ten), "n")
         assert_equal(source_label(NIL), NIL)
 
 

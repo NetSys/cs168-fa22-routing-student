@@ -1,7 +1,6 @@
 """Unit tests for layout functions."""
 from nose import SkipTest
-from nose.tools import assert_almost_equal, assert_equal, \
-    assert_false, assert_raises
+from nose.tools import assert_almost_equal, assert_equal, assert_false, assert_raises
 import networkx as nx
 
 
@@ -15,21 +14,22 @@ class TestLayout(object):
         try:
             import numpy
         except ImportError:
-            raise SkipTest('NumPy not available.')
+            raise SkipTest("NumPy not available.")
         try:
             import scipy
         except ImportError:
-            pass    # Almost all tests still viable
+            pass  # Almost all tests still viable
 
     def setUp(self):
         self.Gi = nx.grid_2d_graph(5, 5)
         self.Gs = nx.Graph()
-        nx.add_path(self.Gs, 'abcdef')
+        nx.add_path(self.Gs, "abcdef")
         self.bigG = nx.grid_2d_graph(25, 25)  # bigger than 500 nodes for sparse
 
     def test_spring_init_pos(self):
         # Tests GH #2448
         import math
+
         G = nx.Graph()
         G.add_edges_from([(0, 1), (1, 2), (2, 0), (2, 3)])
 
@@ -37,7 +37,7 @@ class TestLayout(object):
         fixed_pos = [0]
         pos = nx.fruchterman_reingold_layout(G, pos=init_pos, fixed=fixed_pos)
         has_nan = any(math.isnan(c) for coords in pos.values() for c in coords)
-        assert_false(has_nan, 'values should not be nan')
+        assert_false(has_nan, "values should not be nan")
 
     def test_smoke_empty_graph(self):
         G = []
@@ -124,8 +124,8 @@ class TestLayout(object):
         try:
             import scipy
         except ImportError:
-            raise SkipTest('scipy not available.')
-        A = nx.to_scipy_sparse_matrix(self.Gs, dtype='d')
+            raise SkipTest("scipy not available.")
+        A = nx.to_scipy_sparse_matrix(self.Gs, dtype="d")
         pos = nx.drawing.layout._sparse_fruchterman_reingold(A)
         assert_equal(pos.shape, (6, 2))
         pos = nx.drawing.layout._sparse_spectral(A)
@@ -176,7 +176,9 @@ class TestLayout(object):
         assert_raises(ValueError, nx.circular_layout, G, center=(1, 1, 1))
         assert_raises(ValueError, nx.spring_layout, G, center=(1, 1, 1))
         assert_raises(ValueError, nx.fruchterman_reingold_layout, G, center=(1, 1, 1))
-        assert_raises(ValueError, nx.fruchterman_reingold_layout, G, dim=3, center=(1, 1))
+        assert_raises(
+            ValueError, nx.fruchterman_reingold_layout, G, dim=3, center=(1, 1)
+        )
         assert_raises(ValueError, nx.spectral_layout, G, center=(1, 1, 1))
         assert_raises(ValueError, nx.spectral_layout, G, dim=3, center=(1, 1))
         assert_raises(ValueError, nx.shell_layout, G, center=(1, 1, 1))
@@ -211,21 +213,18 @@ class TestLayout(object):
     def test_kamada_kawai_costfn_2d(self):
         costfn = nx.drawing.layout._kamada_kawai_costfn
 
-        pos = numpy.array([[1.3, -3.2],
-                           [2.7, -0.3],
-                           [5.1, 2.5]])
-        invdist = 1 / numpy.array([[0.1, 2.1, 1.7],
-                                   [2.1, 0.2, 0.6],
-                                   [1.7, 0.6, 0.3]])
+        pos = numpy.array([[1.3, -3.2], [2.7, -0.3], [5.1, 2.5]])
+        invdist = 1 / numpy.array([[0.1, 2.1, 1.7], [2.1, 0.2, 0.6], [1.7, 0.6, 0.3]])
         meanwt = 0.3
 
-        cost, grad = costfn(pos.ravel(), numpy, invdist,
-                            meanweight=meanwt, dim=2)
+        cost, grad = costfn(pos.ravel(), numpy, invdist, meanweight=meanwt, dim=2)
 
         expected_cost = 0.5 * meanwt * numpy.sum(numpy.sum(pos, axis=0) ** 2)
         for i in range(pos.shape[0]):
             for j in range(i + 1, pos.shape[0]):
-                expected_cost += (numpy.linalg.norm(pos[i] - pos[j]) * invdist[i][j] - 1.0) ** 2
+                expected_cost += (
+                    numpy.linalg.norm(pos[i] - pos[j]) * invdist[i][j] - 1.0
+                ) ** 2
 
         assert_almost_equal(cost, expected_cost)
 
@@ -236,12 +235,13 @@ class TestLayout(object):
                 pos0 = pos.flatten()
 
                 pos0[idx] += dx
-                cplus = costfn(pos0, numpy, invdist,
-                               meanweight=meanwt, dim=pos.shape[1])[0]
+                cplus = costfn(
+                    pos0, numpy, invdist, meanweight=meanwt, dim=pos.shape[1]
+                )[0]
 
                 pos0[idx] -= 2 * dx
-                cminus = costfn(pos0, numpy, invdist,
-                                meanweight=meanwt, dim=pos.shape[1])[0]
+                cminus = costfn(
+                    pos0, numpy, invdist, meanweight=meanwt, dim=pos.shape[1]
+                )[0]
 
-                assert_almost_equal(grad[idx], (cplus - cminus) / (2 * dx),
-                                    places=5)
+                assert_almost_equal(grad[idx], (cplus - cminus) / (2 * dx), places=5)

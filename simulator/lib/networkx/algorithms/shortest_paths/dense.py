@@ -8,13 +8,16 @@
 #    All rights reserved.
 #    BSD license.
 import networkx as nx
+
 __author__ = """Aric Hagberg <aric.hagberg@gmail.com>"""
-__all__ = ['floyd_warshall',
-           'floyd_warshall_predecessor_and_distance',
-           'floyd_warshall_numpy']
+__all__ = [
+    "floyd_warshall",
+    "floyd_warshall_predecessor_and_distance",
+    "floyd_warshall_numpy",
+]
 
 
-def floyd_warshall_numpy(G, nodelist=None, weight='weight'):
+def floyd_warshall_numpy(G, nodelist=None, weight="weight"):
     """Find all-pairs shortest path lengths using Floyd's algorithm.
 
     Parameters
@@ -45,13 +48,13 @@ def floyd_warshall_numpy(G, nodelist=None, weight='weight'):
     try:
         import numpy as np
     except ImportError:
-        raise ImportError(
-            "to_numpy_matrix() requires numpy: http://scipy.org/ ")
+        raise ImportError("to_numpy_matrix() requires numpy: http://scipy.org/ ")
 
     # To handle cases when an edge has weight=0, we must make sure that
     # nonedges are not given the value 0 as well.
-    A = nx.to_numpy_matrix(G, nodelist=nodelist, multigraph_weight=min,
-                           weight=weight, nonedge=np.inf)
+    A = nx.to_numpy_matrix(
+        G, nodelist=nodelist, multigraph_weight=min, weight=weight, nonedge=np.inf
+    )
     n, m = A.shape
     I = np.identity(n)
     A[I == 1] = 0  # diagonal elements should be zero
@@ -60,7 +63,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight='weight'):
     return A
 
 
-def floyd_warshall_predecessor_and_distance(G, weight='weight'):
+def floyd_warshall_predecessor_and_distance(G, weight="weight"):
     """Find all-pairs shortest path lengths using Floyd's algorithm.
 
     Parameters
@@ -91,10 +94,11 @@ def floyd_warshall_predecessor_and_distance(G, weight='weight'):
     all_pairs_shortest_path_length
     """
     from collections import defaultdict
+
     # dictionary-of-dictionaries representation for dist and pred
     # use some defaultdict magick here
     # for dist the default is the floating point inf value
-    dist = defaultdict(lambda: defaultdict(lambda: float('inf')))
+    dist = defaultdict(lambda: defaultdict(lambda: float("inf")))
     for u in G:
         dist[u][u] = 0
     pred = defaultdict(dict)
@@ -117,7 +121,7 @@ def floyd_warshall_predecessor_and_distance(G, weight='weight'):
     return dict(pred), dict(dist)
 
 
-def floyd_warshall(G, weight='weight'):
+def floyd_warshall(G, weight="weight"):
     """Find all-pairs shortest path lengths using Floyd's algorithm.
 
     Parameters
@@ -151,11 +155,13 @@ def floyd_warshall(G, weight='weight'):
     # could make this its own function to reduce memory costs
     return floyd_warshall_predecessor_and_distance(G, weight=weight)[1]
 
+
 # fixture for nose tests
 
 
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import numpy
     except:

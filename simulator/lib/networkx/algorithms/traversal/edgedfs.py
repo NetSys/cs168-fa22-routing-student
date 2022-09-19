@@ -7,10 +7,10 @@ Algorithms for a depth-first traversal of edges in a graph.
 
 """
 
-FORWARD = 'forward'
-REVERSE = 'reverse'
+FORWARD = "forward"
+REVERSE = "reverse"
 
-__all__ = ['edge_dfs']
+__all__ = ["edge_dfs"]
 
 
 def helper_funcs(G, orientation):
@@ -19,8 +19,8 @@ def helper_funcs(G, orientation):
     for all graph types: graph, multigraph, directed or not.
 
     """
-    ignore_orientation = G.is_directed() and orientation == 'ignore'
-    reverse_orientation = G.is_directed() and orientation == 'reverse'
+    ignore_orientation = G.is_directed() and orientation == "ignore"
+    reverse_orientation = G.is_directed() and orientation == "reverse"
 
     if ignore_orientation:
         # When we ignore the orientation, we still need to know how the edge
@@ -30,10 +30,13 @@ def helper_funcs(G, orientation):
                 yield edge + (FORWARD,)
             for edge in G.in_edges(u_for_edges, **kwds):
                 yield edge + (REVERSE,)
+
     elif reverse_orientation:
+
         def out_edges(u_for_edges, **kwds):
             for edge in G.in_edges(u_for_edges, **kwds):
                 yield edge + (REVERSE,)
+
     else:
         # If "yield from" were an option, we could pass kwds automatically.
         out_edges = G.edges
@@ -48,10 +51,13 @@ def helper_funcs(G, orientation):
         def key(edge):
             # We want everything but the direction.
             return edge[:-1]
+
     else:
         if G.is_directed():
+
             def key(edge):
                 return edge
+
         else:
             # edge is a 3-tuple:  (u, v, key)
             def key(edge):
@@ -75,7 +81,7 @@ def helper_funcs(G, orientation):
     return out_edges, key, traversed_tailhead
 
 
-def edge_dfs(G, source=None, orientation='original'):
+def edge_dfs(G, source=None, orientation="original"):
     """
     A directed, depth-first traversal of edges in `G`, beginning at `source`.
 
@@ -154,9 +160,9 @@ def edge_dfs(G, source=None, orientation='original'):
     if not nodes:
         raise StopIteration
 
-    kwds = {'data': False}
+    kwds = {"data": False}
     if G.is_multigraph():
-        kwds['keys'] = True
+        kwds["keys"] = True
 
     out_edges, key, tailhead = helper_funcs(G, orientation)
 

@@ -48,20 +48,34 @@ Often it is easiest to use `.copy()` to avoid chains.
 from collections import Mapping
 
 from networkx.classes import Graph, DiGraph, MultiGraph, MultiDiGraph
-from networkx.classes.coreviews import ReadOnlyGraph, \
-    AtlasView, AdjacencyView, MultiAdjacencyView, \
-    FilterAtlas, FilterAdjacency, FilterMultiAdjacency, \
-    UnionAdjacency, UnionMultiAdjacency
+from networkx.classes.coreviews import (
+    ReadOnlyGraph,
+    AtlasView,
+    AdjacencyView,
+    MultiAdjacencyView,
+    FilterAtlas,
+    FilterAdjacency,
+    FilterMultiAdjacency,
+    UnionAdjacency,
+    UnionMultiAdjacency,
+)
 from networkx.classes.filters import no_filter, show_nodes, show_edges
 from networkx.exception import NetworkXError, NetworkXNotImplemented
 from networkx.utils import not_implemented_for
 
 
-__all__ = ['SubGraph', 'SubDiGraph', 'SubMultiGraph', 'SubMultiDiGraph',
-           'ReverseView', 'MultiReverseView',
-           'DiGraphView', 'MultiDiGraphView',
-           'GraphView', 'MultiGraphView',
-           ]
+__all__ = [
+    "SubGraph",
+    "SubDiGraph",
+    "SubMultiGraph",
+    "SubMultiDiGraph",
+    "ReverseView",
+    "MultiReverseView",
+    "DiGraphView",
+    "MultiDiGraphView",
+    "GraphView",
+    "MultiGraphView",
+]
 
 
 class SubGraph(ReadOnlyGraph, Graph):
@@ -81,7 +95,7 @@ class SubDiGraph(ReadOnlyGraph, DiGraph):
     def __init__(self, graph, filter_node=no_filter, filter_edge=no_filter):
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         self._NODE_OK = filter_node
         self._EDGE_OK = filter_edge
@@ -90,8 +104,9 @@ class SubDiGraph(ReadOnlyGraph, DiGraph):
         self.graph = graph.graph
         self._node = FilterAtlas(graph._node, filter_node)
         self._adj = FilterAdjacency(graph._adj, filter_node, filter_edge)
-        self._pred = FilterAdjacency(graph._pred, filter_node,
-                                     lambda u, v: filter_edge(v, u))
+        self._pred = FilterAdjacency(
+            graph._pred, filter_node, lambda u, v: filter_edge(v, u)
+        )
         self._succ = self._adj
 
 
@@ -99,7 +114,7 @@ class SubMultiGraph(ReadOnlyGraph, MultiGraph):
     def __init__(self, graph, filter_node=no_filter, filter_edge=no_filter):
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         self._NODE_OK = filter_node
         self._EDGE_OK = filter_edge
@@ -114,7 +129,7 @@ class SubMultiDiGraph(ReadOnlyGraph, MultiDiGraph):
     def __init__(self, graph, filter_node=no_filter, filter_edge=no_filter):
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         self._NODE_OK = filter_node
         self._EDGE_OK = filter_edge
@@ -124,8 +139,7 @@ class SubMultiDiGraph(ReadOnlyGraph, MultiDiGraph):
         self._node = FilterAtlas(graph._node, filter_node)
         FMA = FilterMultiAdjacency
         self._adj = FMA(graph._adj, filter_node, filter_edge)
-        self._pred = FMA(graph._pred, filter_node,
-                         lambda u, v, k: filter_edge(v, u, k))
+        self._pred = FMA(graph._pred, filter_node, lambda u, v, k: filter_edge(v, u, k))
         self._succ = self._adj
 
 
@@ -137,7 +151,7 @@ class ReverseView(ReadOnlyGraph, DiGraph):
 
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         # Set graph interface
         self.graph = graph.graph
@@ -155,7 +169,7 @@ class MultiReverseView(ReadOnlyGraph, MultiDiGraph):
 
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         # Set graph interface
         self.graph = graph.graph
@@ -168,11 +182,11 @@ class MultiReverseView(ReadOnlyGraph, MultiDiGraph):
 class DiGraphView(ReadOnlyGraph, DiGraph):
     def __init__(self, graph):
         if graph.is_multigraph():
-            msg = 'Wrong View class. Use MultiDiGraphView.'
+            msg = "Wrong View class. Use MultiDiGraphView."
             raise NetworkXError(msg)
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         self.graph = graph.graph
         self._node = graph._node
@@ -188,11 +202,11 @@ class DiGraphView(ReadOnlyGraph, DiGraph):
 class MultiDiGraphView(ReadOnlyGraph, MultiDiGraph):
     def __init__(self, graph):
         if not graph.is_multigraph():
-            msg = 'Wrong View class. Use DiGraphView.'
+            msg = "Wrong View class. Use DiGraphView."
             raise NetworkXError(msg)
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         self.graph = graph.graph
         self._node = graph._node
@@ -210,11 +224,11 @@ class GraphView(ReadOnlyGraph, Graph):
 
     def __init__(self, graph):
         if graph.is_multigraph():
-            msg = 'Wrong View class. Use MultiGraphView.'
+            msg = "Wrong View class. Use MultiGraphView."
             raise NetworkXError(msg)
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         self.graph = graph.graph
         self._node = graph._node
@@ -229,11 +243,11 @@ class MultiGraphView(ReadOnlyGraph, MultiGraph):
 
     def __init__(self, graph):
         if not graph.is_multigraph():
-            msg = 'Wrong View class. Use GraphView.'
+            msg = "Wrong View class. Use GraphView."
             raise NetworkXError(msg)
         self._graph = graph
         self.root_graph = graph
-        while hasattr(self.root_graph, '_graph'):
+        while hasattr(self.root_graph, "_graph"):
             self.root_graph = self.root_graph._graph
         self.graph = graph.graph
         self._node = graph._node

@@ -37,7 +37,6 @@ from networkx.generators.random_graphs import watts_strogatz_graph
 
 
 class TestGeneratorsRandom(object):
-
     def smoke_test_random_graph(self):
         seed = 42
         G = gnp_random_graph(100, 0.25, seed)
@@ -149,8 +148,12 @@ class TestGeneratorsRandom(object):
         assert_equal(sum(1 for _ in G.edges()), 0)
 
     def test_gnp(self):
-        for generator in [gnp_random_graph, binomial_graph, erdos_renyi_graph,
-                          fast_gnp_random_graph]:
+        for generator in [
+            gnp_random_graph,
+            binomial_graph,
+            erdos_renyi_graph,
+            fast_gnp_random_graph,
+        ]:
             G = generator(10, -1.1)
             assert_equal(len(G), 10)
             assert_equal(sum(1 for _ in G.edges()), 0)
@@ -221,6 +224,7 @@ class TestGeneratorsRandom(object):
 
         def root(u, w, r):
             return r / c + w
+
         c = 1
         graph = random_kernel_graph(1000, integral, root)
         assert_equal(len(graph), 1000)

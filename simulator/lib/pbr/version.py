@@ -1,4 +1,3 @@
-
 #    Copyright 2012 OpenStack Foundation
 #    Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
 #
@@ -38,8 +37,14 @@ class SemanticVersion(object):
     """
 
     def __init__(
-            self, major, minor=0, patch=0, prerelease_type=None,
-            prerelease=None, dev_count=None):
+        self,
+        major,
+        minor=0,
+        patch=0,
+        prerelease_type=None,
+        prerelease=None,
+        dev_count=None,
+    ):
         """Create a SemanticVersion.
 
         :param major: Major component of the version.
@@ -80,16 +85,20 @@ class SemanticVersion(object):
         # (a/b/rc/z) - release segment grouping
         # pre-release level
         # dev count, maxsize for releases.
-        rc_lookup = {'a': 'a', 'b': 'b', 'rc': 'rc', None: 'z'}
+        rc_lookup = {"a": "a", "b": "b", "rc": "rc", None: "z"}
         if self._dev_count and not self._prerelease_type:
             uq_dev = 0
         else:
             uq_dev = 1
         return (
-            self._major, self._minor, self._patch,
+            self._major,
+            self._minor,
+            self._patch,
             uq_dev,
-            rc_lookup[self._prerelease_type], self._prerelease,
-            self._dev_count or sys.maxsize)
+            rc_lookup[self._prerelease_type],
+            self._prerelease,
+            self._dev_count or sys.maxsize,
+        )
 
     def __lt__(self, other):
         """Compare self and other, another Semantic Version."""
@@ -149,25 +158,30 @@ class SemanticVersion(object):
     @classmethod
     def _from_pip_string_unsafe(klass, version_string):
         # Versions need to start numerically, ignore if not
-        version_string = version_string.lstrip('vV')
+        version_string = version_string.lstrip("vV")
         if not version_string[:1].isdigit():
             raise ValueError("Invalid version %r" % version_string)
-        input_components = version_string.split('.')
+        input_components = version_string.split(".")
         # decimals first (keep pre-release and dev/hashes to the right)
         components = [c for c in input_components if c.isdigit()]
         digit_len = len(components)
         if digit_len == 0:
             raise ValueError("Invalid version %r" % version_string)
         elif digit_len < 3:
-            if (digit_len < len(input_components) and
-                    input_components[digit_len][0].isdigit()):
+            if (
+                digit_len < len(input_components)
+                and input_components[digit_len][0].isdigit()
+            ):
                 # Handle X.YaZ - Y is a digit not a leadin to pre-release.
                 mixed_component = input_components[digit_len]
-                last_component = ''.join(itertools.takewhile(
-                    lambda x: x.isdigit(), mixed_component))
+                last_component = "".join(
+                    itertools.takewhile(lambda x: x.isdigit(), mixed_component)
+                )
                 components.append(last_component)
-                input_components[digit_len:digit_len + 1] = [
-                    last_component, mixed_component[len(last_component):]]
+                input_components[digit_len : digit_len + 1] = [
+                    last_component,
+                    mixed_component[len(last_component) :],
+                ]
                 digit_len += 1
             components.extend([0] * (3 - digit_len))
         components.extend(input_components[digit_len:])
@@ -180,12 +194,13 @@ class SemanticVersion(object):
 
         def _parse_type(segment):
             # Discard leading digits (the 0 in 0a1)
-            isdigit = operator.methodcaller('isdigit')
-            segment = ''.join(itertools.dropwhile(isdigit, segment))
-            isalpha = operator.methodcaller('isalpha')
-            prerelease_type = ''.join(itertools.takewhile(isalpha, segment))
-            prerelease = segment[len(prerelease_type)::]
+            isdigit = operator.methodcaller("isdigit")
+            segment = "".join(itertools.dropwhile(isdigit, segment))
+            isalpha = operator.methodcaller("isalpha")
+            prerelease_type = "".join(itertools.takewhile(isalpha, segment))
+            prerelease = segment[len(prerelease_type) : :]
             return prerelease_type, int(prerelease)
+
         if _is_int(components[2]):
             patch = int(components[2])
         else:
@@ -204,31 +219,38 @@ class SemanticVersion(object):
             # old dev format - 0.1.2.3.g1234
             dev_count = int(remainder[0])
         else:
-            if remainder and (remainder[0][0] == '0' or
-                              remainder[0][0] in ('a', 'b', 'r')):
+            if remainder and (
+                remainder[0][0] == "0" or remainder[0][0] in ("a", "b", "r")
+            ):
                 # Current RC/beta layout
                 prerelease_type, prerelease = _parse_type(remainder[0])
                 remainder = remainder[1:]
             while remainder:
                 component = remainder[0]
-                if component.startswith('dev'):
+                if component.startswith("dev"):
                     dev_count = int(component[3:])
-                elif component.startswith('post'):
+                elif component.startswith("post"):
                     dev_count = None
                     post_count = int(component[4:])
                 else:
                     raise ValueError(
-                        'Unknown remainder %r in %r'
-                        % (remainder, version_string))
+                        "Unknown remainder %r in %r" % (remainder, version_string)
+                    )
                 remainder = remainder[1:]
         result = SemanticVersion(
-            major, minor, patch, prerelease_type=prerelease_type,
-            prerelease=prerelease, dev_count=dev_count)
+            major,
+            minor,
+            patch,
+            prerelease_type=prerelease_type,
+            prerelease=prerelease,
+            dev_count=dev_count,
+        )
         if post_count:
             if dev_count:
                 raise ValueError(
-                    'Cannot combine postN and devN - no mapping in %r'
-                    % (version_string,))
+                    "Cannot combine postN and devN - no mapping in %r"
+                    % (version_string,)
+                )
             result = result.increment().to_dev(post_count)
         return result
 
@@ -270,8 +292,7 @@ class SemanticVersion(object):
                     new_major = self._major - 1
                 else:
                     new_major = 0
-        return SemanticVersion(
-            new_major, new_minor, new_patch)
+        return SemanticVersion(new_major, new_minor, new_patch)
 
     def increment(self, minor=False, major=False):
         """Return an incremented SemanticVersion.
@@ -312,8 +333,8 @@ class SemanticVersion(object):
         else:
             new_major = self._major
         return SemanticVersion(
-            new_major, new_minor, new_patch,
-            new_prerelease_type, new_prerelease)
+            new_major, new_minor, new_patch, new_prerelease_type, new_prerelease
+        )
 
     def _long_version(self, pre_separator, rc_marker=""):
         """Construct a long string version of this semver.
@@ -323,22 +344,22 @@ class SemanticVersion(object):
             version number of the component to preserve sorting. (Used for
             rpm support)
         """
-        if ((self._prerelease_type or self._dev_count)
-                and pre_separator is None):
+        if (self._prerelease_type or self._dev_count) and pre_separator is None:
             segments = [self.decrement().brief_string()]
             pre_separator = "."
         else:
             segments = [self.brief_string()]
         if self._prerelease_type:
             segments.append(
-                "%s%s%s%s" % (pre_separator, rc_marker, self._prerelease_type,
-                              self._prerelease))
+                "%s%s%s%s"
+                % (pre_separator, rc_marker, self._prerelease_type, self._prerelease)
+            )
         if self._dev_count:
             if not self._prerelease_type:
                 segments.append(pre_separator)
             else:
-                segments.append('.')
-            segments.append('dev')
+                segments.append(".")
+            segments.append("dev")
             segments.append(self._dev_count)
         return "".join(str(s) for s in segments)
 
@@ -365,8 +386,13 @@ class SemanticVersion(object):
         :param dev_count: The number of commits since the last release.
         """
         return SemanticVersion(
-            self._major, self._minor, self._patch, self._prerelease_type,
-            self._prerelease, dev_count=dev_count)
+            self._major,
+            self._minor,
+            self._patch,
+            self._prerelease_type,
+            self._prerelease,
+            dev_count=dev_count,
+        )
 
     def version_tuple(self):
         """Present the version as a version_info tuple.
@@ -386,27 +412,26 @@ class SemanticVersion(object):
         """
         segments = [self._major, self._minor, self._patch]
         if self._prerelease_type:
-            type_map = {('a', False): 'alpha',
-                        ('b', False): 'beta',
-                        ('rc', False): 'candidate',
-                        ('a', True): 'alphadev',
-                        ('b', True): 'betadev',
-                        ('rc', True): 'candidatedev',
-                        }
-            segments.append(
-                type_map[(self._prerelease_type, bool(self._dev_count))])
+            type_map = {
+                ("a", False): "alpha",
+                ("b", False): "beta",
+                ("rc", False): "candidate",
+                ("a", True): "alphadev",
+                ("b", True): "betadev",
+                ("rc", True): "candidatedev",
+            }
+            segments.append(type_map[(self._prerelease_type, bool(self._dev_count))])
             segments.append(self._dev_count or self._prerelease)
         elif self._dev_count:
-            segments.append('dev')
+            segments.append("dev")
             segments.append(self._dev_count - 1)
         else:
-            segments.append('final')
+            segments.append("final")
             segments.append(0)
         return tuple(segments)
 
 
 class VersionInfo(object):
-
     def __init__(self, package):
         """Object that understands versioning for a package
 
@@ -424,8 +449,7 @@ class VersionInfo(object):
 
     def __repr__(self):
         """Include the name."""
-        return "pbr.version.VersionInfo(%s:%s)" % (
-            self.package, self.version_string())
+        return "pbr.version.VersionInfo(%s:%s)" % (self.package, self.version_string())
 
     def _get_version_from_pkg_resources(self):
         """Obtain a version from pkg_resources or setup-time logic if missing.
@@ -437,6 +461,7 @@ class VersionInfo(object):
         # Lazy import because pkg_resources is costly to import so defer until
         # we absolutely need it.
         import pkg_resources
+
         try:
             requirement = pkg_resources.Requirement.parse(self.package)
             provider = pkg_resources.get_provider(requirement)
@@ -446,6 +471,7 @@ class VersionInfo(object):
             # produced from a tarball where the package itself has not been
             # installed into anything. Revert to setup-time logic.
             from pbr import packaging
+
             result_string = packaging.get_version(self.package)
         return SemanticVersion.from_pip_string(result_string)
 
@@ -478,6 +504,5 @@ class VersionInfo(object):
         prefix and then cached and returned.
         """
         if not self._cached_version:
-            self._cached_version = "%s%s" % (prefix,
-                                             self.version_string())
+            self._cached_version = "%s%s" % (prefix, self.version_string())
         return self._cached_version

@@ -16,15 +16,15 @@ from networkx.utils.decorators import not_implemented_for
 from ...utils import arbitrary_element
 
 __all__ = [
-    'number_connected_components',
-    'connected_components',
-    'connected_component_subgraphs',
-    'is_connected',
-    'node_connected_component',
+    "number_connected_components",
+    "connected_components",
+    "connected_component_subgraphs",
+    "is_connected",
+    "node_connected_component",
 ]
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def connected_components(G):
     """Generate connected components.
 
@@ -75,14 +75,16 @@ def connected_components(G):
             seen.update(c)
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def connected_component_subgraphs(G, copy=True):
     """DEPRECATED: Use ``(G.subgraph(c) for c in connected_components(G))``
 
-           Or ``(G.subgraph(c).copy() for c in connected_components(G))``
+    Or ``(G.subgraph(c).copy() for c in connected_components(G))``
     """
-    msg = "connected_component_subgraphs is deprecated and will be removed" \
-          "in 2.2. Use (G.subgraph(c).copy() for c in connected_components(G))"
+    msg = (
+        "connected_component_subgraphs is deprecated and will be removed"
+        "in 2.2. Use (G.subgraph(c).copy() for c in connected_components(G))"
+    )
     _warnings.warn(msg, DeprecationWarning)
     for c in connected_components(G):
         if copy:
@@ -118,7 +120,7 @@ def number_connected_components(G):
     return sum(1 for cc in connected_components(G))
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def is_connected(G):
     """Return True if the graph is connected, False otherwise.
 
@@ -157,12 +159,13 @@ def is_connected(G):
 
     """
     if len(G) == 0:
-        raise nx.NetworkXPointlessConcept('Connectivity is undefined ',
-                                          'for the null graph.')
+        raise nx.NetworkXPointlessConcept(
+            "Connectivity is undefined ", "for the null graph."
+        )
     return sum(1 for node in _plain_bfs(G, arbitrary_element(G))) == len(G)
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def node_connected_component(G, n):
     """Return the set of nodes in the component of graph containing node n.
 

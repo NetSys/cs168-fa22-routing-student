@@ -4,7 +4,6 @@ import networkx as nx
 
 
 class TestClosenessVitality(object):
-
     def test_unweighted(self):
         G = nx.cycle_graph(3)
         vitality = nx.closeness_vitality(G)
@@ -13,7 +12,7 @@ class TestClosenessVitality(object):
     def test_weighted(self):
         G = nx.Graph()
         nx.add_cycle(G, [0, 1, 2], weight=2)
-        vitality = nx.closeness_vitality(G, weight='weight')
+        vitality = nx.closeness_vitality(G, weight="weight")
         assert_equal(vitality, {0: 4, 1: 4, 2: 4})
 
     def test_unweighted_digraph(self):
@@ -25,14 +24,14 @@ class TestClosenessVitality(object):
         G = nx.DiGraph()
         nx.add_cycle(G, [0, 1, 2], weight=2)
         nx.add_cycle(G, [2, 1, 0], weight=2)
-        vitality = nx.closeness_vitality(G, weight='weight')
+        vitality = nx.closeness_vitality(G, weight="weight")
         assert_equal(vitality, {0: 8, 1: 8, 2: 8})
 
     def test_weighted_multidigraph(self):
         G = nx.MultiDiGraph()
         nx.add_cycle(G, [0, 1, 2], weight=2)
         nx.add_cycle(G, [2, 1, 0], weight=2)
-        vitality = nx.closeness_vitality(G, weight='weight')
+        vitality = nx.closeness_vitality(G, weight="weight")
         assert_equal(vitality, {0: 8, 1: 8, 2: 8})
 
     def test_disconnecting_graph(self):
@@ -41,4 +40,4 @@ class TestClosenessVitality(object):
 
         """
         G = nx.path_graph(3)
-        assert_equal(nx.closeness_vitality(G, node=1), -float('inf'))
+        assert_equal(nx.closeness_vitality(G, node=1), -float("inf"))

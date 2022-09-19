@@ -1,21 +1,29 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Node assortativity coefficients and correlation measures.
 """
 import networkx as nx
-from networkx.algorithms.assortativity.mixing import degree_mixing_matrix, \
-    attribute_mixing_matrix, numeric_mixing_matrix
-from networkx.algorithms.assortativity.pairs import node_degree_xy, \
-    node_attribute_xy
-__author__ = ' '.join(['Aric Hagberg <aric.hagberg@gmail.com>',
-                       'Oleguer Sagarra <oleguer.sagarra@gmail.com>'])
-__all__ = ['degree_pearson_correlation_coefficient',
-           'degree_assortativity_coefficient',
-           'attribute_assortativity_coefficient',
-           'numeric_assortativity_coefficient']
+from networkx.algorithms.assortativity.mixing import (
+    degree_mixing_matrix,
+    attribute_mixing_matrix,
+    numeric_mixing_matrix,
+)
+from networkx.algorithms.assortativity.pairs import node_degree_xy, node_attribute_xy
+
+__author__ = " ".join(
+    [
+        "Aric Hagberg <aric.hagberg@gmail.com>",
+        "Oleguer Sagarra <oleguer.sagarra@gmail.com>",
+    ]
+)
+__all__ = [
+    "degree_pearson_correlation_coefficient",
+    "degree_assortativity_coefficient",
+    "attribute_assortativity_coefficient",
+    "numeric_assortativity_coefficient",
+]
 
 
-def degree_assortativity_coefficient(G, x='out', y='in', weight=None,
-                                     nodes=None):
+def degree_assortativity_coefficient(G, x="out", y="in", weight=None, nodes=None):
     """Compute degree assortativity of graph.
 
     Assortativity measures the similarity of connections
@@ -32,12 +40,12 @@ def degree_assortativity_coefficient(G, x='out', y='in', weight=None,
        The degree type for target node (directed graphs only).
 
     weight: string or None, optional (default=None)
-       The edge attribute that holds the numerical value used 
+       The edge attribute that holds the numerical value used
        as a weight.  If None, then each edge has weight 1.
        The degree is the sum of the edge weights adjacent to the node.
 
     nodes: list or iterable (optional)
-        Compute degree assortativity only for nodes in container. 
+        Compute degree assortativity only for nodes in container.
         The default is all nodes.
 
     Returns
@@ -64,28 +72,27 @@ def degree_assortativity_coefficient(G, x='out', y='in', weight=None,
     -----
     This computes Eq. (21) in Ref. [1]_ , where e is the joint
     probability distribution (mixing matrix) of the degrees.  If G is
-    directed than the matrix e is the joint probability of the 
+    directed than the matrix e is the joint probability of the
     user-specified degree type for the source and target.
 
     References
     ----------
     .. [1] M. E. J. Newman, Mixing patterns in networks,
        Physical Review E, 67 026126, 2003
-    .. [2] Foster, J.G., Foster, D.V., Grassberger, P. & Paczuski, M. 
+    .. [2] Foster, J.G., Foster, D.V., Grassberger, P. & Paczuski, M.
        Edge direction and the structure of networks, PNAS 107, 10815-20 (2010).
     """
     M = degree_mixing_matrix(G, x=x, y=y, nodes=nodes, weight=weight)
     return numeric_ac(M)
 
 
-def degree_pearson_correlation_coefficient(G, x='out', y='in',
-                                           weight=None, nodes=None):
-    """Compute degree assortativity of graph. 
+def degree_pearson_correlation_coefficient(G, x="out", y="in", weight=None, nodes=None):
+    """Compute degree assortativity of graph.
 
     Assortativity measures the similarity of connections
     in the graph with respect to the node degree.
 
-    This is the same as degree_assortativity_coefficient but uses the 
+    This is the same as degree_assortativity_coefficient but uses the
     potentially faster scipy.stats.pearsonr function.
 
     Parameters
@@ -99,7 +106,7 @@ def degree_pearson_correlation_coefficient(G, x='out', y='in',
        The degree type for target node (directed graphs only).
 
     weight: string or None, optional (default=None)
-       The edge attribute that holds the numerical value used 
+       The edge attribute that holds the numerical value used
        as a weight.  If None, then each edge has weight 1.
        The degree is the sum of the edge weights adjacent to the node.
 
@@ -115,7 +122,7 @@ def degree_pearson_correlation_coefficient(G, x='out', y='in',
     Examples
     --------
     >>> G=nx.path_graph(4)
-    >>> r=nx.degree_pearson_correlation_coefficient(G) 
+    >>> r=nx.degree_pearson_correlation_coefficient(G)
     >>> print("%3.1f"%r)
     -0.5
 
@@ -127,14 +134,13 @@ def degree_pearson_correlation_coefficient(G, x='out', y='in',
     ----------
     .. [1] M. E. J. Newman, Mixing patterns in networks
            Physical Review E, 67 026126, 2003
-    .. [2] Foster, J.G., Foster, D.V., Grassberger, P. & Paczuski, M. 
+    .. [2] Foster, J.G., Foster, D.V., Grassberger, P. & Paczuski, M.
        Edge direction and the structure of networks, PNAS 107, 10815-20 (2010).
     """
     try:
         import scipy.stats as stats
     except ImportError:
-        raise ImportError(
-            "Assortativity requires SciPy: http://scipy.org/ ")
+        raise ImportError("Assortativity requires SciPy: http://scipy.org/ ")
     xy = node_degree_xy(G, x=x, y=y, nodes=nodes, weight=weight)
     x, y = zip(*xy)
     return stats.pearsonr(x, y)[0]
@@ -150,12 +156,12 @@ def attribute_assortativity_coefficient(G, attribute, nodes=None):
     ----------
     G : NetworkX graph
 
-    attribute : string 
+    attribute : string
         Node attribute key
 
     nodes: list or iterable (optional)
-        Compute attribute assortativity for nodes in container. 
-        The default is all nodes. 
+        Compute attribute assortativity for nodes in container.
+        The default is all nodes.
 
     Returns
     -------
@@ -197,12 +203,12 @@ def numeric_assortativity_coefficient(G, attribute, nodes=None):
     ----------
     G : NetworkX graph
 
-    attribute : string 
+    attribute : string
         Node attribute key.  The corresponding attribute value must be an
         integer.
 
     nodes: list or iterable (optional)
-        Compute numeric assortativity only for attributes of nodes in 
+        Compute numeric assortativity only for attributes of nodes in
         container. The default is all nodes.
 
     Returns
@@ -221,7 +227,7 @@ def numeric_assortativity_coefficient(G, attribute, nodes=None):
 
     Notes
     -----
-    This computes Eq. (21) in Ref. [1]_ , for the mixing matrix of 
+    This computes Eq. (21) in Ref. [1]_ , for the mixing matrix of
     of the specified attribute.
 
     References
@@ -255,8 +261,7 @@ def attribute_ac(M):
     try:
         import numpy
     except ImportError:
-        raise ImportError(
-            "attribute_assortativity requires NumPy: http://scipy.org/ ")
+        raise ImportError("attribute_assortativity requires NumPy: http://scipy.org/ ")
     if M.sum() != 1.0:
         M = M / float(M.sum())
     M = numpy.asmatrix(M)
@@ -272,8 +277,7 @@ def numeric_ac(M):
     try:
         import numpy
     except ImportError:
-        raise ImportError('numeric_assortativity requires ',
-                          'NumPy: http://scipy.org/')
+        raise ImportError("numeric_assortativity requires ", "NumPy: http://scipy.org/")
     if M.sum() != 1.0:
         M = M / float(M.sum())
     nx, ny = M.shape  # nx=ny
@@ -281,8 +285,8 @@ def numeric_ac(M):
     y = numpy.arange(ny)
     a = M.sum(axis=0)
     b = M.sum(axis=1)
-    vara = (a * x**2).sum() - ((a * x).sum())**2
-    varb = (b * x**2).sum() - ((b * x).sum())**2
+    vara = (a * x**2).sum() - ((a * x).sum()) ** 2
+    varb = (b * x**2).sum() - ((b * x).sum()) ** 2
     xy = numpy.outer(x, y)
     ab = numpy.outer(a, b)
     return (xy * (M - ab)).sum() / numpy.sqrt(vara * varb)
@@ -291,6 +295,7 @@ def numeric_ac(M):
 # fixture for nose tests
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import numpy
     except:

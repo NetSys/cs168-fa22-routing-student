@@ -7,7 +7,6 @@ from networkx import is_strongly_regular
 
 
 class TestDistanceRegular(object):
-
     def test_is_distance_regular(self):
         assert_true(nx.is_distance_regular(nx.icosahedral_graph()))
         assert_true(nx.is_distance_regular(nx.petersen_graph()))

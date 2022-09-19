@@ -20,7 +20,6 @@ def main():
 
 
 class Foo(object):
-
     @classmethod
     def bar(self):
         print("PBR Test Command - with class!")

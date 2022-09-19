@@ -19,6 +19,7 @@ from __future__ import division
 import heapq
 from itertools import chain
 from itertools import combinations
+
 # In Python 3, the function is `zip_longest`, in Python 2 `izip_longest`.
 try:
     from itertools import zip_longest
@@ -31,13 +32,15 @@ import random
 import networkx as nx
 from networkx.utils import random_weighted_sample
 
-__all__ = ['configuration_model',
-           'directed_configuration_model',
-           'expected_degree_graph',
-           'havel_hakimi_graph',
-           'directed_havel_hakimi_graph',
-           'degree_sequence_tree',
-           'random_degree_sequence_graph']
+__all__ = [
+    "configuration_model",
+    "directed_configuration_model",
+    "expected_degree_graph",
+    "havel_hakimi_graph",
+    "directed_havel_hakimi_graph",
+    "degree_sequence_tree",
+    "random_degree_sequence_graph",
+]
 
 chaini = chain.from_iterable
 
@@ -74,8 +77,9 @@ def _to_stublist(degree_sequence):
     return list(chaini([n] * d for n, d in enumerate(degree_sequence)))
 
 
-def _configuration_model(deg_sequence, create_using, directed=False,
-                         in_deg_sequence=None, seed=None):
+def _configuration_model(
+    deg_sequence, create_using, directed=False, in_deg_sequence=None, seed=None
+):
     """Helper function for generating either undirected or directed
     configuration model graphs.
 
@@ -233,22 +237,22 @@ def configuration_model(deg_sequence, create_using=None, seed=None):
 
     """
     if sum(deg_sequence) % 2 != 0:
-        msg = 'Invalid degree sequence: sum of degrees must be even, not odd'
+        msg = "Invalid degree sequence: sum of degrees must be even, not odd"
         raise nx.NetworkXError(msg)
 
     if create_using is None:
         create_using = nx.MultiGraph()
     elif create_using.is_directed():
-        raise nx.NetworkXNotImplemented('not implemented for directed graphs')
+        raise nx.NetworkXNotImplemented("not implemented for directed graphs")
 
     G = _configuration_model(deg_sequence, create_using, seed=seed)
 
     return G
 
 
-def directed_configuration_model(in_degree_sequence,
-                                 out_degree_sequence,
-                                 create_using=None, seed=None):
+def directed_configuration_model(
+    in_degree_sequence, out_degree_sequence, create_using=None, seed=None
+):
     """Return a directed_random graph with the given degree sequences.
 
     The configuration model generates a random directed pseudograph
@@ -328,14 +332,19 @@ def directed_configuration_model(in_degree_sequence,
 
     """
     if sum(in_degree_sequence) != sum(out_degree_sequence):
-        msg = 'Invalid degree sequences: sequences must have equal sums'
+        msg = "Invalid degree sequences: sequences must have equal sums"
         raise nx.NetworkXError(msg)
 
     if create_using is None:
         create_using = nx.MultiDiGraph()
 
-    G = _configuration_model(out_degree_sequence, create_using, directed=True,
-                             in_deg_sequence=in_degree_sequence, seed=seed)
+    G = _configuration_model(
+        out_degree_sequence,
+        create_using,
+        directed=True,
+        in_deg_sequence=in_degree_sequence,
+        seed=seed,
+    )
 
     name = "directed configuration_model {} nodes {} edges"
     return G
@@ -490,7 +499,7 @@ def havel_hakimi_graph(deg_sequence, create_using=None):
        and Factors  Discrete Mathematics, 6(1), pp. 79-88 (1973)
     """
     if not nx.is_graphical(deg_sequence):
-        raise nx.NetworkXError('Invalid degree sequence')
+        raise nx.NetworkXError("Invalid degree sequence")
     if create_using is not None and create_using.is_directed():
         raise nx.NetworkXError("Directed graphs are not supported")
 
@@ -516,7 +525,7 @@ def havel_hakimi_graph(deg_sequence, create_using=None):
         # If there are not enough stubs to connect to, then the sequence is
         # not graphical
         if dmax > n - 1:
-            raise nx.NetworkXError('Non-graphical integer sequence')
+            raise nx.NetworkXError("Non-graphical integer sequence")
 
         # Remove largest stub in list
         source = num_degs[dmax].pop()
@@ -542,9 +551,7 @@ def havel_hakimi_graph(deg_sequence, create_using=None):
     return G
 
 
-def directed_havel_hakimi_graph(in_deg_sequence,
-                                out_deg_sequence,
-                                create_using=None):
+def directed_havel_hakimi_graph(in_deg_sequence, out_deg_sequence, create_using=None):
     """Return a directed graph with the given degree sequences.
 
     Parameters
@@ -582,8 +589,8 @@ def directed_havel_hakimi_graph(in_deg_sequence,
        Algorithms for Constructing Graphs and Digraphs with Given Valences
        and Factors Discrete Mathematics, 6(1), pp. 79-88 (1973)
     """
-    assert(nx.utils.is_list_of_ints(in_deg_sequence))
-    assert(nx.utils.is_list_of_ints(out_deg_sequence))
+    assert nx.utils.is_list_of_ints(in_deg_sequence)
+    assert nx.utils.is_list_of_ints(out_deg_sequence)
 
     if create_using is None:
         create_using = nx.DiGraph()
@@ -606,7 +613,8 @@ def directed_havel_hakimi_graph(in_deg_sequence,
             in_deg = in_deg_sequence[n]
         if in_deg < 0 or out_deg < 0:
             raise nx.NetworkXError(
-                'Invalid degree sequences. Sequence values must be positive.')
+                "Invalid degree sequences. Sequence values must be positive."
+            )
         sumin, sumout, maxin = sumin + in_deg, sumout + out_deg, max(maxin, in_deg)
         if in_deg > 0:
             stubheap.append((-1 * out_deg, -1 * in_deg, n))
@@ -614,7 +622,8 @@ def directed_havel_hakimi_graph(in_deg_sequence,
             zeroheap.append((-1 * out_deg, n))
     if sumin != sumout:
         raise nx.NetworkXError(
-            'Invalid degree sequences. Sequences must have equal sums.')
+            "Invalid degree sequences. Sequences must have equal sums."
+        )
     heapq.heapify(stubheap)
     heapq.heapify(zeroheap)
 
@@ -625,7 +634,7 @@ def directed_havel_hakimi_graph(in_deg_sequence,
         (freeout, freein, target) = heapq.heappop(stubheap)
         freein *= -1
         if freein > len(stubheap) + len(zeroheap):
-            raise nx.NetworkXError('Non-digraphical integer sequence')
+            raise nx.NetworkXError("Non-digraphical integer sequence")
 
         # Attach arcs from the nodes with the most stubs
         mslen = 0
@@ -636,7 +645,7 @@ def directed_havel_hakimi_graph(in_deg_sequence,
             else:
                 (stubout, stubin, stubsource) = heapq.heappop(stubheap)
             if stubout == 0:
-                raise nx.NetworkXError('Non-digraphical integer sequence')
+                raise nx.NetworkXError("Non-digraphical integer sequence")
             G.add_edge(stubsource, target)
             # Check if source is now totally connected
             if stubout + 1 < 0 or stubin < 0:
@@ -666,11 +675,13 @@ def degree_sequence_tree(deg_sequence, create_using=None):
     # The sum of the degree sequence must be even (for any undirected graph).
     degree_sum = sum(deg_sequence)
     if degree_sum % 2 != 0:
-        msg = 'Invalid degree sequence: sum of degrees must be even, not odd'
+        msg = "Invalid degree sequence: sum of degrees must be even, not odd"
         raise nx.NetworkXError(msg)
     if len(deg_sequence) - degree_sum // 2 != 1:
-        msg = ('Invalid degree sequence: tree must have number of nodes equal'
-               ' to one less than the number of edges')
+        msg = (
+            "Invalid degree sequence: tree must have number of nodes equal"
+            " to one less than the number of edges"
+        )
         raise nx.NetworkXError(msg)
     if create_using is not None and create_using.is_directed():
         raise nx.NetworkXError("Directed Graph not supported")
@@ -756,7 +767,7 @@ def random_degree_sequence_graph(sequence, seed=None, tries=10):
             return DSRG.generate()
         except nx.NetworkXUnfeasible:
             pass
-    raise nx.NetworkXError('failed to generate graph in %d tries' % tries)
+    raise nx.NetworkXError("failed to generate graph in %d tries" % tries)
 
 
 class DegreeSequenceRandomGraph(object):
@@ -764,7 +775,7 @@ class DegreeSequenceRandomGraph(object):
     # use random_degree_sequence_graph()
     def __init__(self, degree, seed=None):
         if not nx.is_graphical(degree):
-            raise nx.NetworkXUnfeasible('degree sequence is not graphical')
+            raise nx.NetworkXUnfeasible("degree sequence is not graphical")
         if seed is not None:
             random.seed(seed)
         self.degree = list(degree)
@@ -816,7 +827,7 @@ class DegreeSequenceRandomGraph(object):
 
     def q(self, u, v):
         # remaining degree probability
-        norm = float(max(self.remaining_degree.values()))**2
+        norm = float(max(self.remaining_degree.values())) ** 2
         return self.remaining_degree[u] * self.remaining_degree[v] / norm
 
     def suitable_edge(self):
@@ -841,7 +852,7 @@ class DegreeSequenceRandomGraph(object):
     def phase2(self):
         # choose remaining nodes uniformly at random and use rejection sampling
         while len(self.remaining_degree) >= 2 * self.dmax:
-            norm = float(max(self.remaining_degree.values()))**2
+            norm = float(max(self.remaining_degree.values())) ** 2
             while True:
                 u, v = sorted(random.sample(self.remaining_degree.keys(), 2))
                 if self.graph.has_edge(u, v):
@@ -856,11 +867,12 @@ class DegreeSequenceRandomGraph(object):
         # build potential remaining edges and choose with rejection sampling
         potential_edges = combinations(self.remaining_degree, 2)
         # build auxilliary graph of potential edges not already in graph
-        H = nx.Graph([(u, v) for (u, v) in potential_edges
-                      if not self.graph.has_edge(u, v)])
+        H = nx.Graph(
+            [(u, v) for (u, v) in potential_edges if not self.graph.has_edge(u, v)]
+        )
         while self.remaining_degree:
             if not self.suitable_edge():
-                raise nx.NetworkXUnfeasible('no suitable edges left')
+                raise nx.NetworkXUnfeasible("no suitable edges left")
             while True:
                 u, v = sorted(random.choice(list(H.edges())))
                 if random.random() < self.q(u, v):

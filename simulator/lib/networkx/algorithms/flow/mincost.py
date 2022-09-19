@@ -9,16 +9,12 @@ __author__ = """Loïc Séguin-C. <loicseguin@gmail.com>"""
 # BSD license.
 
 
-__all__ = ['min_cost_flow_cost',
-           'min_cost_flow',
-           'cost_of_flow',
-           'max_flow_min_cost']
+__all__ = ["min_cost_flow_cost", "min_cost_flow", "cost_of_flow", "max_flow_min_cost"]
 
 import networkx as nx
 
 
-def min_cost_flow_cost(G, demand='demand', capacity='capacity',
-                       weight='weight'):
+def min_cost_flow_cost(G, demand="demand", capacity="capacity", weight="weight"):
     r"""Find the cost of a minimum cost flow satisfying all demands in digraph G.
 
     G is a digraph with edge costs and capacities and in which nodes
@@ -105,12 +101,10 @@ def min_cost_flow_cost(G, demand='demand', capacity='capacity',
     >>> flowCost
     24
     """
-    return nx.network_simplex(G, demand=demand, capacity=capacity,
-                              weight=weight)[0]
+    return nx.network_simplex(G, demand=demand, capacity=capacity, weight=weight)[0]
 
 
-def min_cost_flow(G, demand='demand', capacity='capacity',
-                  weight='weight'):
+def min_cost_flow(G, demand="demand", capacity="capacity", weight="weight"):
     r"""Return a minimum cost flow satisfying all demands in digraph G.
 
     G is a digraph with edge costs and capacities and in which nodes
@@ -196,11 +190,10 @@ def min_cost_flow(G, demand='demand', capacity='capacity',
     >>> G.add_edge('c', 'd', weight = 2, capacity = 5)
     >>> flowDict = nx.min_cost_flow(G)
     """
-    return nx.network_simplex(G, demand=demand, capacity=capacity,
-                              weight=weight)[1]
+    return nx.network_simplex(G, demand=demand, capacity=capacity, weight=weight)[1]
 
 
-def cost_of_flow(G, flowDict, weight='weight'):
+def cost_of_flow(G, flowDict, weight="weight"):
     """Compute the cost of the flow given by flowDict on graph G.
 
     Note that this function does not check for the validity of the
@@ -241,11 +234,10 @@ def cost_of_flow(G, flowDict, weight='weight'):
     multiplying the relevant edge attributes by a convenient
     constant factor (eg 100).
     """
-    return sum((flowDict[u][v] * d.get(weight, 0)
-                for u, v, d in G.edges(data=True)))
+    return sum((flowDict[u][v] * d.get(weight, 0) for u, v, d in G.edges(data=True)))
 
 
-def max_flow_min_cost(G, s, t, capacity='capacity', weight='weight'):
+def max_flow_min_cost(G, s, t, capacity="capacity", weight="weight"):
     """Return a maximum (s, t)-flow of minimum cost.
 
     G is a digraph with edge costs and capacities. There is a source

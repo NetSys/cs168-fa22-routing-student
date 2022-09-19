@@ -21,7 +21,9 @@ try:
 
     def zeta(x, q, tolerance):
         return _zeta(x, q)
+
 except ImportError:
+
     def zeta(x, q, tolerance):
         """The Hurwitz zeta function, or the Riemann zeta function of two
         arguments.
@@ -33,7 +35,7 @@ except ImportError:
 
         """
         z = 0
-        z_prev = -float('inf')
+        z_prev = -float("inf")
         k = 0
         while abs(z - z_prev) > tolerance:
             z_prev = z
@@ -41,9 +43,10 @@ except ImportError:
             k += 1
         return z
 
+
 import networkx as nx
 
-__all__ = ['LFR_benchmark_graph']
+__all__ = ["LFR_benchmark_graph"]
 
 
 def _zipf_rv_below(gamma, xmin, threshold):
@@ -90,8 +93,7 @@ def _powerlaw_sequence(gamma, low, high, condition, length, max_iters):
 
 
 # TODO Needs documentation.
-def _generate_min_degree(gamma, average_degree, max_degree, tolerance,
-                         max_iters):
+def _generate_min_degree(gamma, average_degree, max_degree, tolerance, max_iters):
     """Returns a minimum degree from the given average degree."""
     min_deg_top = max_degree
     min_deg_bot = 1
@@ -103,8 +105,7 @@ def _generate_min_degree(gamma, average_degree, max_degree, tolerance,
             raise nx.ExceededMaxIterations("Could not match average_degree")
         mid_avg_deg = 0
         for x in range(int(min_deg_mid), max_degree + 1):
-            mid_avg_deg += (x ** (-gamma + 1)) / zeta(gamma, min_deg_mid,
-                                                      tolerance)
+            mid_avg_deg += (x ** (-gamma + 1)) / zeta(gamma, min_deg_mid, tolerance)
         if mid_avg_deg > average_degree:
             min_deg_top = min_deg_mid
             min_deg_mid = (min_deg_top - min_deg_bot) / 2 + min_deg_bot
@@ -160,14 +161,24 @@ def _generate_communities(degree_sequence, community_sizes, mu, max_iters):
             free.append(result[c].pop())
         if not free:
             return result
-    msg = 'Could not assign communities; try increasing min_community'
+    msg = "Could not assign communities; try increasing min_community"
     raise nx.ExceededMaxIterations(msg)
 
 
-def LFR_benchmark_graph(n, tau1, tau2, mu, average_degree=None,
-                        min_degree=None, max_degree=None, min_community=None,
-                        max_community=None, tol=1.0e-7, max_iters=500,
-                        seed=None):
+def LFR_benchmark_graph(
+    n,
+    tau1,
+    tau2,
+    mu,
+    average_degree=None,
+    min_degree=None,
+    max_degree=None,
+    min_community=None,
+    max_community=None,
+    tol=1.0e-7,
+    max_iters=500,
+    seed=None,
+):
     r"""Returns the LFR benchmark graph for testing community-finding
     algorithms.
 
@@ -351,18 +362,23 @@ def LFR_benchmark_graph(n, tau1, tau2, mu, average_degree=None,
     elif not 0 < max_degree <= n:
         raise nx.NetworkXError("max_degree must be in the interval (0, n]")
     if not ((min_degree is None) ^ (average_degree is None)):
-        raise nx.NetworkXError("Must assign exactly one of min_degree and"
-                               " average_degree")
+        raise nx.NetworkXError(
+            "Must assign exactly one of min_degree and" " average_degree"
+        )
     if min_degree is None:
-        min_degree = _generate_min_degree(tau1, average_degree, max_degree,
-                                          tol, max_iters)
+        min_degree = _generate_min_degree(
+            tau1, average_degree, max_degree, tol, max_iters
+        )
 
     # Generate a degree sequence with a power law distribution.
     low, high = min_degree, max_degree
 
-    def condition(seq): return sum(seq) % 2 == 0
+    def condition(seq):
+        return sum(seq) % 2 == 0
 
-    def length(seq): return len(seq) >= n
+    def length(seq):
+        return len(seq) >= n
+
     deg_seq = _powerlaw_sequence(tau1, low, high, condition, length, max_iters)
 
     # Validate parameters for generating the community size sequence.
@@ -381,9 +397,12 @@ def LFR_benchmark_graph(n, tau1, tau2, mu, average_degree=None,
     # generate a valid community size sequence.
     low, high = min_community, max_community
 
-    def condition(seq): return sum(seq) == n
+    def condition(seq):
+        return sum(seq) == n
 
-    def length(seq): return sum(seq) >= n
+    def length(seq):
+        return sum(seq) >= n
+
     comms = _powerlaw_sequence(tau2, low, high, condition, length, max_iters)
 
     # Generate the communities based on the given degree sequence and
@@ -405,5 +424,5 @@ def LFR_benchmark_graph(n, tau1, tau2, mu, average_degree=None,
                 v = random.choice(range(n))
                 if v not in c:
                     G.add_edge(u, v)
-            G.nodes[u]['community'] = c
+            G.nodes[u]["community"] = c
     return G

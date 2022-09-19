@@ -1,11 +1,11 @@
 import itertools
 
-__all__ = ['greedy_coloring_with_interchange']
+__all__ = ["greedy_coloring_with_interchange"]
 
 
 class Node(object):
 
-    __slots__ = ['node_id', 'color', 'adj_list', 'adj_color']
+    __slots__ = ["node_id", "color", "adj_list", "adj_color"]
 
     def __init__(self, node_id, n):
         self.node_id = node_id
@@ -16,7 +16,8 @@ class Node(object):
     def __repr__(self):
         return "Node_id: {0}, Color: {1}, Adj_list: ({2}), \
             adj_color: ({3})".format(
-            self.node_id, self.color, self.adj_list, self.adj_color)
+            self.node_id, self.color, self.adj_list, self.adj_color
+        )
 
     def assign_color(self, adj_entry, color):
         adj_entry.col_prev = None
@@ -48,7 +49,7 @@ class Node(object):
 
 class AdjEntry(object):
 
-    __slots__ = ['node_id', 'next', 'mate', 'col_next', 'col_prev']
+    __slots__ = ["node_id", "next", "mate", "col_next", "col_prev"]
 
     def __init__(self, node_id):
         self.node_id = node_id
@@ -64,7 +65,7 @@ class AdjEntry(object):
             self.next,
             self.mate.node_id,
             None if self.col_next == None else self.col_next.node_id,
-            None if self.col_prev == None else self.col_prev.node_id
+            None if self.col_prev == None else self.col_prev.node_id,
         )
 
 
@@ -105,8 +106,7 @@ def greedy_coloring_with_interchange(original_graph, nodes):
         neighbors = graph[node].iter_neighbors()
         col_used = {graph[adj_node.node_id].color for adj_node in neighbors}
         col_used.discard(-1)
-        k1 = next(itertools.dropwhile(
-            lambda x: x in col_used, itertools.count()))
+        k1 = next(itertools.dropwhile(lambda x: x in col_used, itertools.count()))
 
         # k1 is now the lowest available color
         if k1 > k:
@@ -116,8 +116,7 @@ def greedy_coloring_with_interchange(original_graph, nodes):
             col2 = -1
             while connected and col1 < k:
                 col1 += 1
-                neighbor_cols = (
-                    graph[node].iter_neighbors_color(col1))
+                neighbor_cols = graph[node].iter_neighbors_color(col1)
                 col1_adj = [it for it in neighbor_cols]
 
                 col2 = col1
@@ -129,10 +128,8 @@ def greedy_coloring_with_interchange(original_graph, nodes):
                     while i < len(frontier):
                         search_node = frontier[i]
                         i += 1
-                        col_opp = (
-                            col2 if graph[search_node].color == col1 else col1)
-                        neighbor_cols = (
-                            graph[search_node].iter_neighbors_color(col_opp))
+                        col_opp = col2 if graph[search_node].color == col1 else col1
+                        neighbor_cols = graph[search_node].iter_neighbors_color(col_opp)
 
                         for neighbor in neighbor_cols:
                             if neighbor not in visited:
@@ -140,18 +137,24 @@ def greedy_coloring_with_interchange(original_graph, nodes):
                                 frontier.append(neighbor)
 
                     # Search if node is not adj to any col2 vertex
-                    connected = len(visited.intersection(
-                        graph[node].iter_neighbors_color(col2))) > 0
+                    connected = (
+                        len(
+                            visited.intersection(graph[node].iter_neighbors_color(col2))
+                        )
+                        > 0
+                    )
 
             # If connected is false then we can swap !!!
             if not connected:
                 # Update all the nodes in the component
                 for search_node in visited:
                     graph[search_node].color = (
-                        col2 if graph[search_node].color == col1 else col1)
+                        col2 if graph[search_node].color == col1 else col1
+                    )
                     col2_adj = graph[search_node].adj_color[col2]
-                    graph[search_node].adj_color[col2] = (
-                        graph[search_node].adj_color[col1])
+                    graph[search_node].adj_color[col2] = graph[search_node].adj_color[
+                        col1
+                    ]
                     graph[search_node].adj_color[col1] = col2_adj
 
                 # Update all the neighboring nodes
@@ -162,8 +165,7 @@ def greedy_coloring_with_interchange(original_graph, nodes):
                         if graph[adj_node.node_id].color != col_opp:
                             # Direct reference to entry
                             adj_mate = adj_node.mate
-                            graph[adj_node.node_id].clear_color(
-                                adj_mate, col_opp)
+                            graph[adj_node.node_id].clear_color(adj_mate, col_opp)
                             graph[adj_node.node_id].assign_color(adj_mate, col)
                 k1 = col1
 

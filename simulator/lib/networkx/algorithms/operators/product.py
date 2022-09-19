@@ -18,9 +18,14 @@ from itertools import product
 import networkx as nx
 from networkx.utils import not_implemented_for
 
-__all__ = ['tensor_product', 'cartesian_product',
-           'lexicographic_product', 'strong_product', 'power',
-           'rooted_product']
+__all__ = [
+    "tensor_product",
+    "cartesian_product",
+    "lexicographic_product",
+    "strong_product",
+    "power",
+    "rooted_product",
+]
 
 
 def _dict_product(d1, d2):
@@ -117,8 +122,7 @@ def _edges_cross_nodes_and_nodes(G, H):
 
 def _init_product_graph(G, H):
     if not G.is_directed() == H.is_directed():
-        raise nx.NetworkXError("G and H must be both directed or",
-                               "both undirected")
+        raise nx.NetworkXError("G and H must be both directed or", "both undirected")
     if G.is_multigraph() or H.is_multigraph():
         GH = nx.MultiGraph()
     else:
@@ -228,8 +232,7 @@ def cartesian_product(G, H):
     new product graph
     """
     if not G.is_directed() == H.is_directed():
-        raise nx.NetworkXError("G and H must be both directed or",
-                               "both undirected")
+        raise nx.NetworkXError("G and H must be both directed or", "both undirected")
     GH = _init_product_graph(G, H)
     GH.add_nodes_from(_node_product(G, H))
     GH.add_edges_from(_edges_cross_nodes(G, H))
@@ -344,8 +347,8 @@ def strong_product(G, H):
     return GH
 
 
-@not_implemented_for('directed')
-@not_implemented_for('multigraph')
+@not_implemented_for("directed")
+@not_implemented_for("multigraph")
 def power(G, k):
     """Returns the specified power of a graph.
 
@@ -409,22 +412,22 @@ def power(G, k):
 
     """
     if k <= 0:
-        raise ValueError('k must be a positive integer')
+        raise ValueError("k must be a positive integer")
     H = nx.Graph()
     H.add_nodes_from(G)
     # update BFS code to ignore self loops.
     for n in G:
-        seen = {}                  # level (number of hops) when seen in BFS
-        level = 1                  # the current level
+        seen = {}  # level (number of hops) when seen in BFS
+        level = 1  # the current level
         nextlevel = G[n]
         while nextlevel:
             thislevel = nextlevel  # advance to next level
-            nextlevel = {}         # and start a new list (fringe)
+            nextlevel = {}  # and start a new list (fringe)
             for v in thislevel:
-                if v == n:         # avoid self loop
+                if v == n:  # avoid self loop
                     continue
                 if v not in seen:
-                    seen[v] = level         # set the level of vertex v
+                    seen[v] = level  # set the level of vertex v
                     nextlevel.update(G[v])  # add neighbors of v
             if k <= level:
                 break
@@ -433,9 +436,9 @@ def power(G, k):
     return H
 
 
-@not_implemented_for('multigraph')
+@not_implemented_for("multigraph")
 def rooted_product(G, H, root):
-    """ Return the rooted product of graphs G and H rooted at root in H.
+    """Return the rooted product of graphs G and H rooted at root in H.
 
     A new graph is constructed representing the rooted product of
     the inputted graphs, G and H, with a root in H.
@@ -460,7 +463,7 @@ def rooted_product(G, H, root):
     The nodes of G and H are not relabeled.
     """
     if root not in H:
-        raise nx.NetworkXError('root must be a vertex in H')
+        raise nx.NetworkXError("root must be a vertex in H")
 
     R = nx.Graph()
     R.add_nodes_from(product(G, H))

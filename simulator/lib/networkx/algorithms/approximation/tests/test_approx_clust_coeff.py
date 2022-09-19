@@ -9,22 +9,25 @@ from networkx.algorithms.approximation import average_clustering
 def test_petersen():
     # Actual coefficient is 0
     G = nx.petersen_graph()
-    assert_equal(average_clustering(G, trials=int(len(G) / 2)),
-                 nx.average_clustering(G))
+    assert_equal(
+        average_clustering(G, trials=int(len(G) / 2)), nx.average_clustering(G)
+    )
 
 
 def test_tetrahedral():
     # Actual coefficient is 1
     G = nx.tetrahedral_graph()
-    assert_equal(average_clustering(G, trials=int(len(G) / 2)),
-                 nx.average_clustering(G))
+    assert_equal(
+        average_clustering(G, trials=int(len(G) / 2)), nx.average_clustering(G)
+    )
 
 
 def test_dodecahedral():
     # Actual coefficient is 0
     G = nx.dodecahedral_graph()
-    assert_equal(average_clustering(G, trials=int(len(G) / 2)),
-                 nx.average_clustering(G))
+    assert_equal(
+        average_clustering(G, trials=int(len(G) / 2)), nx.average_clustering(G)
+    )
 
 
 def test_empty():

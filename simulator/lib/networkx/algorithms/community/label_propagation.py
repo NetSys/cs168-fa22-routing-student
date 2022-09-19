@@ -14,7 +14,7 @@ import networkx as nx
 from networkx.utils import groups
 from networkx.utils.decorators import not_implemented_for
 
-__all__ = ['label_propagation_communities', 'asyn_lpa_communities']
+__all__ = ["label_propagation_communities", "asyn_lpa_communities"]
 
 
 def asyn_lpa_communities(G, weight=None):
@@ -79,13 +79,15 @@ def asyn_lpa_communities(G, weight=None):
             # algorithm asynchronous.
             label_freq = Counter()
             for v in G[node]:
-                label_freq.update({labels[v]: G.edges[v, node][weight]
-                                   if weight else 1})
+                label_freq.update(
+                    {labels[v]: G.edges[v, node][weight] if weight else 1}
+                )
             # Choose the label with the highest frecuency. If more than 1 label
             # has the highest frecuency choose one randomly.
             max_freq = max(label_freq.values())
-            best_labels = [label for label, freq in label_freq.items()
-                           if freq == max_freq]
+            best_labels = [
+                label for label, freq in label_freq.items() if freq == max_freq
+            ]
             new_label = random.choice(best_labels)
             labels[node] = new_label
             # Continue until all nodes have a label that is better than other
@@ -96,7 +98,7 @@ def asyn_lpa_communities(G, weight=None):
     return iter(groups(labels).values())
 
 
-@not_implemented_for('directed')
+@not_implemented_for("directed")
 def label_propagation_communities(G):
     """Generates community sets determined by label propagation
 
@@ -142,7 +144,7 @@ def label_propagation_communities(G):
 def _color_network(G):
     """Colors the network so that neighboring nodes all have distinct colors.
 
-       Returns a dict keyed by color to a set of nodes with that color.
+    Returns a dict keyed by color to a set of nodes with that color.
     """
     coloring = dict()  # color => set(node)
     colors = nx.coloring.greedy_color(G)
@@ -157,19 +159,20 @@ def _color_network(G):
 def _labeling_complete(labeling, G):
     """Determines whether or not LPA is done.
 
-       Label propagation is complete when all nodes have a label that is
-       in the set of highest frequency labels amongst its neighbors.
+    Label propagation is complete when all nodes have a label that is
+    in the set of highest frequency labels amongst its neighbors.
 
-       Nodes with no neighbors are considered complete.
+    Nodes with no neighbors are considered complete.
     """
-    return all(labeling[v] in _most_frequent_labels(v, labeling, G)
-               for v in G if len(G[v]) > 0)
+    return all(
+        labeling[v] in _most_frequent_labels(v, labeling, G) for v in G if len(G[v]) > 0
+    )
 
 
 def _most_frequent_labels(node, labeling, G):
     """Returns a set of all labels with maximum frequency in `labeling`.
 
-       Input `labeling` should be a dict keyed by node to labels.
+    Input `labeling` should be a dict keyed by node to labels.
     """
     if not G[node]:
         # Nodes with no neighbors are themselves a community and are labeled
@@ -185,8 +188,8 @@ def _most_frequent_labels(node, labeling, G):
 def _update_label(node, labeling, G):
     """Updates the label of a node using the Prec-Max tie breaking algorithm
 
-       The algorithm is explained in: 'Community Detection via Semi-Synchronous
-       Label Propagation Algorithms' Cordasco and Gargano, 2011
+    The algorithm is explained in: 'Community Detection via Semi-Synchronous
+    Label Propagation Algorithms' Cordasco and Gargano, 2011
     """
     high_labels = _most_frequent_labels(node, labeling, G)
     if len(high_labels) == 1:

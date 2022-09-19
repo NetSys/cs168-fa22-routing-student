@@ -4,10 +4,10 @@ import networkx
 
 
 class TestDistance:
-
     def setUp(self):
         G = networkx.Graph()
         from networkx import convert_node_labels_to_integers as cnlti
+
         G = cnlti(networkx.grid_2d_graph(4, 4), first_label=1, ordering="sorted")
         self.G = G
 
@@ -56,7 +56,9 @@ class TestDistance:
         assert_equal(networkx.radius(self.G, usebounds=True), 4)
 
     def test_bound_periphery(self):
-        assert_equal(set(networkx.periphery(self.G, usebounds=True)), set([1, 4, 13, 16]))
+        assert_equal(
+            set(networkx.periphery(self.G, usebounds=True)), set([1, 4, 13, 16])
+        )
 
     def test_bound_center(self):
         assert_equal(set(networkx.center(self.G, usebounds=True)), set([6, 7, 10, 11]))

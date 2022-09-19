@@ -35,18 +35,20 @@ from networkx.utils import pairwise
 from networkx.utils import generate_unique_node
 from networkx.utils import not_implemented_for
 
-__all__ = ['descendants',
-           'ancestors',
-           'topological_sort',
-           'lexicographical_topological_sort',
-           'is_directed_acyclic_graph',
-           'is_aperiodic',
-           'transitive_closure',
-           'transitive_reduction',
-           'antichains',
-           'dag_longest_path',
-           'dag_longest_path_length',
-           'dag_to_branching']
+__all__ = [
+    "descendants",
+    "ancestors",
+    "topological_sort",
+    "lexicographical_topological_sort",
+    "is_directed_acyclic_graph",
+    "is_aperiodic",
+    "transitive_closure",
+    "transitive_reduction",
+    "antichains",
+    "dag_longest_path",
+    "dag_longest_path_length",
+    "dag_to_branching",
+]
 
 chaini = chain.from_iterable
 
@@ -171,8 +173,7 @@ def topological_sort(G):
        *Introduction to Algorithms - A Creative Approach.* Addison-Wesley.
     """
     if not G.is_directed():
-        raise nx.NetworkXError(
-            "Topological sort not defined on undirected graphs.")
+        raise nx.NetworkXError("Topological sort not defined on undirected graphs.")
 
     indegree_map = {v: d for v, d in G.in_degree() if d > 0}
     # These nodes have zero indegree and ready to be returned.
@@ -194,8 +195,9 @@ def topological_sort(G):
         yield node
 
     if indegree_map:
-        raise nx.NetworkXUnfeasible("Graph contains a cycle or graph changed "
-                                    "during iteration")
+        raise nx.NetworkXUnfeasible(
+            "Graph contains a cycle or graph changed " "during iteration"
+        )
 
 
 def lexicographical_topological_sort(G, key=None):
@@ -249,11 +251,12 @@ def lexicographical_topological_sort(G, key=None):
        *Introduction to Algorithms - A Creative Approach.* Addison-Wesley.
     """
     if not G.is_directed():
-        raise nx.NetworkXError(
-            "Topological sort not defined on undirected graphs.")
+        raise nx.NetworkXError("Topological sort not defined on undirected graphs.")
 
     if key is None:
-        def key(x): return x
+
+        def key(x):
+            return x
 
     def create_tuple(node):
         return key(node), node
@@ -280,8 +283,9 @@ def lexicographical_topological_sort(G, key=None):
         yield node
 
     if indegree_map:
-        raise nx.NetworkXUnfeasible("Graph contains a cycle or graph changed "
-                                    "during iteration")
+        raise nx.NetworkXUnfeasible(
+            "Graph contains a cycle or graph changed " "during iteration"
+        )
 
 
 def is_aperiodic(G):
@@ -319,8 +323,7 @@ def is_aperiodic(G):
        A Multidisciplinary Approach, CRC Press.
     """
     if not G.is_directed():
-        raise nx.NetworkXError(
-            "is_aperiodic not defined for undirected graphs")
+        raise nx.NetworkXError("is_aperiodic not defined for undirected graphs")
 
     s = arbitrary_element(G)
     levels = {s: 0}
@@ -344,9 +347,9 @@ def is_aperiodic(G):
         return g == 1 and nx.is_aperiodic(G.subgraph(set(G) - set(levels)))
 
 
-@not_implemented_for('undirected')
+@not_implemented_for("undirected")
 def transitive_closure(G):
-    """ Returns transitive closure of a directed graph
+    """Returns transitive closure of a directed graph
 
     The transitive closure of G = (V,E) is a graph G+ = (V,E+) such that
     for all v,w in V there is an edge (v,w) in E+ if and only if there
@@ -374,14 +377,13 @@ def transitive_closure(G):
     """
     TC = G.copy()
     for v in G:
-        TC.add_edges_from((v, u) for u in nx.dfs_preorder_nodes(G, source=v)
-                          if v != u)
+        TC.add_edges_from((v, u) for u in nx.dfs_preorder_nodes(G, source=v) if v != u)
     return TC
 
 
-@not_implemented_for('undirected')
+@not_implemented_for("undirected")
 def transitive_reduction(G):
-    """ Returns transitive reduction of a directed graph
+    """Returns transitive reduction of a directed graph
 
     The transitive reduction of G = (V,E) is a graph G- = (V,E-) such that
     for all v,w in V there is an edge (v,w) in E- if and only if (v,w) is
@@ -410,7 +412,8 @@ def transitive_reduction(G):
     """
     if not is_directed_acyclic_graph(G):
         raise nx.NetworkXError(
-            "Transitive reduction only uniquely defined on directed acyclic graphs.")
+            "Transitive reduction only uniquely defined on directed acyclic graphs."
+        )
     TR = nx.DiGraph()
     TR.add_nodes_from(G.nodes())
     for u in G:
@@ -421,7 +424,7 @@ def transitive_reduction(G):
     return TR
 
 
-@not_implemented_for('undirected')
+@not_implemented_for("undirected")
 def antichains(G):
     """Generates antichains from a directed acyclic graph (DAG).
 
@@ -469,13 +472,12 @@ def antichains(G):
         while stack:
             x = stack.pop()
             new_antichain = antichain + [x]
-            new_stack = [
-                t for t in stack if not ((t in TC[x]) or (x in TC[t]))]
+            new_stack = [t for t in stack if not ((t in TC[x]) or (x in TC[t]))]
             antichains_stacks.append((new_antichain, new_stack))
 
 
-@not_implemented_for('undirected')
-def dag_longest_path(G, weight='weight', default_weight=1):
+@not_implemented_for("undirected")
+def dag_longest_path(G, weight="weight", default_weight=1):
     """Returns the longest path in a directed acyclic graph (DAG).
 
     If `G` has edges with `weight` attribute the edge data are used as
@@ -511,8 +513,10 @@ def dag_longest_path(G, weight='weight', default_weight=1):
         return []
     dist = {}  # stores {v : (length, u)}
     for v in nx.topological_sort(G):
-        us = [(dist[u][0] + data.get(weight, default_weight), u)
-              for u, data in G.pred[v].items()]
+        us = [
+            (dist[u][0] + data.get(weight, default_weight), u)
+            for u, data in G.pred[v].items()
+        ]
         # Use the best predecessor if there is one and its distance is
         # non-negative, otherwise terminate.
         maxu = max(us, key=lambda x: x[0]) if us else (0, v)
@@ -528,8 +532,8 @@ def dag_longest_path(G, weight='weight', default_weight=1):
     return path
 
 
-@not_implemented_for('undirected')
-def dag_longest_path_length(G, weight='weight', default_weight=1):
+@not_implemented_for("undirected")
+def dag_longest_path_length(G, weight="weight", default_weight=1):
     """Returns the longest path length in a DAG
 
     Parameters
@@ -583,8 +587,8 @@ def root_to_leaf_paths(G):
     return chaini(starmap(all_paths, product(roots, leaves)))
 
 
-@not_implemented_for('multigraph')
-@not_implemented_for('undirected')
+@not_implemented_for("multigraph")
+@not_implemented_for("undirected")
 def dag_to_branching(G):
     """Returns a branching representing all (overlapping) paths from
     root nodes to leaf nodes in the given directed acyclic graph.
@@ -671,7 +675,7 @@ def dag_to_branching(G):
 
     """
     if has_cycle(G):
-        msg = 'dag_to_branching is only defined for acyclic graphs'
+        msg = "dag_to_branching is only defined for acyclic graphs"
         raise nx.HasACycle(msg)
     paths = root_to_leaf_paths(G)
     B, root = nx.prefix_tree(paths)

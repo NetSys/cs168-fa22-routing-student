@@ -29,14 +29,16 @@ from __future__ import division
 import networkx as nx
 from networkx.utils import random_state
 
-__all__ = ['circular_layout',
-           'kamada_kawai_layout',
-           'random_layout',
-           'rescale_layout',
-           'shell_layout',
-           'spring_layout',
-           'spectral_layout',
-           'fruchterman_reingold_layout']
+__all__ = [
+    "circular_layout",
+    "kamada_kawai_layout",
+    "random_layout",
+    "rescale_layout",
+    "shell_layout",
+    "spring_layout",
+    "spectral_layout",
+    "fruchterman_reingold_layout",
+]
 
 
 def _process_params(G, center, dim):
@@ -160,8 +162,9 @@ def circular_layout(G, scale=1, center=None, dim=2):
         # Discard the extra angle since it matches 0 radians.
         theta = np.linspace(0, 1, len(G) + 1)[:-1] * 2 * np.pi
         theta = theta.astype(np.float32)
-        pos = np.column_stack([np.cos(theta), np.sin(theta),
-                               np.zeros((len(G), paddims))])
+        pos = np.column_stack(
+            [np.cos(theta), np.sin(theta), np.zeros((len(G), paddims))]
+        )
         pos = rescale_layout(pos, scale=scale) + center
         pos = dict(zip(G, pos))
 
@@ -239,17 +242,19 @@ def shell_layout(G, nlist=None, scale=1, center=None, dim=2):
 
 
 @random_state(10)
-def fruchterman_reingold_layout(G,
-                                k=None,
-                                pos=None,
-                                fixed=None,
-                                iterations=50,
-                                threshold=1e-4,
-                                weight='weight',
-                                scale=1,
-                                center=None,
-                                dim=2,
-                                random_state=None):
+def fruchterman_reingold_layout(
+    G,
+    k=None,
+    pos=None,
+    fixed=None,
+    iterations=50,
+    threshold=1e-4,
+    weight="weight",
+    scale=1,
+    center=None,
+    dim=2,
+    random_state=None,
+):
     """Position nodes using Fruchterman-Reingold force-directed algorithm.
 
     Parameters
@@ -343,22 +348,23 @@ def fruchterman_reingold_layout(G,
         # Sparse matrix
         if len(G) < 500:  # sparse solver for large graphs
             raise ValueError
-        A = nx.to_scipy_sparse_matrix(G, weight=weight, dtype='f')
+        A = nx.to_scipy_sparse_matrix(G, weight=weight, dtype="f")
         if k is None and fixed is not None:
             # We must adjust k by domain size for layouts not near 1x1
             nnodes, _ = A.shape
             k = dom_size / np.sqrt(nnodes)
-        pos = _sparse_fruchterman_reingold(A, k, pos_arr, fixed,
-                                           iterations, threshold,
-                                           dim, random_state)
+        pos = _sparse_fruchterman_reingold(
+            A, k, pos_arr, fixed, iterations, threshold, dim, random_state
+        )
     except:
         A = nx.to_numpy_matrix(G, weight=weight)
         if k is None and fixed is not None:
             # We must adjust k by domain size for layouts not near 1x1
             nnodes, _ = A.shape
             k = dom_size / np.sqrt(nnodes)
-        pos = _fruchterman_reingold(A, k, pos_arr, fixed, iterations,
-                                    threshold, dim, random_state)
+        pos = _fruchterman_reingold(
+            A, k, pos_arr, fixed, iterations, threshold, dim, random_state
+        )
     if fixed is None:
         pos = rescale_layout(pos, scale=scale) + center
     pos = dict(zip(G, pos))
@@ -369,8 +375,16 @@ spring_layout = fruchterman_reingold_layout
 
 
 @random_state(7)
-def _fruchterman_reingold(A, k=None, pos=None, fixed=None, iterations=50,
-                          threshold=1e-4, dim=2, random_state=None):
+def _fruchterman_reingold(
+    A,
+    k=None,
+    pos=None,
+    fixed=None,
+    iterations=50,
+    threshold=1e-4,
+    dim=2,
+    random_state=None,
+):
     # Position nodes in adjacency matrix A using Fruchterman-Reingold
     # Entry point for NetworkX graph is fruchterman_reingold_layout()
     try:
@@ -418,13 +432,13 @@ def _fruchterman_reingold(A, k=None, pos=None, fixed=None, iterations=50,
         # enforce minimum distance of 0.01
         np.clip(distance, 0.01, None, out=distance)
         # displacement "force"
-        displacement = np.einsum('ijk,ij->ik',
-                                 delta,
-                                 (k * k / distance**2 - A * distance / k))
+        displacement = np.einsum(
+            "ijk,ij->ik", delta, (k * k / distance**2 - A * distance / k)
+        )
         # update positions
         length = np.linalg.norm(displacement, axis=-1)
         length = np.where(length < 0.01, 0.1, length)
-        delta_pos = np.einsum('ij,i->ij', displacement, t / length)
+        delta_pos = np.einsum("ij,i->ij", displacement, t / length)
         if fixed is not None:
             # don't change positions of fixed nodes
             delta_pos[fixed] = 0.0
@@ -438,9 +452,16 @@ def _fruchterman_reingold(A, k=None, pos=None, fixed=None, iterations=50,
 
 
 @random_state(7)
-def _sparse_fruchterman_reingold(A, k=None, pos=None, fixed=None,
-                                 iterations=50, threshold=1e-4, dim=2,
-                                 random_state=None):
+def _sparse_fruchterman_reingold(
+    A,
+    k=None,
+    pos=None,
+    fixed=None,
+    iterations=50,
+    threshold=1e-4,
+    dim=2,
+    random_state=None,
+):
     # Position nodes in adjacency matrix A using Fruchterman-Reingold
     # Entry point for NetworkX graph is fruchterman_reingold_layout()
     # Sparse version
@@ -502,8 +523,9 @@ def _sparse_fruchterman_reingold(A, k=None, pos=None, fixed=None,
             # the adjacency matrix row
             Ai = np.asarray(A.getrowview(i).toarray())
             # displacement "force"
-            displacement[:, i] +=\
-                (delta * (k * k / distance**2 - Ai * distance / k)).sum(axis=1)
+            displacement[:, i] += (
+                delta * (k * k / distance**2 - Ai * distance / k)
+            ).sum(axis=1)
         # update positions
         length = np.sqrt((displacement**2).sum(axis=0))
         length = np.where(length < 0.01, 0.1, length)
@@ -517,12 +539,9 @@ def _sparse_fruchterman_reingold(A, k=None, pos=None, fixed=None,
     return pos
 
 
-def kamada_kawai_layout(G, dist=None,
-                        pos=None,
-                        weight='weight',
-                        scale=1,
-                        center=None,
-                        dim=2):
+def kamada_kawai_layout(
+    G, dist=None, pos=None, weight="weight", scale=1, center=None, dim=2
+):
     """Position nodes using Kamada-Kawai path-length cost-function.
 
     Parameters
@@ -566,7 +585,7 @@ def kamada_kawai_layout(G, dist=None,
     try:
         import numpy as np
     except ImportError:
-        msg = 'Kamada-Kawai layout requires numpy: http://scipy.org'
+        msg = "Kamada-Kawai layout requires numpy: http://scipy.org"
         raise ImportError(msg)
 
     G, center = _process_params(G, center, dim)
@@ -600,18 +619,23 @@ def _kamada_kawai_solve(dist_mtx, pos_arr, dim):
     # and starting locations.
 
     import numpy as np
+
     try:
         from scipy.optimize import minimize
     except ImportError:
-        msg = 'Kamada-Kawai layout requires scipy: http://scipy.org'
+        msg = "Kamada-Kawai layout requires scipy: http://scipy.org"
         raise ImportError(msg)
 
     meanwt = 1e-3
-    costargs = (np, 1 / (dist_mtx + np.eye(dist_mtx.shape[0]) * 1e-3),
-                meanwt, dim)
+    costargs = (np, 1 / (dist_mtx + np.eye(dist_mtx.shape[0]) * 1e-3), meanwt, dim)
 
-    optresult = minimize(_kamada_kawai_costfn, pos_arr.ravel(),
-                         method='L-BFGS-B', args=costargs, jac=True)
+    optresult = minimize(
+        _kamada_kawai_costfn,
+        pos_arr.ravel(),
+        method="L-BFGS-B",
+        args=costargs,
+        jac=True,
+    )
 
     return optresult.x.reshape((-1, dim))
 
@@ -623,26 +647,25 @@ def _kamada_kawai_costfn(pos_vec, np, invdist, meanweight, dim):
 
     delta = pos_arr[:, np.newaxis, :] - pos_arr[np.newaxis, :, :]
     nodesep = np.linalg.norm(delta, axis=-1)
-    direction = np.einsum('ijk,ij->ijk',
-                          delta,
-                          1 / (nodesep + np.eye(nNodes) * 1e-3))
+    direction = np.einsum("ijk,ij->ijk", delta, 1 / (nodesep + np.eye(nNodes) * 1e-3))
 
     offset = nodesep * invdist - 1.0
     offset[np.diag_indices(nNodes)] = 0
 
-    cost = 0.5 * np.sum(offset ** 2)
-    grad = (np.einsum('ij,ij,ijk->ik', invdist, offset, direction) -
-            np.einsum('ij,ij,ijk->jk', invdist, offset, direction))
+    cost = 0.5 * np.sum(offset**2)
+    grad = np.einsum("ij,ij,ijk->ik", invdist, offset, direction) - np.einsum(
+        "ij,ij,ijk->jk", invdist, offset, direction
+    )
 
     # Additional parabolic term to encourage mean position to be near origin:
     sumpos = np.sum(pos_arr, axis=0)
-    cost += 0.5 * meanweight * np.sum(sumpos ** 2)
+    cost += 0.5 * meanweight * np.sum(sumpos**2)
     grad += meanweight * sumpos
 
     return (cost, grad.ravel())
 
 
-def spectral_layout(G, weight='weight', scale=1, center=None, dim=2):
+def spectral_layout(G, weight="weight", scale=1, center=None, dim=2):
     """Position nodes using the eigenvectors of the graph Laplacian.
 
     Parameters
@@ -698,7 +721,7 @@ def spectral_layout(G, weight='weight', scale=1, center=None, dim=2):
         # Sparse matrix
         if len(G) < 500:  # dense solver is faster for small graphs
             raise ValueError
-        A = nx.to_scipy_sparse_matrix(G, weight=weight, dtype='d')
+        A = nx.to_scipy_sparse_matrix(G, weight=weight, dtype="d")
         # Symmetrize directed graphs
         if G.is_directed():
             A = A + np.transpose(A)
@@ -739,7 +762,7 @@ def _spectral(A, dim=2):
 
     eigenvalues, eigenvectors = np.linalg.eig(L)
     # sort and keep smallest nonzero
-    index = np.argsort(eigenvalues)[1:dim + 1]  # 0 index is zero eigenvalue
+    index = np.argsort(eigenvalues)[1 : dim + 1]  # 0 index is zero eigenvalue
     return np.real(eigenvectors[:, index])
 
 
@@ -769,7 +792,7 @@ def _sparse_spectral(A, dim=2):
     # number of Lanczos vectors for ARPACK solver.What is the right scaling?
     ncv = max(2 * k + 1, int(np.sqrt(nnodes)))
     # return smallest k eigenvalues and eigenvectors
-    eigenvalues, eigenvectors = eigsh(L, k, which='SM', ncv=ncv)
+    eigenvalues, eigenvectors = eigsh(L, k, which="SM", ncv=ncv)
     index = np.argsort(eigenvalues)[1:k]  # 0 index is zero eigenvalue
     return np.real(eigenvectors[:, index])
 
@@ -815,6 +838,7 @@ def rescale_layout(pos, scale=1):
 # fixture for nose tests
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import numpy
     except:

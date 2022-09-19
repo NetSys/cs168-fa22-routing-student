@@ -16,11 +16,11 @@ from itertools import count
 import networkx as nx
 from networkx.utils import not_implemented_for
 
-__all__ = ['astar_path', 'astar_path_length']
+__all__ = ["astar_path", "astar_path_length"]
 
 
-@not_implemented_for('multigraph')
-def astar_path(G, source, target, heuristic=None, weight='weight'):
+@not_implemented_for("multigraph")
+def astar_path(G, source, target, heuristic=None, weight="weight"):
     """Return a list of nodes in a shortest path between source and target
     using the A* ("A-star") algorithm.
 
@@ -70,7 +70,7 @@ def astar_path(G, source, target, heuristic=None, weight='weight'):
 
     """
     if source not in G or target not in G:
-        msg = 'Either source {} or target {} is not in G'
+        msg = "Either source {} or target {} is not in G"
         raise nx.NodeNotFound(msg.format(source, target))
 
     if heuristic is None:
@@ -134,7 +134,7 @@ def astar_path(G, source, target, heuristic=None, weight='weight'):
     raise nx.NetworkXNoPath("Node %s not reachable from %s" % (source, target))
 
 
-def astar_path_length(G, source, target, heuristic=None, weight='weight'):
+def astar_path_length(G, source, target, heuristic=None, weight="weight"):
     """Return the length of the shortest path between source and target using
     the A* ("A-star") algorithm.
 
@@ -164,7 +164,7 @@ def astar_path_length(G, source, target, heuristic=None, weight='weight'):
 
     """
     if source not in G or target not in G:
-        msg = 'Either source {} or target {} is not in G'
+        msg = "Either source {} or target {} is not in G"
         raise nx.NodeNotFound(msg.format(source, target))
 
     path = astar_path(G, source, target, heuristic, weight)

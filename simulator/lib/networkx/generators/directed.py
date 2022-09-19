@@ -24,8 +24,13 @@ from networkx.generators.classic import empty_graph
 from networkx.utils import discrete_sequence
 from networkx.utils import weighted_choice
 
-__all__ = ['gn_graph', 'gnc_graph', 'gnr_graph', 'random_k_out_graph',
-           'scale_free_graph']
+__all__ = [
+    "gn_graph",
+    "gnc_graph",
+    "gnr_graph",
+    "random_k_out_graph",
+    "scale_free_graph",
+]
 
 
 def gn_graph(n, kernel=None, create_using=None, seed=None):
@@ -73,7 +78,9 @@ def gn_graph(n, kernel=None, create_using=None, seed=None):
         raise nx.NetworkXError("Directed Graph required in create_using")
 
     if kernel is None:
-        def kernel(x): return x
+
+        def kernel(x):
+            return x
 
     if seed is not None:
         random.seed(seed)
@@ -199,8 +206,16 @@ def gnc_graph(n, create_using=None, seed=None):
     return G
 
 
-def scale_free_graph(n, alpha=0.41, beta=0.54, gamma=0.05, delta_in=0.2,
-                     delta_out=0, create_using=None, seed=None):
+def scale_free_graph(
+    n,
+    alpha=0.41,
+    beta=0.54,
+    gamma=0.05,
+    delta_in=0.2,
+    delta_out=0,
+    create_using=None,
+    seed=None,
+):
     """Returns a scale-free directed graph.
 
     Parameters
@@ -266,14 +281,14 @@ def scale_free_graph(n, alpha=0.41, beta=0.54, gamma=0.05, delta_in=0.2,
             raise nx.NetworkXError("MultiDiGraph required in create_using")
 
     if alpha <= 0:
-        raise ValueError('alpha must be >= 0.')
+        raise ValueError("alpha must be >= 0.")
     if beta <= 0:
-        raise ValueError('beta must be >= 0.')
+        raise ValueError("beta must be >= 0.")
     if gamma <= 0:
-        raise ValueError('beta must be >= 0.')
+        raise ValueError("beta must be >= 0.")
 
     if alpha + beta + gamma != 1.0:
-        raise ValueError('alpha+beta+gamma must equal 1.')
+        raise ValueError("alpha+beta+gamma must equal 1.")
 
     # seed random number generated (uses None as default)
     random.seed(seed)
@@ -307,8 +322,7 @@ def scale_free_graph(n, alpha=0.41, beta=0.54, gamma=0.05, delta_in=0.2,
     return G
 
 
-def random_uniform_k_out_graph(n, k, self_loops=True, with_replacement=True,
-                               seed=None):
+def random_uniform_k_out_graph(n, k, self_loops=True, with_replacement=True, seed=None):
     """Returns a random `k`-out graph with uniform attachment.
 
     A random `k`-out graph with uniform attachment is a multidigraph
@@ -457,7 +471,7 @@ def random_k_out_graph(n, k, alpha, self_loops=True, seed=None):
 
     """
     if alpha < 0:
-        raise ValueError('alpha must be positive')
+        raise ValueError("alpha must be positive")
     random.seed(seed)
     G = nx.empty_graph(n, create_using=nx.MultiDiGraph())
     weights = Counter({v: alpha for v in G})

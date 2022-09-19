@@ -25,14 +25,10 @@ class TestGeneratorsDirected(object):
         scale_free_graph(100)
 
     def test_create_using_keyword_arguments(self):
-        assert_raises(nx.NetworkXError,
-                      gn_graph, 100, create_using=Graph())
-        assert_raises(nx.NetworkXError,
-                      gnr_graph, 100, 0.5, create_using=Graph())
-        assert_raises(nx.NetworkXError,
-                      gnc_graph, 100, create_using=Graph())
-        assert_raises(nx.NetworkXError,
-                      scale_free_graph, 100, create_using=Graph())
+        assert_raises(nx.NetworkXError, gn_graph, 100, create_using=Graph())
+        assert_raises(nx.NetworkXError, gnr_graph, 100, 0.5, create_using=Graph())
+        assert_raises(nx.NetworkXError, gnc_graph, 100, create_using=Graph())
+        assert_raises(nx.NetworkXError, scale_free_graph, 100, create_using=Graph())
         G = gn_graph(100, seed=1)
         MG = gn_graph(100, create_using=MultiDiGraph(), seed=1)
         assert_equal(sorted(G.edges()), sorted(MG.edges()))

@@ -8,8 +8,9 @@
 #    BSD license.
 #    NetworkX:http://networkx.github.io/
 import networkx as nx
+
 __author__ = """Aric Hagberg (hagberg@lanl.gov)"""
-__all__ = ['hits', 'hits_numpy', 'hits_scipy', 'authority_matrix', 'hub_matrix']
+__all__ = ["hits", "hits_numpy", "hits_scipy", "authority_matrix", "hub_matrix"]
 
 
 def hits(G, max_iter=100, tol=1.0e-8, nstart=None, normalized=True):
@@ -97,11 +98,11 @@ def hits(G, max_iter=100, tol=1.0e-8, nstart=None, normalized=True):
         # doing a left multiply a^T=hlast^T*G
         for n in h:
             for nbr in G[n]:
-                a[nbr] += hlast[n] * G[n][nbr].get('weight', 1)
+                a[nbr] += hlast[n] * G[n][nbr].get("weight", 1)
         # now multiply h=Ga
         for n in h:
             for nbr in G[n]:
-                h[n] += a[nbr] * G[n][nbr].get('weight', 1)
+                h[n] += a[nbr] * G[n][nbr].get("weight", 1)
         # normalize vector
         s = 1.0 / max(h.values())
         for n in h:
@@ -186,8 +187,7 @@ def hits_numpy(G, normalized=True):
     try:
         import numpy as np
     except ImportError:
-        raise ImportError(
-            "hits_numpy() requires NumPy: http://scipy.org/")
+        raise ImportError("hits_numpy() requires NumPy: http://scipy.org/")
     if len(G) == 0:
         return {}, {}
     H = nx.hub_matrix(G, list(G))
@@ -279,8 +279,7 @@ def hits_scipy(G, max_iter=100, tol=1.0e-6, normalized=True):
         import scipy.sparse
         import numpy as np
     except ImportError:
-        raise ImportError(
-            "hits_scipy() requires SciPy: http://scipy.org/")
+        raise ImportError("hits_scipy() requires SciPy: http://scipy.org/")
     if len(G) == 0:
         return {}, {}
     M = nx.to_scipy_sparse_matrix(G, nodelist=list(G))
@@ -311,11 +310,13 @@ def hits_scipy(G, max_iter=100, tol=1.0e-6, normalized=True):
     authorities = dict(zip(G, map(float, a)))
     return hubs, authorities
 
+
 # fixture for nose tests
 
 
 def setup_module(module):
     from nose import SkipTest
+
     try:
         import numpy
     except:
